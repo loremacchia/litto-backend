@@ -7,18 +7,18 @@ import java.io.Serializable;
 public class StepDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Date endDate; // TODO cambia il tipo della data
+	private String endDate; // TODO cambia il tipo della data
 	private String title;
 	private String subtitle;
 	private String imageUrl;
 	private String planName;
 	private long planId;
 
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

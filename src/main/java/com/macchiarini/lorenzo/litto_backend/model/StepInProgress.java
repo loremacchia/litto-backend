@@ -1,7 +1,5 @@
-package com.macchiarini.lorenzo.litto_backend.model;
-import java.text.SimpleDateFormat;  
-import java.util.Date; 
-import java.util.*;
+package com.macchiarini.lorenzo.litto_backend.model; 
+import java.util.Date;
 
 /**
  * 

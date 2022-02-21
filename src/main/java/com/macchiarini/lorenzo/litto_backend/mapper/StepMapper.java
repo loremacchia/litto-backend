@@ -12,6 +12,7 @@ import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.Step;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.User;
+import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.ejb.LocalBean;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,17 +22,21 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 	
+	@Inject
+	DateHandler dateHandler;
 	
 	public StepDto fromPlanStepToStepDto(StepInProgress step, Plan plan) {
 		StepDto stepDto = new StepDto();
-		stepDto.setEndDate(step.getEndDate());
+		stepDto.setEndDate(dateHandler.toString(step.getEndDate()));
 		stepDto.setSubtitle(step.getStep().getSubtitle());
 		stepDto.setTitle(step.getStep().getTitle());
 		stepDto.setImageUrl(plan.getImageUrl());
-		stepDto.setPlanId(0); // TODO Mettere planId
+		stepDto.setPlanId(plan.getId());
 		stepDto.setPlanName(plan.getTitle());
 		return stepDto;
 	}
+	
+	// TODO quando devo aggiungere o togliere piani attivi o step attivi devo convertire sempre le date
 	
 	
 }
