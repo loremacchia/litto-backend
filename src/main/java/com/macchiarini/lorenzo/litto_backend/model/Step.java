@@ -1,5 +1,7 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
+import java.util.List;
+
 public class Step {
 
 	/**
@@ -8,18 +10,19 @@ public class Step {
 	public Step() {
 	}
 
+	private long id;
 	private String title;
 	private String subtitle;
-	private Material[] materials; // TODO lista ordinata
+	private List<Material> materials; // TODO lista ordinata
 	private long planId;
-	private int week; // TODO va bene così o meglio un id vero e proprio?
+	private int planWeek; // TODO va bene così o meglio un id vero e proprio?
 
-	public int getWeek() {
-		return week;
+	public int getPlanWeek() {
+		return planWeek;
 	}
 
-	public void setWeek(int week) {
-		this.week = week;
+	public void setPlanWeek(int planWeek) {
+		this.planWeek = planWeek;
 	}
 
 	public long getPlanId() {
@@ -46,12 +49,20 @@ public class Step {
 		this.subtitle = subtitle;
 	}
 
-	public Material[] getMaterials() {
+	public List<Material> getMaterials() {
 		return materials;
 	}
 
-	public void setMaterials(Material[] materials) {
+	public void setMaterials(List<Material> materials) {
 		this.materials = materials;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

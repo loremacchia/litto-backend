@@ -18,8 +18,8 @@ public class Plan {
 	private String title;
 	private String subtitle;
 	private int level;
-	private Topic[] tags;
-	private Step[] steps;
+	private List<Topic> tags;
+	private List<Step> steps;
 	private int duration;
 
 	public long getId() {
@@ -62,19 +62,19 @@ public class Plan {
 		this.level = level;
 	}
 
-	public Topic[] getTags() {
+	public List<Topic> getTags() {
 		return tags;
 	}
 
-	public void setTags(Topic[] tags) {
+	public void setTags(List<Topic> tags) {
 		this.tags = tags;
 	}
 
-	public Step[] getSteps() {
+	public List<Step> getSteps() {
 		return steps;
 	}
 
-	public void setSteps(Step[] steps) {
+	public void setSteps(List<Step> steps) {
 		this.steps = steps;
 	}
 

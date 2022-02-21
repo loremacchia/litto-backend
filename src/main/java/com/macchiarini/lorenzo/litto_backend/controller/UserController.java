@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
-import com.macchiarini.lorenzo.litto_backend.dao.StepDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
@@ -17,9 +16,12 @@ import com.macchiarini.lorenzo.litto_backend.mapper.StepMapper;
 import com.macchiarini.lorenzo.litto_backend.mapper.UserMapper;
 import com.macchiarini.lorenzo.litto_backend.model.Interest;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
+import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
+import com.macchiarini.lorenzo.litto_backend.model.Step;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.Topic;
 import com.macchiarini.lorenzo.litto_backend.model.User;
+import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
 
@@ -32,9 +34,6 @@ public class UserController {
 	UserDao userDao;
 
 	@Inject
-	StepDao stepDao;
-
-	@Inject
 	StepMapper stepMapper;
 
 	@Inject
@@ -42,6 +41,9 @@ public class UserController {
 
 	@Inject
 	PlanMapper planMapper;
+	
+	@Inject
+	DateHandler dateHandler;
 
 	// TODO JWT
 	public long createUser(UserInitDto userInitDto) {
@@ -95,7 +97,7 @@ public class UserController {
 	}
 
 	public List<StepDto> getUserGoals(long ID) {
-		List<StepInProgress> activeSteps = userDao.getGoals(ID);
+		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for (StepInProgress s : activeSteps) { // TODO n+1 queries
 			Plan p = planDao.getPlan(s.getStep().getPlanId());
@@ -118,4 +120,24 @@ public class UserController {
 		return interests;
 	}
 
+	public boolean startPlan(long planID, long userID, String dateFrom, String dateTo) {
+		Plan plan = planDao.getPlan(planID);
+		PlanInProgress planInProgress = new PlanInProgress();
+		planInProgress.setPlan(plan);
+		planInProgress.setEndingDate(dateHandler.toDate(dateTo));
+		List<Step> steps = plan.getSteps();
+		int counter = 0;
+		List<StepInProgress> stepsInProgress = new ArrayList<StepInProgress>();
+		for(Step s : steps) {
+			counter++;
+			StepInProgress sip = new StepInProgress();
+			sip.setStep(s);
+			sip.setEndDate(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter));
+			stepsInProgress.add(sip);
+		}
+		System.out.println(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter) + dateTo);
+		planInProgress.setToDoSteps(stepsInProgress);
+		userDao.startPlan(userID, planInProgress);
+		return true;
+	}
 }

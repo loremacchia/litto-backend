@@ -9,9 +9,7 @@ import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.User;
 
-import jakarta.ejb.LocalBean;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 @ApplicationScoped

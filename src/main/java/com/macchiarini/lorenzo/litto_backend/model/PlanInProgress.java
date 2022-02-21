@@ -26,7 +26,7 @@ public class PlanInProgress {
     /**
      * 
      */
-    private StepInProgress[] toDoSteps;
+    private List<StepInProgress> toDoSteps;
 
 	public Date getEndingDate() {
 		return endingDate;
@@ -44,11 +44,11 @@ public class PlanInProgress {
 		this.plan = plan;
 	}
 
-	public StepInProgress[] getToDoSteps() {
+	public List<StepInProgress> getToDoSteps() {
 		return toDoSteps;
 	}
 
-	public void setToDoSteps(StepInProgress[] toDoSteps) {
+	public void setToDoSteps(List<StepInProgress> toDoSteps) {
 		this.toDoSteps = toDoSteps;
 	}
     

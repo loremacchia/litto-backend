@@ -1,6 +1,4 @@
 package com.macchiarini.lorenzo.litto_backend.dto;
-import java.text.SimpleDateFormat;  
-import java.util.Date; 
 
 import java.io.Serializable;
 

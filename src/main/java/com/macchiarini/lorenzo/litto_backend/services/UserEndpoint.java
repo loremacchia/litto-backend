@@ -11,27 +11,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.macchiarini.lorenzo.litto_backend.controller.UserController;
-import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
-import com.macchiarini.lorenzo.litto_backend.dao.StepDao;
-import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
-import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
-import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
-import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserLoginDto;
-import com.macchiarini.lorenzo.litto_backend.mapper.PlanMapper;
-import com.macchiarini.lorenzo.litto_backend.mapper.StepMapper;
-import com.macchiarini.lorenzo.litto_backend.mapper.UserMapper;
-import com.macchiarini.lorenzo.litto_backend.model.Interest;
-import com.macchiarini.lorenzo.litto_backend.model.Plan;
-import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
-import com.macchiarini.lorenzo.litto_backend.model.Topic;
-import com.macchiarini.lorenzo.litto_backend.model.User;
 
 @Path("/user")
 public class UserEndpoint {
@@ -103,6 +86,14 @@ public class UserEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getInterests() {
 		return Response.ok().entity(userController.getInterests()).build();
+	}
+	
+	@POST
+	@Path("/{userId}/start/{planId}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response startPlan(@PathParam("planId") long planID, @PathParam("userId") long userID, String dateFrom, String dateTo) {
+		return Response.ok().entity(userController.startPlan(planID, userID, dateFrom, dateTo)).build();
 	}
 
 }
