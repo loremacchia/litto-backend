@@ -1,26 +1,12 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-import java.util.*;
-
-/**
- * 
- */
 public class YouTube extends Material {
 
-	/**
-	 * Default constructor
-	 */
 	public YouTube() {
+		super.setType(MaterialType.YouTube);
 	}
 
-	/**
-	 * 
-	 */
 	private String link;
-
-	/**
-	 * 
-	 */
 	private String description;
 
 	public String getLink() {

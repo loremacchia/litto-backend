@@ -1,26 +1,13 @@
-package com.macchiarini.lorenzo.litto_backend.model; 
+package com.macchiarini.lorenzo.litto_backend.model;
+
 import java.util.Date;
 
-/**
- * 
- */
 public class StepInProgress {
-
-	/**
-	 * Default constructor
-	 */
 	public StepInProgress() {
 	}
 
-	/**
-	 * TODO cambia data
-	 */
-	private Date endDate;
-
-	/**
-	 * 
-	 */
-	private Step step;
+	private Date endDate; // Date è il tipo di tutti gli attributi data interni all'architettura, String solo quelli che si interfacciano con l'esterno
+	private Step step; // TODO lasciare solo stepid?
 
 	public Date getEndDate() {
 		return endDate;

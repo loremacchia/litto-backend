@@ -2,15 +2,9 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.*;
 
-/**
- * 
- */
 public class User {
 
-	/**
-	 * Default constructor TODO aggiungi UUID e id utente
-	 */
-	public User() {
+	public User() { // TODO aggiungi UUID e id utente
 	}
 
 	private long id;
@@ -23,8 +17,8 @@ public class User {
 	private String username;
 	private int level;
 	private List<Interest> interests; // TODO anche solo i nomi?
-	private Plan[] completedPlans; // TODO anche solo le chiavi/id?
-	private PlanInProgress[] progressingPlans;
+	private List<Plan> completedPlans; // TODO anche solo le chiavi/id?
+	private List<PlanInProgress> progressingPlans;
 
 	public long getId() {
 		return id;
@@ -106,19 +100,19 @@ public class User {
 		this.interests = interests;
 	}
 
-	public Plan[] getCompletedPlans() {
+	public List<Plan> getCompletedPlans() {
 		return completedPlans;
 	}
 
-	public void setCompletedPlans(Plan[] completedPlans) {
+	public void setCompletedPlans(List<Plan> completedPlans) {
 		this.completedPlans = completedPlans;
 	}
 
-	public PlanInProgress[] getProgressingPlans() {
+	public List<PlanInProgress> getProgressingPlans() {
 		return progressingPlans;
 	}
 
-	public void setProgressingPlans(PlanInProgress[] progressingPlans) {
+	public void setProgressingPlans(List<PlanInProgress> progressingPlans) {
 		this.progressingPlans = progressingPlans;
 	}
 

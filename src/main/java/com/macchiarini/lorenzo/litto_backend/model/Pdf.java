@@ -1,21 +1,11 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-import java.util.*;
-
-/**
- * 
- */
 public class Pdf extends Material {
 
-	/**
-	 * Default constructor
-	 */
 	public Pdf() {
+		super.setType(MaterialType.PDF);
 	}
 
-	/**
-	 * 
-	 */
 	private String file;
 
 	public String getFile() {

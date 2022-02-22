@@ -2,31 +2,14 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.*;
 
-/**
- * 
- */
 public class PlanInProgress {
 
-    /**
-     * Default constructor
-     */
-    public PlanInProgress() {
-    }
+	public PlanInProgress() {
+	}
 
-    /**
-     * TODO setter della data
-     */
-    private Date endingDate;
-
-    /**
-     * TODO cambia in planId e non plan
-     */
-    private Plan plan;
-
-    /**
-     * 
-     */
-    private List<StepInProgress> toDoSteps;
+	private Date endingDate;
+	private Plan plan; // TODO cambia in planId e non plan
+	private List<StepInProgress> toDoSteps; // TODO cambia in stepId e non step
 
 	public Date getEndingDate() {
 		return endingDate;
@@ -51,6 +34,5 @@ public class PlanInProgress {
 	public void setToDoSteps(List<StepInProgress> toDoSteps) {
 		this.toDoSteps = toDoSteps;
 	}
-    
-    
+
 }

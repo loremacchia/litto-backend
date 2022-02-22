@@ -4,13 +4,10 @@ import java.util.List;
 
 public class Step {
 
-	/**
-	 * Default constructor
-	 */
 	public Step() {
 	}
 
-	private long id;
+	private long id; // TODO vedere se ID è utile in fase di query o per essere linkato da setpInProgress o plan ecc..
 	private String title;
 	private String subtitle;
 	private List<Material> materials; // TODO lista ordinata

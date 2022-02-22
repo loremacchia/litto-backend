@@ -1,26 +1,10 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-import java.util.*;
-
-/**
- * 
- */
 public class Material {
-
-	/**
-	 * Default constructor
-	 */
 	public Material() {
 	}
 
-	/**
-	 * 
-	 */
 	private String title;
-
-	/**
-	 * 
-	 */
 	private MaterialType type;
 
 	public String getTitle() {

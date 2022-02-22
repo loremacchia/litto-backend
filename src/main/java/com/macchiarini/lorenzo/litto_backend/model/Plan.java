@@ -2,14 +2,8 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.*;
 
-/**
- * 
- */
 public class Plan {
 
-	/**
-	 * Default constructor
-	 */
 	public Plan() {
 	}
 

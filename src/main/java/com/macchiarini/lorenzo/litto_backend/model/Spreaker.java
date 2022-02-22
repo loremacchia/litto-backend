@@ -1,26 +1,12 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-import java.util.*;
-
-/**
- * 
- */
 public class Spreaker extends Material {
 
-	/**
-	 * Default constructor
-	 */
 	public Spreaker() {
+		super.setType(MaterialType.Spreaker);
 	}
 
-	/**
-	 * 
-	 */
 	private String link;
-
-	/**
-	 * 
-	 */
 	private String description;
 
 	public String getLink() {

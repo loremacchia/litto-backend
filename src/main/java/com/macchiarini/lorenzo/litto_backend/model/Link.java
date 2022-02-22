@@ -1,26 +1,12 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-import java.util.*;
-
-/**
- * 
- */
 public class Link extends Material {
 
-	/**
-	 * Default constructor
-	 */
 	public Link() {
+		super.setType(MaterialType.Link);
 	}
 
-	/**
-	 * 
-	 */
 	private String link;
-
-	/**
-	 * 
-	 */
 	private String description;
 
 	public String getLink() {
