@@ -82,4 +82,19 @@ public class UserDao {
 	public void removePlanInProgress(long userID, long planID) {	
 	}
 
+	// Function to remove the token from the user db
+	public void removeUserToken(long userID) {
+		
+	}
+
+	// Function to set the token 
+	public User setUserToken(long userID, String token) {
+		return null;
+	}
+	
+	// Function that returns the token value of the user
+	public String getUserToken(long userID) {
+		return "";
+	}
+
 }

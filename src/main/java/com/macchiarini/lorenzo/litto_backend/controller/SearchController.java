@@ -17,6 +17,7 @@ public class SearchController {
 	public SearchDto search(String word) {
 		List<Plan> plans = searchDao.searchPlans(word);
 		List<Topic> tags = searchDao.searchTags(word);
+		System.out.println(word);
 		SearchDto s = new SearchDto();
 		s.setPlans(plans);
 		s.setTags(tags);

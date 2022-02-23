@@ -3,6 +3,9 @@ package com.macchiarini.lorenzo.litto_backend.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
@@ -24,9 +27,13 @@ import com.macchiarini.lorenzo.litto_backend.model.User;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
+import jakarta.jws.soap.SOAPBinding.Use;
 
 public class UserController {
 
+	@Inject 
+	Authorizer authorizer;
+	
 	@Inject
 	UserMapper userMapper;
 
@@ -45,13 +52,18 @@ public class UserController {
 	@Inject
 	DateHandler dateHandler;
 
-	// TODO JWT
-	public long createUser(UserInitDto userInitDto) {
+	public User createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
 			User user = userMapper.toUser(userInitDto);
-			return userDao.addUser(user);
+			long ID = userDao.addUser(user);
+			User u = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
+			return u;
 		}
-		return -1;
+		return null;
+	}
+	
+	public User createToken(String email, String password, long userID) {
+		return authorizer.createToken(userID, email, password);
 	}
 
 	public boolean completeUser(long ID, UserCompleteDto userCompleteDto) {
@@ -76,16 +88,17 @@ public class UserController {
 		return false;
 	}
 
-	public long loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
+	public User loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
 		long ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		User u = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
 		if (ID != 0) { // TODO controlla che l'id sia corretto
-			return ID;
+			return u;
 		}
-		return -1;
+		return null;
 	}
 
-	public boolean logoutUser(long ID) { // TODO completare
-		// TODO rimuovere JWT
+	public boolean logoutUser(long ID) {
+		authorizer.removeUserAuth(ID);
 		return true;
 	}
 

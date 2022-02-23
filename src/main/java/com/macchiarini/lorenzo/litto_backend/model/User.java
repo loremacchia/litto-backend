@@ -19,6 +19,16 @@ public class User {
 	private List<Interest> interests; // TODO anche solo i nomi?
 	private List<Plan> completedPlans; // TODO anche solo le chiavi/id?
 	private List<PlanInProgress> progressingPlans;
+	private String token;
+
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	public long getId() {
 		return id;

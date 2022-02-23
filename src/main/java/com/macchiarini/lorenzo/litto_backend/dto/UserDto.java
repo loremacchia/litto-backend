@@ -15,7 +15,7 @@ public class UserDto implements Serializable {
 	private String imageUrl;
 	private int level;
 	private List<Interest> interests; // TODO anche solo i nomi?
-	private PlanPreviewDto[] completedPlans; // TODO anche solo le chiavi/id?
+	private List<PlanPreviewDto> completedPlans; // TODO anche solo le chiavi/id?
 
 	public long getId() {
 		return id;
@@ -73,11 +73,11 @@ public class UserDto implements Serializable {
 		this.interests = interests;
 	}
 
-	public PlanPreviewDto[] getCompletedPlans() {
+	public List<PlanPreviewDto> getCompletedPlans() {
 		return completedPlans;
 	}
 
-	public void setCompletedPlans(PlanPreviewDto[] completedPlans) {
+	public void setCompletedPlans(List<PlanPreviewDto> completedPlans) {
 		this.completedPlans = completedPlans;
 	}
 }
