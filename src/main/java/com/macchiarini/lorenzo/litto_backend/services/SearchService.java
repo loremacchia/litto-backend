@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/search")
-public class SearchEndpoint extends BaseEndpoint {
+public class SearchService extends BaseService {
 
 	@Inject
 	SearchController searchController;

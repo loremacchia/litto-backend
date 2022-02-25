@@ -3,9 +3,6 @@ package com.macchiarini.lorenzo.litto_backend.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
@@ -27,7 +24,6 @@ import com.macchiarini.lorenzo.litto_backend.model.User;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
-import jakarta.jws.soap.SOAPBinding.Use;
 
 public class UserController {
 

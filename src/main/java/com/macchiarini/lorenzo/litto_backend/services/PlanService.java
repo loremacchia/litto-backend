@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/plan")
-public class PlanEndpoint extends BaseEndpoint {
+public class PlanService extends BaseService {
 
 	@Inject
 	PlanController planController;
@@ -25,7 +25,7 @@ public class PlanEndpoint extends BaseEndpoint {
 	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getPlan(@PathParam("id") long ID, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, planController.getPlan(ID));
+		return responseCreator(token, planController.getPlan(ID)); 
 	}
 
 	@POST
@@ -34,6 +34,6 @@ public class PlanEndpoint extends BaseEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response createPlan(@PathParam("userId") long userID, Plan plan,
 			@HeaderParam("Authorization") String token) {
-		return responseCreator(token, planController.createPlan(userID, plan));
+		return responseCreator(token, planController.createPlan(userID, plan)); // TODO fare la verifica prima di eseguire la funzione
 	}
 }

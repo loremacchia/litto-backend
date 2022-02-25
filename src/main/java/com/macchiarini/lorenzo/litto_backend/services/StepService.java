@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/step")
-public class StepEndpoint extends BaseEndpoint {
+public class StepService extends BaseService {
 
 	@Inject
 	StepController stepController;
@@ -31,6 +31,6 @@ public class StepEndpoint extends BaseEndpoint {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getNextActiveStep(@PathParam("userId") long userID, @PathParam("planId") long planID,
 			@HeaderParam("Authorization") String token) {
-		return responseCreator(token, stepController.getNextActiveStep(userID, planID));
+		return responseCreator(token, stepController.getNextActiveStep(userID, planID)); // TODO fare la verifica prima di eseguire la funzione
 	}
 }
