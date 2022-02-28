@@ -6,7 +6,7 @@ public class Link extends Material {
 		super.setType(MaterialType.Link);
 	}
 
-	private String link;
+	private String link; // TODO cambia in URL
 	private String description;
 
 	public String getLink() {

@@ -9,8 +9,14 @@ import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.Topic;
 import com.macchiarini.lorenzo.litto_backend.model.User;
 
+import jakarta.inject.Inject;
+
+
 public class UserDao {
 
+	@Inject
+	GraphQLClient gql;
+	
 	// Function to serach if a user has already registered with the given email
 	public List<User> searchUserbyEmail(String email) {
 		return null;

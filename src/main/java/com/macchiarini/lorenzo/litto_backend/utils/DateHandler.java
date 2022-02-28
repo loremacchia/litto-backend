@@ -24,4 +24,17 @@ public class DateHandler {
 		c.add(Calendar.DATE, weeks*7);
 		return c.getTime();
 	}
+	
+	public String toDBDate(Date date) {
+		return new SimpleDateFormat("yyyy-MM-dd").format(date); // TODO verifica che vada bene
+	}
+	
+	public Date fromDBDate(String string) {
+		try {
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(string);
+			return date;  
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }
