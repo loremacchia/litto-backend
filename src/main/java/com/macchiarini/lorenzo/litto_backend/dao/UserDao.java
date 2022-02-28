@@ -1,8 +1,11 @@
 package com.macchiarini.lorenzo.litto_backend.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.macchiarini.lorenzo.litto_backend.dto.IDDto;
+import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
@@ -19,13 +22,19 @@ public class UserDao {
 	
 	// Function to serach if a user has already registered with the given email
 	public List<User> searchUserbyEmail(String email) {
-		return null;
+		return Arrays.asList(gql.query("users", "email: \\\""+ email+"\\\"","id email", User[].class));
 	}
 
 	// Function to persist the User and to get back the userId
 	// TODO cifrare password
-	public long addUser(User user) {
-		return 0;
+	public String addUser(UserInitDto userInitDto) {
+		String inputString = "email: \\\""+ userInitDto.getEmail()+"\\\"";
+		inputString += "password: \\\""+ userInitDto.getPassword()+"\\\"";
+		inputString += "username: \\\""+ userInitDto.getUsername()+"\\\"";
+		System.out.println(inputString);
+		IDDto idDto = gql.create("CreateUsers", "createUsers", "users", inputString, null, "id", IDDto[].class)[0];
+		System.out.println(idDto.getId());
+		return idDto.getId();
 	}
 
 	// Function to return the user with a given ID
@@ -36,6 +45,10 @@ public class UserDao {
 	// Function to update a user giving the new user field in input.
 	// It has to search for it in the DB and overwrite its data
 	public void updateUser(User user) {
+//		String inputString = "email: \\\""+ userInitDto.getEmail()+"\\\"";
+//		inputString += "password: \\\""+ userInitDto.getPassword()+"\\\"";
+//		inputString += "username: \\\""+ userInitDto.getUsername()+"\\\"";
+//		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\""+token+"\\\"", "id: \\\""+userID+"\\\"", "id", IDDto[].class);
 	}
 
 	// Function to get the ID of the user by giving the email and password
@@ -94,8 +107,8 @@ public class UserDao {
 	}
 
 	// Function to set the token 
-	public User setUserToken(long userID, String token) {
-		return null;
+	public void setUserToken(String userID, String token) {
+		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\""+token+"\\\"", "id: \\\""+userID+"\\\"", "id", IDDto[].class);
 	}
 	
 	// Function that returns the token value of the user

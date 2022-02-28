@@ -18,7 +18,7 @@ public class Authorizer {
 	@Inject
 	UserDao userDao;
 	
-	public User createToken(long userID, String email, String password) throws JWTCreationException {
+	public String createToken(String userID, String email, String password) throws JWTCreationException {
 
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 		String token = JWT.create()
@@ -28,8 +28,8 @@ public class Authorizer {
 				        .withClaim("password", password)
 						.sign(algorithm);
 		System.out.println(token);
-		User u = userDao.setUserToken(userID, token);
-		return u;
+		userDao.setUserToken(userID, token);
+		return token;
 
 	}
 

@@ -3,10 +3,13 @@ package com.macchiarini.lorenzo.litto_backend.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.security.auth.login.Token;
+
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
+import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
@@ -48,17 +51,28 @@ public class UserController {
 	@Inject
 	DateHandler dateHandler;
 
-	public User createUser(UserInitDto userInitDto) {
+	public void name(UserInitDto userInitDto) {
+		String ID = userDao.addUser(userInitDto);
+		System.out.println(ID);
+		List<User> u = userDao.searchUserbyEmail(userInitDto.getEmail());
+		System.out.println(u);
+	}
+	
+	
+	public TokenIDDto createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
-			User user = userMapper.toUser(userInitDto);
-			long ID = userDao.addUser(user);
-			User u = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
-			return u;
+//			User user = userMapper.toUser(userInitDto);
+			String ID = userDao.addUser(userInitDto);
+			String token = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
+			TokenIDDto returnDto = new TokenIDDto();
+			returnDto.setId(ID);
+			returnDto.setToken(token);
+			return returnDto;
 		}
 		return null;
 	}
 	
-	public User createToken(String email, String password, long userID) {
+	public String createToken(String email, String password, String userID) {
 		return authorizer.createToken(userID, email, password);
 	}
 
@@ -85,11 +99,11 @@ public class UserController {
 	}
 
 	public User loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
-		long ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-		User u = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
-		if (ID != 0) { // TODO controlla che l'id sia corretto
-			return u;
-		}
+//		String ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+//		User u = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
+//		if (ID != 0) { // TODO controlla che l'id sia corretto
+//			return u;
+//		}
 		return null;
 	}
 

@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 
 import com.macchiarini.lorenzo.litto_backend.controller.UserController;
 import com.macchiarini.lorenzo.litto_backend.dto.DateDto;
+import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserLoginDto;
@@ -42,7 +43,7 @@ public class UserService extends BaseService {
 //				        .withClaim("password", userInitDto.getPassword())
 //						.sign(algorithm);
 		System.out.println(token);
-		
+		userController.createUser(userInitDto);
 		
 		
 		System.out.println(token.split(" ")[1].toString());
@@ -53,8 +54,8 @@ public class UserService extends BaseService {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response createUser(UserInitDto userInitDto) {
-		User u = userController.createUser(userInitDto);
-		if (u.getId() != -1) {
+		TokenIDDto u = userController.createUser(userInitDto);
+		if (u.getId() != "") {
 			return Response.ok().header("Authorization",  "Bearer " +u.getToken()).entity(u.getId()).build();
 		}
 		return Response.ok().header("Authorization",  "Bearer " +"").entity(false).build();
