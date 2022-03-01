@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.model.Interest;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.User;
 
@@ -22,6 +24,17 @@ public class UserMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 		user.setEmail(userInitDto.getEmail());
 		user.setPassword(userInitDto.getPassword());
 		user.setUsername(userInitDto.getUsername());
+		return user;
+	}
+	
+	public User toUser(UserCompleteDto userCompleteDto, String ID, List<Interest> interests) {
+		User user = new User();
+		user.setBio(userCompleteDto.getBio());
+		user.setName(userCompleteDto.getName());
+		user.setSurname(userCompleteDto.getSurname());
+		user.setImageUrl(userCompleteDto.getImageUrl());
+		user.setId(ID);
+		user.setInterests(interests);
 		return user;
 	}
 	

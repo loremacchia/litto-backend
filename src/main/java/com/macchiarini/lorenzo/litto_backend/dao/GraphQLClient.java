@@ -7,6 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,12 +57,34 @@ public class GraphQLClient {
 		HttpResponse<String> response;
 		try {
 			System.out.println(queryBody);
-
+			
 			ObjectMapper mapper = new ObjectMapper();
 			response = client.send(request, BodyHandlers.ofString());
 			System.out.println(response.body());
 			JsonNode node = mapper.readTree(response.body());
 			return mapper.readValue(node.get("data").get(entityName).toString(), returnType);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public <T> T customQuery(String queryBody, String finalEntity, Class<T> returnType) {
+		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(queryBody))
+				.header("Content-Type", "application/json").uri(url).build();
+		HttpResponse<String> response;
+		try {
+
+			ObjectMapper mapper = new ObjectMapper();
+			response = client.send(request, BodyHandlers.ofString());
+			System.out.println(response.body());
+			JsonNode node = mapper.readTree(response.body());
+			JsonNode results = node.get("data");
+			System.out.println(node.findPath(finalEntity).toString());
+			return mapper.readValue(node.findPath(finalEntity).toString(), returnType);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

@@ -2,6 +2,7 @@ package com.macchiarini.lorenzo.litto_backend.mapper;
 
 import com.macchiarini.lorenzo.litto_backend.dto.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
+import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
@@ -41,6 +42,17 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 		stepActiveDto.setMaterials(step.getStep().getMaterials());
 		
 		return stepActiveDto;
+	}
+	
+	public StepDto fromDBToStepDto(StepFromDBDto stepDB) {
+		StepDto step = new StepDto();
+		step.setEndDate(stepDB.getEndDate());
+		step.setTitle(stepDB.getStep().get(0).getTitle());
+		step.setSubtitle(stepDB.getStep().get(0).getSubtitle());
+		step.setPlanName(stepDB.getPlan().get(0).getTitle());
+		step.setPlanId(stepDB.getPlan().get(0).getId());
+		step.setImageUrl(stepDB.getPlan().get(0).getImageUrl());
+		return step;
 	}
 	
 }

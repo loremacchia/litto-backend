@@ -20,7 +20,7 @@ public class Authorizer {
 	
 	public String createToken(String userID, String email, String password) throws JWTCreationException {
 
-		Algorithm algorithm = Algorithm.HMAC256("secret");
+		Algorithm algorithm = Algorithm.HMAC256("secret"); // TODO creare token usando anche timestamp
 		String token = JWT.create()
 						.withIssuer("auth0")
 				        .withClaim("userID", userID)
@@ -35,7 +35,8 @@ public class Authorizer {
 
 	public boolean verifyToken(String token) throws JWTVerificationException {
 		Map<String, Claim> claims = decodeToken(token);
-		long userID = Long.valueOf(claims.get("userID").toString());
+		String userID = claims.get("userID").toString();
+		userID = userID.substring(1, userID.length()-1);
 		String tokenFromDB = userDao.getUserToken(userID);
 	    if(tokenFromDB != null) { // TODO vedere se va effettivamente bene
 //	    	Algorithm algorithm = Algorithm.HMAC256("secret");
@@ -46,7 +47,7 @@ public class Authorizer {
 //		        .withClaim("password", u.getPassword())
 //		        .build(); //Reusable verifier instance
 //		    DecodedJWT jwt = verifier.verify(token);
-	    	if(token == tokenFromDB) {
+	    	if(token.equals(tokenFromDB)) {
 	    		return true;
 	    	}
 	    	else {
@@ -61,11 +62,12 @@ public class Authorizer {
 
 	public void invalidateToken(String token) throws JWTDecodeException {
 		Map<String, Claim> claims = decodeToken(token);
-		long userID = Long.valueOf(claims.get("userID").toString());
+		String userID = claims.get("userID").toString();
+		System.out.println(userID);
 		userDao.removeUserToken(userID);
 	}
 	
-	public void removeUserAuth(long userID) {
+	public void removeUserAuth(String userID) {
 		userDao.removeUserToken(userID);
 	}
 	

@@ -9,6 +9,7 @@ import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
+import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
 import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
@@ -56,6 +57,7 @@ public class UserController {
 		System.out.println(ID);
 		List<User> u = userDao.searchUserbyEmail(userInitDto.getEmail());
 		System.out.println(u);
+	
 	}
 	
 	
@@ -69,72 +71,94 @@ public class UserController {
 			returnDto.setToken(token);
 			return returnDto;
 		}
-		return null;
+		return null; //TODO gestire i ritorni nei casi sbagliati
 	}
 	
 	public String createToken(String email, String password, String userID) {
 		return authorizer.createToken(userID, email, password);
 	}
 
-	public boolean completeUser(long ID, UserCompleteDto userCompleteDto) {
-		if (ID == 0) { // TODO controllare se JWT o id è corretto
-			User user = userDao.getUser(ID); // TODO aggiungere ritorno se non c'è user
-			user.setBio(userCompleteDto.getBio());
-			user.setName(userCompleteDto.getName());
-			user.setSurname(userCompleteDto.getSurname());
-			user.setImageUrl(userCompleteDto.getImageUrl());
-			List<Topic> topics = userDao.getTopics(userCompleteDto.getInterests());
+	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
+		if (ID != "") { // TODO controllare se JWT o id è corretto
+//			User user = userDao.getUser(ID); // TODO aggiungere ritorno se non c'è user
+//			user.setBio(userCompleteDto.getBio());
+//			user.setName(userCompleteDto.getName());
+//			user.setSurname(userCompleteDto.getSurname());
+//			user.setImageUrl(userCompleteDto.getImageUrl());
+			List<String> topics = userCompleteDto.getInterests();
 			List<Interest> interests = new ArrayList<Interest>();
-			for (Topic t : topics) {
+			for (String t : topics) {
 				Interest i = new Interest();
-				i.setTopic(t);
+				Topic ts = new Topic();
+				ts.setName(t);
+				i.setTopic(ts);
 				i.setLevel(1);
 				interests.add(i);
 			}
-			user.setInterests(interests); // TODO vedere se far passare direttamente dallo user anche le immagini
+//			user.setInterests(interests); // TODO vedere se far passare direttamente dallo user anche le immagini
+			User user = userMapper.toUser(userCompleteDto, ID, interests);
+			System.out.println("intesss");
+			for(Interest i : user.getInterests()) {
+				System.out.println(i.getLevel() + i.getTopic().getName());
+			}
 			userDao.updateUser(user);
 			return true;
 		}
 		return false;
 	}
 
-	public User loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
-//		String ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-//		User u = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
-//		if (ID != 0) { // TODO controlla che l'id sia corretto
-//			return u;
-//		}
+	public TokenIDDto loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
+		
+		String ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		
+		if (ID != "") { // TODO controlla che l'id sia corretto
+			String token = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
+			userDao.setUserToken(ID, token);
+			TokenIDDto t = new TokenIDDto();
+			t.setId(ID);
+			t.setToken(token);
+			return t;
+		}
+		
 		return null;
 	}
 
-	public boolean logoutUser(long ID) {
+	public boolean logoutUser(String ID) {
 		authorizer.removeUserAuth(ID);
 		return true;
 	}
 
-	public UserDto getUser(long ID) {
-		User user = userDao.getFullUser(ID); // TODO forse farsi ritornare direttamente lo user corretto potrebbe andare
+	public UserDto getUser(String ID) {
+		UserDto userDto = userDao.getFullUser(ID); // TODO forse farsi ritornare direttamente lo user corretto potrebbe andare
 												// bene ugualmente
-		UserDto userDto = userMapper.toUserDto(user);
+		System.out.println(userDto.getId() + " "+ userDto.getName());
+//		UserDto userDto = userMapper.toUserDto(user);
 		return userDto;
 	}
 
-	public List<StepDto> getUserGoals(long ID) {
-		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
+	public List<StepDto> getUserGoals(String ID) {
+//		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
+//		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
+//		for (StepInProgress s : activeSteps) { // TODO n+1 queries
+//			Plan p = planDao.getPlan(s.getStep().getPlanId());
+//			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(s, p));
+//		}
+		List<StepFromDBDto> stepsDB = userDao.getAllActiveSteps(ID);
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
-		for (StepInProgress s : activeSteps) { // TODO n+1 queries
-			Plan p = planDao.getPlan(s.getStep().getPlanId());
-			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(s, p));
+		for(StepFromDBDto s : stepsDB) {
+			activeStepDtos.add(stepMapper.fromDBToStepDto(s));
 		}
+		
+		// TODO ricontrollare quando posso inserire piani ecc, qua da errore
 		return activeStepDtos;
 	}
 
-	public List<PlanPreviewDto> getUserRecommendedPlans(long ID) {
-		List<Plan> recommendedPlans = userDao.getRecommendedPlans(ID);
-		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
-		for (Plan p : recommendedPlans) {
-			recommendedPlansDto.add(planMapper.toPlanPreviewDto(p));
-		}
+	public List<PlanPreviewDto> getUserRecommendedPlans(String ID) {
+		List<PlanPreviewDto> recommendedPlansDto = userDao.getRecommendedPlans(ID);
+//		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
+//		for (Plan p : recommendedPlans) {
+//			recommendedPlansDto.add(planMapper.toPlanPreviewDto(p));
+//		}
 		return recommendedPlansDto;
 	}
 

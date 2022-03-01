@@ -1,11 +1,21 @@
 package com.macchiarini.lorenzo.litto_backend.dao;
 
+import java.io.IOException;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.macchiarini.lorenzo.litto_backend.dto.IDDto;
+import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
+import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
+import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.model.Interest;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
@@ -14,23 +24,22 @@ import com.macchiarini.lorenzo.litto_backend.model.User;
 
 import jakarta.inject.Inject;
 
-
 public class UserDao {
 
 	@Inject
 	GraphQLClient gql;
-	
+
 	// Function to serach if a user has already registered with the given email
 	public List<User> searchUserbyEmail(String email) {
-		return Arrays.asList(gql.query("users", "email: \\\""+ email+"\\\"","id email", User[].class));
+		return Arrays.asList(gql.query("users", "email: \\\"" + email + "\\\"", "id email", User[].class));
 	}
 
 	// Function to persist the User and to get back the userId
 	// TODO cifrare password
 	public String addUser(UserInitDto userInitDto) {
-		String inputString = "email: \\\""+ userInitDto.getEmail()+"\\\"";
-		inputString += "password: \\\""+ userInitDto.getPassword()+"\\\"";
-		inputString += "username: \\\""+ userInitDto.getUsername()+"\\\"";
+		String inputString = "email: \\\"" + userInitDto.getEmail() + "\\\"";
+		inputString += "password: \\\"" + userInitDto.getPassword() + "\\\"";
+		inputString += "username: \\\"" + userInitDto.getUsername() + "\\\"";
 		System.out.println(inputString);
 		IDDto idDto = gql.create("CreateUsers", "createUsers", "users", inputString, null, "id", IDDto[].class)[0];
 		System.out.println(idDto.getId());
@@ -38,47 +47,82 @@ public class UserDao {
 	}
 
 	// Function to return the user with a given ID
-	public User getUser(long ID) {
+	public User getUser(String ID) {
 		return null;
 	}
 
 	// Function to update a user giving the new user field in input.
 	// It has to search for it in the DB and overwrite its data
+	// Here gets only bio, name, surname, imageUrl, interests
 	public void updateUser(User user) {
-//		String inputString = "email: \\\""+ userInitDto.getEmail()+"\\\"";
-//		inputString += "password: \\\""+ userInitDto.getPassword()+"\\\"";
-//		inputString += "username: \\\""+ userInitDto.getUsername()+"\\\"";
-//		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\""+token+"\\\"", "id: \\\""+userID+"\\\"", "id", IDDto[].class);
+		String updateClause = "name: \\\"" + user.getName() + "\\\"";
+		updateClause += "surname: \\\"" + user.getSurname() + "\\\"";
+		updateClause += "bio: \\\"" + user.getBio() + "\\\"";
+		updateClause += "imageUrl: \\\"" + user.getImageUrl() + "\\\"";
+		updateClause += "interests: [";
+		for (Interest i : user.getInterests()) {
+			updateClause += "{ create: { node: { ";
+			updateClause += "level: " + i.getLevel() + " , ";
+			updateClause += "user: { connect: { where: { node: { id: \\\"" + user.getId() + "\\\" }}}}, ";
+			updateClause += "topic: { connect: { where: { node: { name: \\\"" + i.getTopic().getName()
+					+ "\\\" }}}}, }}},";
+		}
+		updateClause += "]";
+		gql.update("UpdateUsers", "updateUsers", "users", updateClause, "id: \\\"" + user.getId() + "\\\"", "id",
+				IDDto[].class);
 	}
 
 	// Function to get the ID of the user by giving the email and password
-	public long loginUser(String email, String password) {
-		return 0;
+	public String loginUser(String email, String password) {
+		return gql.query("users", "email: \\\"" + email + "\\\" password: \\\"" + password + "\\\"", "id",
+				IDDto[].class)[0].getId();
+
 	}
 
 	// Function to get the user and all its composited values (plans, interests ecc)
-	public User getFullUser(long ID) { // TODO può essere fatto solamente in addUser?
-		return null;
+	public UserDto getFullUser(String ID) { // TODO può essere fatto solamente in addUser?
+		return gql.query("users", "id: \\\"" + ID + "\\\"",
+				"id name surname bio imageUrl level interests { level topic { name imageUrl } } completedPlans { id imageUrl title duration }",
+				UserDto[].class)[0];
+
 	}
 
 	// Function to get the topic from the strings
-	public List<Topic> getTopics(List<String> topicNames) {
-		return new ArrayList<Topic>();
-	}
+//	public List<Topic> getTopics(List<String> topicNames) {
+//		return new ArrayList<Topic>();
+//	}
 
 	// Function to get all the active steps of the User having ID
-	public List<StepInProgress> getAllActiveSteps(long ID) {
-		return null;
+	public List<StepFromDBDto> getAllActiveSteps(String ID) {
+		String queryBody = "{\"query\":\"query { users(where: {id:\\\"" + ID
+				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title subtitle } plan { id imageUrl title }}}}}\"}";
+		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps",
+				StepFromDBDto[].class));
 	}
 
 	// Function to get all the recommended plans of the User having ID
-	public List<Plan> getRecommendedPlans(long ID) {
-		return null;
+	public List<PlanPreviewDto> getRecommendedPlans(String ID) {
+		JsonNode inters = gql.query("users", "id: \\\"" + ID + "\\\"", "interests { topic { name }}", JsonNode.class);
+		JsonNode node;
+		node = inters.findPath("interests");
+		List<String> ints = new ArrayList<String>();
+		for(JsonNode n : node) {
+			ints.add(n.findPath("name").toString());
+		}
+		String parsedString = "[";
+		for(String s : ints) {
+			parsedString += "\\\"" + s.substring(1,s.length()-1) + "\\\",";
+		}
+		parsedString.substring(0,parsedString.length()-1);
+		parsedString += "]";
+		return Arrays.asList(gql.query("plans", "tags:{ name_IN: " + parsedString + "}", "id title subtitle duration", PlanPreviewDto[].class));
 	}
 
 	// Function to get the first 12 topics
 	public List<Topic> getInterests() {
-		return null;
+		return Arrays.asList(gql.customQuery(
+				"{\"query\":\"query { topics(options: {limit:12}) { name imageUrl }}\",\"variables\":{}}",
+				"topics", Topic[].class));
 	}
 
 	// Function to add a created plan to the user with the ID = userId
@@ -92,28 +136,36 @@ public class UserDao {
 		return false;
 
 	}
-	
-	// Function that sets the plan in progress to the userID (the plan is different only for the toDoSteps)
-	public void updatePlanInProgress(long userID, PlanInProgress plan) {		
+
+	// Function that sets the plan in progress to the userID (the plan is different
+	// only for the toDoSteps)
+	public void updatePlanInProgress(long userID, PlanInProgress plan) {
 	}
 
 	// Function that removes the progressing plan from the userID
-	public void removePlanInProgress(long userID, long planID) {	
+	public void removePlanInProgress(long userID, long planID) {
 	}
 
 	// Function to remove the token from the user db
-	public void removeUserToken(long userID) {
-		
+	public void removeUserToken(String userID) {
+		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\"\\\"", "id: \\\"" + userID + "\\\"", "id",
+				IDDto[].class);
 	}
 
-	// Function to set the token 
+	// Function to set the token
 	public void setUserToken(String userID, String token) {
-		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\""+token+"\\\"", "id: \\\""+userID+"\\\"", "id", IDDto[].class);
+		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\"" + token + "\\\"", "id: \\\"" + userID + "\\\"",
+				"id", IDDto[].class);
 	}
-	
+
 	// Function that returns the token value of the user
-	public String getUserToken(long userID) {
-		return "";
+	public String getUserToken(String userID) {
+		System.out.println(userID);
+		String token = gql.query("users", "id: \\\"" + userID + "\\\"", "token", TokenIDDto[].class)[0].getToken();
+		if (token == null) {
+			return null;
+		}
+		return token;
 	}
 
 }
