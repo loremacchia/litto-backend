@@ -7,7 +7,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,9 +81,11 @@ public class GraphQLClient {
 			response = client.send(request, BodyHandlers.ofString());
 			System.out.println(response.body());
 			JsonNode node = mapper.readTree(response.body());
-			JsonNode results = node.get("data");
-			System.out.println(node.findPath(finalEntity).toString());
-			return mapper.readValue(node.findPath(finalEntity).toString(), returnType);
+			if(finalEntity!= null) {
+				System.out.println(node.findPath(finalEntity).toString());
+				return mapper.readValue(node.findPath(finalEntity).toString(), returnType);
+			}
+			return mapper.readValue(node.get("data").toString(), returnType);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

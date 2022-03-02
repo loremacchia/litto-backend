@@ -149,7 +149,7 @@ public class UserController {
 			activeStepDtos.add(stepMapper.fromDBToStepDto(s));
 		}
 		
-		// TODO ricontrollare quando posso inserire piani ecc, qua da errore
+		// TODO ricontrollare quando posso inserire piani ecc, qua da errore (teoricamente no)
 		return activeStepDtos;
 	}
 

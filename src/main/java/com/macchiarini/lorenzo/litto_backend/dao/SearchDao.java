@@ -1,20 +1,20 @@
 package com.macchiarini.lorenzo.litto_backend.dao;
 
-import java.util.List;
+import com.macchiarini.lorenzo.litto_backend.dto.SearchDto;
 
-import com.macchiarini.lorenzo.litto_backend.model.Plan;
-import com.macchiarini.lorenzo.litto_backend.model.Topic;
+import jakarta.inject.Inject;
 
 public class SearchDao {
 
-	// Function that, given a word, searches for all the plans related to that word
-	public List<Plan> searchPlans(String word) {
-		return null;		
-	}
+	@Inject
+	GraphQLClient gql;
 
-	// Function that, given a word, searches for all the tags(topics) related to that word
-	public List<Topic> searchTags(String word) {
-		return null;		
+	// Function that, given a word, searches for all the plans related to that word
+	public SearchDto search(String word) {
+		String searchQuery = "{\"query\":\"query { topics(where: {name_CONTAINS:\\\"" + word
+				+ "\\\"}) { imageUrl name } plans(where:  {OR: [{ title_CONTAINS: \\\"" + word
+				+ "\\\", subtitle_CONTAINS: \\\"" + word + "\\\", tags:{name_CONTAINS:\\\"" + word
+				+ "\\\"}}]}) { id imageUrl title duration }}\"}";
+		return gql.customQuery(searchQuery, null, SearchDto.class);
 	}
-	
 }

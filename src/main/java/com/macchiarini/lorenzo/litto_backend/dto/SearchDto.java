@@ -9,23 +9,23 @@ import com.macchiarini.lorenzo.litto_backend.model.Topic;
 public class SearchDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private List<Topic> tags;
-	private List<Plan> plans;
+	private List<Topic> topics;
+	private List<PlanPreviewDto> plans;
 
-	public List<Topic> getTags() {
-		return tags;
-	}
-
-	public void setTags(List<Topic> tags) {
-		this.tags = tags;
-	}
-
-	public List<Plan> getPlans() {
+	public List<PlanPreviewDto> getPlans() {
 		return plans;
 	}
 
-	public void setPlans(List<Plan> plans) {
+	public void setPlans(List<PlanPreviewDto> plans) {
 		this.plans = plans;
+	}
+
+	public List<Topic> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
 	}
 
 }

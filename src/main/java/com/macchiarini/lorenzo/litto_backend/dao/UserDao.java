@@ -96,8 +96,7 @@ public class UserDao {
 	public List<StepFromDBDto> getAllActiveSteps(String ID) {
 		String queryBody = "{\"query\":\"query { users(where: {id:\\\"" + ID
 				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title subtitle } plan { id imageUrl title }}}}}\"}";
-		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps",
-				StepFromDBDto[].class));
+		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps", StepFromDBDto[].class));
 	}
 
 	// Function to get all the recommended plans of the User having ID
@@ -121,7 +120,7 @@ public class UserDao {
 	// Function to get the first 12 topics
 	public List<Topic> getInterests() {
 		return Arrays.asList(gql.customQuery(
-				"{\"query\":\"query { topics(options: {limit:12}) { name imageUrl }}\",\"variables\":{}}",
+				"{\"query\":\"query { topics(options: {limit:12}) { name imageUrl }}\"}",
 				"topics", Topic[].class));
 	}
 
