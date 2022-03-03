@@ -10,7 +10,7 @@ public class StepDto implements Serializable {
 	private String subtitle;
 	private String imageUrl;
 	private String planName;
-	private long planId;
+	private String planId;
 
 	public String getEndDate() {
 		return endDate;
@@ -52,11 +52,11 @@ public class StepDto implements Serializable {
 		this.planName = planName;
 	}
 
-	public long getPlanId() {
+	public String getPlanId() {
 		return planId;
 	}
 
-	public void setPlanId(long planId) {
+	public void setPlanId(String planId) {
 		this.planId = planId;
 	}
 

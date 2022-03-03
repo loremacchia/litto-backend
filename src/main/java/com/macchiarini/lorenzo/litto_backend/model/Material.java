@@ -6,6 +6,11 @@ public class Material {
 
 	private String title;
 	private MaterialType type;
+	private String file;
+	private String link;
+	private String description;
+	private String text;
+	
 
 	public String getTitle() {
 		return title;
@@ -21,6 +26,38 @@ public class Material {
 
 	public void setType(MaterialType type) {
 		this.type = type;
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 }

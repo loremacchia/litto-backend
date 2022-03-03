@@ -6,8 +6,8 @@ public class Plan {
 
 	public Plan() {
 	}
-
-	private long id;
+	//userId, discord
+	private String id;
 	private String imageUrl;
 	private String title;
 	private String subtitle;
@@ -16,12 +16,12 @@ public class Plan {
 	private List<Step> steps;
 	private int duration;
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setId(String l) {
+		this.id = l;
 	}
 
 	public String getImageUrl() {

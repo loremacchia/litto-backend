@@ -125,7 +125,7 @@ public class UserDao {
 	}
 
 	// Function to add a created plan to the user with the ID = userId
-	public void addCreatedPlan(long userId, Plan plan) {
+	public void addCreatedPlan(String userId, Plan plan) {
 	}
 
 	// Function that gets the user and adds the plan in progress

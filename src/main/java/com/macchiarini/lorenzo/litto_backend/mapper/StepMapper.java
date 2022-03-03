@@ -39,7 +39,7 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 		stepActiveDto.setPlanId(plan.getId());
 		stepActiveDto.setPlanName(plan.getTitle());
 		stepActiveDto.setPlanWeek(step.getStep().getPlanWeek());
-		stepActiveDto.setMaterials(step.getStep().getMaterials());
+		stepActiveDto.setMaterial(step.getStep().getMaterial());
 		
 		return stepActiveDto;
 	}

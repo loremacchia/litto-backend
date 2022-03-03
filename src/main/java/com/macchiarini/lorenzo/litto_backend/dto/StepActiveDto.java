@@ -15,9 +15,9 @@ public class StepActiveDto implements Serializable {
 	private String imageUrl;
 	private String planName;
 	private int planWeek;
-	private long planId;
-	private long userId;
-	private List<Material> materials;
+	private String planId;
+	private String userId;
+	private List<Material> material;
 
 	public String getEndDate() {
 		return endDate;
@@ -59,27 +59,27 @@ public class StepActiveDto implements Serializable {
 		this.planName = planName;
 	}
 
-	public long getPlanId() {
+	public String getPlanId() {
 		return planId;
 	}
 
-	public void setPlanId(long planId) {
+	public void setPlanId(String planId) {
 		this.planId = planId;
 	}
 
-	public List<Material> getMaterials() {
-		return materials;
+	public List<Material> getMaterial() {
+		return material;
 	}
 
-	public void setMaterials(List<Material> materials) {
-		this.materials = materials;
+	public void setMaterial(List<Material> material) {
+		this.material = material;
 	}
 
-	public long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

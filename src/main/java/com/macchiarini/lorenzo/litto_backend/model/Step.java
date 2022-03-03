@@ -10,8 +10,8 @@ public class Step {
 	private long id; // TODO vedere se ID è utile in fase di query o per essere linkato da setpInProgress o plan ecc..
 	private String title;
 	private String subtitle;
-	private List<Material> materials; // TODO lista ordinata
-	private long planId;
+	private List<Material> material; // TODO lista ordinata
+	private String planId;
 	private int planWeek; // TODO va bene così o meglio un id vero e proprio?
 
 	public int getPlanWeek() {
@@ -22,11 +22,11 @@ public class Step {
 		this.planWeek = planWeek;
 	}
 
-	public long getPlanId() {
+	public String getPlanId() {
 		return planId;
 	}
 
-	public void setPlanId(long planId) {
+	public void setPlanId(String planId) {
 		this.planId = planId;
 	}
 
@@ -46,12 +46,12 @@ public class Step {
 		this.subtitle = subtitle;
 	}
 
-	public List<Material> getMaterials() {
-		return materials;
+	public List<Material> getMaterial() {
+		return material;
 	}
 
-	public void setMaterials(List<Material> materials) {
-		this.materials = materials;
+	public void setMaterial(List<Material> material) {
+		this.material = material;
 	}
 
 	public long getId() {

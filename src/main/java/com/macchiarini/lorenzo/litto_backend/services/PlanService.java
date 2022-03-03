@@ -32,8 +32,7 @@ public class PlanService extends BaseService {
 	@Path("/create/{userId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response createPlan(@PathParam("userId") long userID, Plan plan,
-			@HeaderParam("Authorization") String token) {
+	public Response createPlan(@PathParam("userId") String userID, @HeaderParam("Authorization") String token, Plan plan) {
 		return responseCreator(token, planController.createPlan(userID, plan)); // TODO fare la verifica prima di eseguire la funzione
 	}
 }
