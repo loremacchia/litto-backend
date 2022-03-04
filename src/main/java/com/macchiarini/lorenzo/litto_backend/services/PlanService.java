@@ -24,7 +24,7 @@ public class PlanService extends BaseService {
 	@GET
 	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getPlan(@PathParam("id") long ID, @HeaderParam("Authorization") String token) {
+	public Response getPlan(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, planController.getPlan(ID)); 
 	}
 

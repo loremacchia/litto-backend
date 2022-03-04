@@ -167,7 +167,7 @@ public class UserController {
 		return interests;
 	}
 
-	public boolean startPlan(long planID, long userID, String dateFrom, String dateTo) {
+	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
 		Plan plan = planDao.getPlan(planID);
 		PlanInProgress planInProgress = new PlanInProgress();
 		planInProgress.setPlan(plan);

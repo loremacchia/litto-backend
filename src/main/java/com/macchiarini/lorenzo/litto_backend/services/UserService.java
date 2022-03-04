@@ -124,7 +124,7 @@ public class UserService extends BaseService {
 	@Path("/{userId}/start/{planId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response startPlan(@PathParam("planId") long planID, @PathParam("userId") long userID,
+	public Response startPlan(@PathParam("planId") String planID, @PathParam("userId") String userID,
 			@HeaderParam("Authorization") String token, DateDto dateDto) {
 		return responseCreator(token,
 				userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo())); // TODO fare la verifica prima di eseguire la funzione

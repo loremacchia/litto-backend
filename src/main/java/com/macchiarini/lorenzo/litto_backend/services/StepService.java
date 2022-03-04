@@ -21,7 +21,7 @@ public class StepService extends BaseService {
 	@GET
 	@Path("/{userId}/{planId}") // /user/{userId}/plan/{planId}/step
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getActiveStep(@PathParam("userId") long userID, @PathParam("planId") long planID,
+	public Response getActiveStep(@PathParam("userId") String userID, @PathParam("planId") String planID,
 			@HeaderParam("Authorization") String token) {
 		return responseCreator(token, stepController.getActiveStep(userID, planID));
 	}

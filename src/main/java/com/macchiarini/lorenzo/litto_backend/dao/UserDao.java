@@ -124,14 +124,15 @@ public class UserDao {
 				"topics", Topic[].class));
 	}
 
-	// Function to add a created plan to the user with the ID = userId
-	public void addCreatedPlan(String userId, Plan plan) {
-	}
+	// Function to add a created plan to the user with the ID = userId (dont need it)
+//	public void addCreatedPlan(String userId, String planId) {
+//		
+//	}
 
 	// Function that gets the user and adds the plan in progress
 	// Here the plan in progress must be linked to a real plan and not recreate all
 	// plan infos (so for the steps)
-	public boolean startPlan(long userID, PlanInProgress planInProgress) {
+	public boolean startPlan(String userID, PlanInProgress planInProgress) {
 		return false;
 
 	}
