@@ -27,9 +27,10 @@ public class StepController {
 
 	// Function that gets the current step in progress of the user with userID and planID
 	public StepActiveDto getActiveStep(String userID, String planID) {
-		Plan plan = planDao.getPlan(planID);
-		StepInProgress step = stepDao.getActiveStep(userID, planID);
-		return stepMapper.fromPlanAtiveStepToActiveDto(plan, step);
+//		Plan plan = planDao.getPlan(planID);
+//		StepInProgress step = stepDao.getActiveStep(userID, planID);
+//		return stepMapper.fromPlanAtiveStepToActiveDto(plan, step);
+		return stepMapper.fromPlanProgressToActiveStep(stepDao.getActiveStep(userID, planID), userID);
 	}
 
 	public boolean getNextActiveStep(String userID, String planID) {

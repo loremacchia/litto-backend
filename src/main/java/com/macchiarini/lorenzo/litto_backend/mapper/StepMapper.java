@@ -4,6 +4,7 @@ import com.macchiarini.lorenzo.litto_backend.dto.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
+import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
@@ -53,6 +54,20 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 		step.setPlanId(stepDB.getPlan().get(0).getId());
 		step.setImageUrl(stepDB.getPlan().get(0).getImageUrl());
 		return step;
+	}
+	
+	public StepActiveDto fromPlanProgressToActiveStep (PlanInProgress p, String userId) {
+		StepActiveDto stepActiveDto = new StepActiveDto();
+		stepActiveDto.setEndDate(p.getToDoSteps().get(0).getEndDate());
+		stepActiveDto.setTitle(p.getToDoSteps().get(0).getStep().getTitle());
+		stepActiveDto.setSubtitle(p.getToDoSteps().get(0).getStep().getSubtitle());
+		stepActiveDto.setPlanWeek(p.getToDoSteps().get(0).getStep().getPlanWeek());
+		stepActiveDto.setMaterials(p.getToDoSteps().get(0).getStep().getMaterials());
+		stepActiveDto.setImageUrl(p.getPlan().getImageUrl());
+		stepActiveDto.setPlanName(p.getPlan().getTitle());
+		stepActiveDto.setPlanId(p.getPlan().getId());
+		stepActiveDto.setUserId(userId);
+		return stepActiveDto;
 	}
 	
 }
