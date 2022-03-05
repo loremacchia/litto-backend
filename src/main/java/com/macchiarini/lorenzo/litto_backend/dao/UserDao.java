@@ -15,12 +15,14 @@ import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
 import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.dto.UserPlanDto;
 import com.macchiarini.lorenzo.litto_backend.model.Interest;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.Topic;
 import com.macchiarini.lorenzo.litto_backend.model.User;
+import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
 
@@ -28,6 +30,9 @@ public class UserDao {
 
 	@Inject
 	GraphQLClient gql;
+	
+	@Inject
+	DateHandler dateHandler;
 
 	// Function to serach if a user has already registered with the given email
 	public List<User> searchUserbyEmail(String email) {
@@ -133,17 +138,58 @@ public class UserDao {
 	// Here the plan in progress must be linked to a real plan and not recreate all
 	// plan infos (so for the steps)
 	public boolean startPlan(String userID, PlanInProgress planInProgress) {
-		return false;
 
+		String whereClause= "id: \\\""+userID+"\\\"";
+		
+		String updateClause = "progressingPlans: [{ create :[{ node: {";
+		updateClause += "progress: "+1+",";
+		updateClause += "endingDate: \\\""+dateHandler.fromClientToDB(planInProgress.getEndingDate())+"\\\",";
+		updateClause += "user: { connect: { where: { node: {";
+		updateClause += "id: \\\""+userID+"\\\"} } } },";
+		updateClause += "plan: { connect: { where: { node: {";
+		updateClause += "id: \\\""+planInProgress.getPlan().getId()+"\\\"} } } },";
+		updateClause += "toDoSteps: {create: [";
+		for(StepInProgress s : planInProgress.getToDoSteps()) {
+			updateClause += "{node: {";
+			updateClause += "endDate: \\\""+dateHandler.fromClientToDB(s.getEndDate())+"\\\",";
+			updateClause += "plan: { connect: { where: { node: {";
+			updateClause += "id: \\\""+planInProgress.getPlan().getId()+"\\\"} } } },";
+			updateClause += "step: { connect: { where: { node: {";
+			updateClause += "planWeek: "+s.getStep().getPlanWeek()+",";
+			updateClause += "plan: { id: \\\""+planInProgress.getPlan().getId()+"\\\"} } } } }";
+			updateClause += "}},";
+		}
+		updateClause.substring(0, updateClause.length()-1);
+		updateClause += "]}}}]}]";
+		
+		
+		
+		gql.update("", "updateUsers", "users", updateClause, whereClause, "id", IDDto[].class); 		
+		return true;
+
+	}
+	
+	// Function that returns the plan in progress of a user
+	public List<String> getPlansInProgress(String userID) {
+		JsonNode ids= gql.customQuery(
+				"{\"query\":\"query { users(where: {id: \\\"" + userID + "\\\"}) { progressingPlans { plan {id } } } } \"}",
+				"progressingPlans", JsonNode.class);
+		
+		List<String> planIds = new ArrayList<String>();
+		for(JsonNode n : ids) {
+			String tmp = n.findPath("id").toString();
+			planIds.add(tmp.substring(1, tmp.length()-1));
+		}
+		return planIds;
 	}
 
 	// Function that sets the plan in progress to the userID (the plan is different
 	// only for the toDoSteps)
-	public void updatePlanInProgress(long userID, PlanInProgress plan) {
+	public void updatePlanInProgress(String userID, PlanInProgress plan) {
 	}
 
 	// Function that removes the progressing plan from the userID
-	public void removePlanInProgress(long userID, long planID) {
+	public void removePlanInProgress(String userID, String planID) {
 	}
 
 	// Function to remove the token from the user db

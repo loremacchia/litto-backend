@@ -6,23 +6,24 @@ import java.util.Date;
 
 public class DateHandler {
 	public String toString(Date date) {
-		return new SimpleDateFormat("dd-MM-yyyy").format(date);
+		return new SimpleDateFormat("dd.MM.yyyy").format(date);
 	}
 	
 	public Date toDate(String string) {
 		try {
-			Date date = new SimpleDateFormat("dd-MM-yyyy").parse(string);
+			Date date = new SimpleDateFormat("dd.MM.yyyy").parse(string);
 			return date;  
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public Date incrementDate(Date date, int weeks) {
+	public String incrementDate(String string, int weeks) {
+		Date date = toDate(string);
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.DATE, weeks*7);
-		return c.getTime();
+		return toString(c.getTime());
 	}
 	
 	public String toDBDate(Date date) {
@@ -36,5 +37,13 @@ public class DateHandler {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	
+	public String fromDBtoClient (String string) { //TODO quando pesco dal db devo cambiare le date!!!
+		return toString(fromDBDate(string));
+	}
+	
+	public String fromClientToDB(String string) {
+		return toDBDate(toDate(string));
 	}
 }

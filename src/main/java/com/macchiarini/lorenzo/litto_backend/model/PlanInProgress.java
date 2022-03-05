@@ -7,15 +7,15 @@ public class PlanInProgress {
 	public PlanInProgress() {
 	}
 
-	private Date endingDate;
+	private String endingDate;
 	private Plan plan; // TODO cambia in planId e non plan
 	private List<StepInProgress> toDoSteps; // TODO cambia in stepId e non step
 
-	public Date getEndingDate() {
+	public String getEndingDate() {
 		return endingDate;
 	}
 
-	public void setEndingDate(Date endingDate) {
+	public void setEndingDate(String endingDate) {
 		this.endingDate = endingDate;
 	}
 

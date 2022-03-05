@@ -7,6 +7,7 @@ import org.jboss.security.auth.login.Token;
 
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
+import com.macchiarini.lorenzo.litto_backend.dto.IDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
@@ -15,6 +16,7 @@ import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserLoginDto;
+import com.macchiarini.lorenzo.litto_backend.dto.UserPlanDto;
 import com.macchiarini.lorenzo.litto_backend.mapper.PlanMapper;
 import com.macchiarini.lorenzo.litto_backend.mapper.StepMapper;
 import com.macchiarini.lorenzo.litto_backend.mapper.UserMapper;
@@ -168,21 +170,31 @@ public class UserController {
 	}
 
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
+		
+		List<String> planIds = userDao.getPlansInProgress(userID);
+		
+		for(String i : planIds) {
+			System.out.println(i + " "+planID + " " + i.equals(planID));
+			if(i.equals(planID)) {
+				return false;
+			}
+		}
+		
 		Plan plan = planDao.getPlan(planID);
+		System.out.println(plan);
+		System.out.println(dateFrom + " "+ dateTo + " " + dateHandler.toDate(dateTo));
 		PlanInProgress planInProgress = new PlanInProgress();
 		planInProgress.setPlan(plan);
-		planInProgress.setEndingDate(dateHandler.toDate(dateTo));
+		planInProgress.setEndingDate(dateTo);
 		List<Step> steps = plan.getSteps();
-		int counter = 0;
 		List<StepInProgress> stepsInProgress = new ArrayList<StepInProgress>();
 		for(Step s : steps) {
-			counter++;
 			StepInProgress sip = new StepInProgress();
 			sip.setStep(s);
-			sip.setEndDate(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter));
+			sip.setEndDate(dateHandler.incrementDate(dateTo, s.getPlanWeek()));
 			stepsInProgress.add(sip);
 		}
-		System.out.println(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter) + dateTo);
+		System.out.println(dateHandler.incrementDate(dateTo, steps.size()) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
 		userDao.startPlan(userID, planInProgress);
 		return true;

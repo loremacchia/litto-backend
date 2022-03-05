@@ -18,7 +18,7 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 	
 	public StepDto fromPlanStepToStepDto(StepInProgress step, Plan plan) {
 		StepDto stepDto = new StepDto();
-		stepDto.setEndDate(dateHandler.toString(step.getEndDate()));
+		stepDto.setEndDate(step.getEndDate());
 		stepDto.setSubtitle(step.getStep().getSubtitle());
 		stepDto.setTitle(step.getStep().getTitle());
 		stepDto.setImageUrl(plan.getImageUrl());
@@ -32,14 +32,14 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 	public StepActiveDto fromPlanAtiveStepToActiveDto(Plan plan, StepInProgress step) {
 		StepActiveDto stepActiveDto = new StepActiveDto();
 		
-		stepActiveDto.setEndDate(dateHandler.toString(step.getEndDate()));
+		stepActiveDto.setEndDate(step.getEndDate());
 		stepActiveDto.setSubtitle(step.getStep().getSubtitle());
 		stepActiveDto.setTitle(step.getStep().getTitle());
 		stepActiveDto.setImageUrl(plan.getImageUrl());
 		stepActiveDto.setPlanId(plan.getId());
 		stepActiveDto.setPlanName(plan.getTitle());
 		stepActiveDto.setPlanWeek(step.getStep().getPlanWeek());
-		stepActiveDto.setMaterial(step.getStep().getMaterial());
+		stepActiveDto.setMaterials(step.getStep().getMaterials());
 		
 		return stepActiveDto;
 	}

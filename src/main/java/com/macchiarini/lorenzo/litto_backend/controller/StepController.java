@@ -32,7 +32,7 @@ public class StepController {
 		return stepMapper.fromPlanAtiveStepToActiveDto(plan, step);
 	}
 
-	public boolean getNextActiveStep(long userID, long planID) {
+	public boolean getNextActiveStep(String userID, String planID) {
 		PlanInProgress plan = planDao.getPlanInProgress(userID, planID);
 		plan.getToDoSteps().remove(0);
 		if(plan.getToDoSteps().size() != 0) {

@@ -6,14 +6,14 @@ public class StepInProgress {
 	public StepInProgress() {
 	}
 
-	private Date endDate; // Date è il tipo di tutti gli attributi data interni all'architettura, String solo quelli che si interfacciano con l'esterno
+	private String endDate; // Date è il tipo di tutti gli attributi data interni all'architettura, String solo quelli che si interfacciano con l'esterno
 	private Step step; // TODO lasciare solo stepid?
 
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

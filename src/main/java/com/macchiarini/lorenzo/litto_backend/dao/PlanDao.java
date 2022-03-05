@@ -23,7 +23,7 @@ public class PlanDao {
 	// Function that finds the plan given its id
 	public Plan getPlan(String ID) {
 		return gql.query("plans", "id: \\\"" + ID + "\\\"",
-				"id title subtitle imageUrl level duration steps { title subtitle planWeek materials { title type text link description file } tags { name imageUrl } ",
+				" id title subtitle imageUrl level duration tags { name imageUrl } steps { title subtitle planWeek materials { title type text link description file }}",
 				Plan[].class)[0];
 	}
 
@@ -64,7 +64,7 @@ public class PlanDao {
 			secondQueryBody += "{node: {" + "title: \\\"" + s.getTitle() + "\\\"," + "subtitle: \\\"" + s.getSubtitle()
 					+ "\\\"," + "planWeek: " + s.getPlanWeek() + "," + "plan: {connect: {where: {node: {id: \\\""
 					+ planId + "\\\"}}}}," + "materials: {create: [";
-			for (Material m : s.getMaterial()) {
+			for (Material m : s.getMaterials()) {
 				switch (m.getType()) {
 				case PDF:
 					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," + "type: \\\"" + m.getType()
@@ -105,7 +105,7 @@ public class PlanDao {
 		return planId;
 	}
 
-	public PlanInProgress getPlanInProgress(long userID, long planID) {
+	public PlanInProgress getPlanInProgress(String userID, String planID) {
 		// TODO ritorna il piano corretto in progress
 		return null;
 	}

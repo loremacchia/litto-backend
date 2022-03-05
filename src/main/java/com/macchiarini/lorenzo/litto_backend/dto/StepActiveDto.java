@@ -17,7 +17,7 @@ public class StepActiveDto implements Serializable {
 	private int planWeek;
 	private String planId;
 	private String userId;
-	private List<Material> material;
+	private List<Material> materials;
 
 	public String getEndDate() {
 		return endDate;
@@ -67,12 +67,12 @@ public class StepActiveDto implements Serializable {
 		this.planId = planId;
 	}
 
-	public List<Material> getMaterial() {
-		return material;
+	public List<Material> getMaterials() {
+		return materials;
 	}
 
-	public void setMaterial(List<Material> material) {
-		this.material = material;
+	public void setMaterials(List<Material> materials) {
+		this.materials = materials;
 	}
 
 	public String getUserId() {

@@ -72,6 +72,7 @@ public class GraphQLClient {
 	}
 	
 	public <T> T customQuery(String queryBody, String finalEntity, Class<T> returnType) {
+		System.out.println(queryBody);
 		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(queryBody))
 				.header("Content-Type", "application/json").uri(url).build();
 		HttpResponse<String> response;
