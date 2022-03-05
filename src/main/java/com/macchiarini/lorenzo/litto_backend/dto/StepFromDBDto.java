@@ -7,8 +7,8 @@ public class StepFromDBDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String endDate; 
-	private List<StepPreviewDto> step;
-	private List<PlanPreviewDto> plan;
+	private StepPreviewDto step;
+	private PlanPreviewDto plan;
 	
 	public String getEndDate() {
 		return endDate;
@@ -16,16 +16,16 @@ public class StepFromDBDto implements Serializable {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public List<StepPreviewDto> getStep() {
+	public StepPreviewDto getStep() {
 		return step;
 	}
-	public void setStep(List<StepPreviewDto> step) {
+	public void setStep(StepPreviewDto step) {
 		this.step = step;
 	}
-	public List<PlanPreviewDto> getPlan() {
+	public PlanPreviewDto getPlan() {
 		return plan;
 	}
-	public void setPlan(List<PlanPreviewDto> plan) {
+	public void setPlan(PlanPreviewDto plan) {
 		this.plan = plan;
 	}
 	

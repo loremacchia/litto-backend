@@ -48,11 +48,11 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 	public StepDto fromDBToStepDto(StepFromDBDto stepDB) {
 		StepDto step = new StepDto();
 		step.setEndDate(stepDB.getEndDate());
-		step.setTitle(stepDB.getStep().get(0).getTitle());
-		step.setSubtitle(stepDB.getStep().get(0).getSubtitle());
-		step.setPlanName(stepDB.getPlan().get(0).getTitle());
-		step.setPlanId(stepDB.getPlan().get(0).getId());
-		step.setImageUrl(stepDB.getPlan().get(0).getImageUrl());
+		step.setTitle(stepDB.getStep().getTitle());
+		step.setSubtitle(stepDB.getStep().getSubtitle());
+		step.setPlanName(stepDB.getPlan().getTitle());
+		step.setPlanId(stepDB.getPlan().getId());
+		step.setImageUrl(stepDB.getPlan().getImageUrl());
 		return step;
 	}
 	

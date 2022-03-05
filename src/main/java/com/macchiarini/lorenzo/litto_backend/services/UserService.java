@@ -3,6 +3,7 @@ package com.macchiarini.lorenzo.litto_backend.services;
 import jakarta.inject.Inject;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -71,6 +72,14 @@ public class UserService extends BaseService {
 	public Response completeUser(@PathParam("id") String ID, @HeaderParam("Authorization") String token, UserCompleteDto userCompleteDto) {
 		return responseCreator(token, userController.completeUser(ID, userCompleteDto ));
 	}
+	
+	@DELETE
+	@Path("/{id}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response deleteUser(@PathParam("id") String userID, @HeaderParam("Authorization") String token) {
+		return responseCreator(token, userController.deleteUser(userID));
+	}
 
 	@POST
 	@Path("/login")
@@ -101,14 +110,14 @@ public class UserService extends BaseService {
 
 	@GET
 	@Path("/{id}/goals")
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON }) //TODO da errore se non ci sono goals
 	public Response getUserGoals(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, userController.getUserGoals(ID));
 	}
 
 	@GET
 	@Path("/{id}/recommended")
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON }) //TODO da errore se non ci sono piani
 	public Response getUserRecommendedPlans(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, userController.getUserRecommendedPlans(ID));
 	}
@@ -121,7 +130,7 @@ public class UserService extends BaseService {
 	}
 
 	@POST
-	@Path("/{userId}/start/{planId}")
+	@Path("/{userId}/start/{planId}") //TODO da errore se non ci sono piani con quell'id
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response startPlan(@PathParam("planId") String planID, @PathParam("userId") String userID,
@@ -129,5 +138,7 @@ public class UserService extends BaseService {
 		return responseCreator(token,
 				userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo())); // TODO fare la verifica prima di eseguire la funzione
 	}
+	
+	
 
 }

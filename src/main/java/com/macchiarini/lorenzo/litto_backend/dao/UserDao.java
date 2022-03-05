@@ -50,10 +50,17 @@ public class UserDao {
 		System.out.println(idDto.getId());
 		return idDto.getId();
 	}
-
-	// Function to return the user with a given ID
-	public User getUser(String ID) {
-		return null;
+	
+	public boolean deleteUser(String userID) {
+		String queryBody = "{\"query\":\"mutation { deleteUsers(where: {"
+				+ "id: \\\""+userID+"\\\""
+				+ "}, delete: { "
+				+ "progressingPlans: [ { delete: { toDoSteps: [ {} ] } } ], "
+				+ "interests: [ {} ], "
+				+ "completedPlans: [{}] }) "
+				+ "{ nodesDeleted } }\"}";
+		gql.customQuery(queryBody, "nodesDeleted", int.class);
+		return true;
 	}
 
 	// Function to update a user giving the new user field in input.
@@ -101,7 +108,7 @@ public class UserDao {
 	public List<StepFromDBDto> getAllActiveSteps(String ID) {
 		String queryBody = "{\"query\":\"query { users(where: {id:\\\"" + ID
 				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title subtitle } plan { id imageUrl title }}}}}\"}";
-		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps", StepFromDBDto[].class));
+		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps", StepFromDBDto[].class)); 
 	}
 
 	// Function to get all the recommended plans of the User having ID
@@ -183,14 +190,32 @@ public class UserDao {
 		return planIds;
 	}
 
-	// Function that sets the plan in progress to the userID (the plan is different
-	// only for the toDoSteps)
-	public void updatePlanInProgress(String userID, PlanInProgress plan) {
+	// Function that removes from the user the active step of planWeek of the planID
+	// Returns the number of remaining steps of the plan in progress
+	public int removeActiveStep(String userID, String planID, int planWeek) {
+		String mutationBody = "{\"query\":\"mutation { updateUsers(where: "
+				+ "{id: \\\""+userID+"\\\"}, "
+				+ "update: { progressingPlans: [{update: {node: { toDoSteps: "
+				+ "[ { delete: [ { where: { node: { step: { planWeek: "+planWeek+" } } } } ] } ] } }, "
+				+ "where: { node: { plan: { id: \\\""+planID+"\\\" } } } } ] }) "
+				+ "{ users { progressingPlans(where: { plan: { id: \\\""+planID+"\\\" }}) "
+				+ "{ toDoStepsAggregate { count } } } } }\"}";
+		return gql.customQuery(mutationBody, "count", int.class);
 	}
 
-	// Function that removes the progressing plan from the userID
+	// Function that removes the progressing plan from the userID and adds it to the completed plans
 	public void removePlanInProgress(String userID, String planID) {
+		String mutationBody = "{\"query\":\"mutation { updateUsers(where: "
+				+ "{ id: \\\""+userID+"\\\" }, "
+				+ "update: { progressingPlans: "
+				+ "[ { delete: [ { where: { node: "
+				+ "{ plan: { id: \\\""+planID+"\\\" } } } } ] } ], "
+				+ "completedPlans: [ { connect: [ { where: { node: { "
+				+ "id: \\\""+planID+"\\\" } } } ] } ] }) "
+				+ "{ users { id  } } } \"}";
+		gql.customQuery(mutationBody, "users", IDDto[].class); // TODO exception
 	}
+	
 
 	// Function to remove the token from the user db
 	public void removeUserToken(String userID) {
@@ -213,5 +238,7 @@ public class UserDao {
 		}
 		return token;
 	}
+
+
 
 }

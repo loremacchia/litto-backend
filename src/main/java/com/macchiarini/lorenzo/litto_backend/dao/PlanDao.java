@@ -105,9 +105,5 @@ public class PlanDao {
 		return planId;
 	}
 
-	public PlanInProgress getPlanInProgress(String userID, String planID) {
-		// TODO ritorna il piano corretto in progress
-		return null;
-	}
 
 }

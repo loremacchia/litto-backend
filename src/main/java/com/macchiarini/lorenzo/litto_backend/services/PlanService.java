@@ -22,14 +22,14 @@ public class PlanService extends BaseService {
 	PlanController planController;
 
 	@GET
-	@Path("/{id}")
+	@Path("/{id}") //TODO da errore se non ci sono plan
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getPlan(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, planController.getPlan(ID)); 
 	}
 
-	@POST
-	@Path("/create/{userId}")
+	@POST 
+	@Path("/create/{userId}") //TODO da errore 
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response createPlan(@PathParam("userId") String userID, @HeaderParam("Authorization") String token, Plan plan) {

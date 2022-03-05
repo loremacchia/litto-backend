@@ -199,4 +199,8 @@ public class UserController {
 		userDao.startPlan(userID, planInProgress);
 		return true;
 	}
+	
+	public boolean deleteUser(String userID) {
+		return userDao.deleteUser(userID);
+	}
 }

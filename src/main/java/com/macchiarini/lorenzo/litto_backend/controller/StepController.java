@@ -33,17 +33,12 @@ public class StepController {
 		return stepMapper.fromPlanProgressToActiveStep(stepDao.getActiveStep(userID, planID), userID);
 	}
 
-	public boolean getNextActiveStep(String userID, String planID) {
-		PlanInProgress plan = planDao.getPlanInProgress(userID, planID);
-		plan.getToDoSteps().remove(0);
-		if(plan.getToDoSteps().size() != 0) {
-			plan.setToDoSteps(plan.getToDoSteps());
-			userDao.updatePlanInProgress(userID,plan);
-			return true; // TODO vedere se i valori di ritorno vanno bene o devono essere invertiti
-		}
-		else {
+	public boolean getNextActiveStep(String userID, String planID, int planWeek) {
+		int remainingSteps = userDao.removeActiveStep(userID, planID, planWeek);
+		if(remainingSteps == 0) { //TODO forse a 0 non ci arriva e da errore
 			userDao.removePlanInProgress(userID, planID);
 			return false;
 		}
+		return true;
 	}
 }
