@@ -56,8 +56,7 @@ public class UserDao {
 				+ "id: \\\""+userID+"\\\""
 				+ "}, delete: { "
 				+ "progressingPlans: [ { delete: { toDoSteps: [ {} ] } } ], "
-				+ "interests: [ {} ], "
-				+ "completedPlans: [{}] }) "
+				+ "interests: [ {} ] }) "
 				+ "{ nodesDeleted } }\"}";
 		gql.customQuery(queryBody, "nodesDeleted", int.class);
 		return true;

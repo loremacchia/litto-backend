@@ -191,10 +191,10 @@ public class UserController {
 		for(Step s : steps) {
 			StepInProgress sip = new StepInProgress();
 			sip.setStep(s);
-			sip.setEndDate(dateHandler.incrementDate(dateTo, s.getPlanWeek()));
+			sip.setEndDate(dateHandler.incrementDate(dateFrom, s.getPlanWeek()));
 			stepsInProgress.add(sip);
 		}
-		System.out.println(dateHandler.incrementDate(dateTo, steps.size()) + dateTo);
+		System.out.println(dateHandler.incrementDate(dateFrom, steps.size()) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
 		userDao.startPlan(userID, planInProgress);
 		return true;
