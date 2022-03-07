@@ -14,8 +14,8 @@ public class UserDto implements Serializable {
 	private String bio;
 	private String imageUrl;
 	private int level;
-	private List<Interest> interests; // TODO anche solo i nomi?
-	private List<PlanPreviewDto> completedPlans; // TODO anche solo le chiavi/id?
+	private List<Interest> interests; 
+	private List<PlanPreviewDto> completedPlans; 
 
 	public String getId() {
 		return id;

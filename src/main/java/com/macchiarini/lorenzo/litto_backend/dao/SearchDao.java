@@ -1,5 +1,7 @@
 package com.macchiarini.lorenzo.litto_backend.dao;
 
+import java.io.IOException;
+
 import com.macchiarini.lorenzo.litto_backend.dto.SearchDto;
 
 import jakarta.inject.Inject;
@@ -9,8 +11,14 @@ public class SearchDao {
 	@Inject
 	GraphQLClient gql;
 
-	// Function that, given a word, searches for all the plans related to that word
-	public SearchDto search(String word) {
+	/**
+	 * Function that, given a word, searches for all the plans related to that word
+	 * @param word
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public SearchDto search(String word) throws IOException, InterruptedException {
 		String searchQuery = "{\"query\":\"query { topics(where: {name_CONTAINS:\\\"" + word
 				+ "\\\"}) { imageUrl name } plans(where:  { OR: [{OR: [{title_CONTAINS: \\\"" + word
 				+ "\\\"}]},{OR: [{subtitle_CONTAINS: \\\"" + word + "\\\"}]},{OR: [{ tags:{name_CONTAINS:\\\"" + word

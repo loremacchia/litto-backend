@@ -10,7 +10,7 @@ public class UserCompleteDto implements Serializable {
 	private String name;
 	private String surname;
 	private String imageUrl;
-	private List<String> interests; // TODO sono stringhe o gli ID?
+	private List<String> interests;
 
 	public String getBio() {
 		return bio;

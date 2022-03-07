@@ -13,6 +13,4 @@ public class UserPlanDto {
 	public void setPlans(List<PlanPreviewDto> plans) {
 		this.plans = plans;
 	}
-	
-	
 }

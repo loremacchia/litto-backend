@@ -4,11 +4,40 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date; 
 
+/**
+ * @author lorem
+ *
+ */
 public class DateHandler {
+	
+	/**
+	 * @param string
+	 * @return
+	 */
+	public String fromDBtoClient (String string) { 
+		return toString(fromDBDate(string));
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 */
+	public String fromClientToDB(String string) {
+		return toDBDate(toDate(string));
+	}
+	
+	/**
+	 * @param date
+	 * @return
+	 */
 	public String toString(Date date) {
 		return new SimpleDateFormat("dd.MM.yyyy").format(date);
 	}
 	
+	/**
+	 * @param string
+	 * @return
+	 */
 	public Date toDate(String string) {
 		try {
 			Date date = new SimpleDateFormat("dd.MM.yyyy").parse(string);
@@ -18,6 +47,11 @@ public class DateHandler {
 		}
 	}
 	
+	/**
+	 * @param string
+	 * @param weeks
+	 * @return
+	 */
 	public String incrementDate(String string, int weeks) {
 		Date date = toDate(string);
 		Calendar c = Calendar.getInstance();
@@ -26,10 +60,18 @@ public class DateHandler {
 		return toString(c.getTime());
 	}
 	
+	/**
+	 * @param date
+	 * @return
+	 */
 	public String toDBDate(Date date) {
-		return new SimpleDateFormat("yyyy-MM-dd").format(date); // TODO verifica che vada bene
+		return new SimpleDateFormat("yyyy-MM-dd").format(date); 
 	}
 	
+	/**
+	 * @param string
+	 * @return
+	 */
 	public Date fromDBDate(String string) {
 		try {
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(string);
@@ -37,13 +79,5 @@ public class DateHandler {
 		} catch (Exception e) {
 			return null;
 		}
-	}
-	
-	public String fromDBtoClient (String string) { //TODO quando pesco dal db devo cambiare le date!!!
-		return toString(fromDBDate(string));
-	}
-	
-	public String fromClientToDB(String string) {
-		return toDBDate(toDate(string));
 	}
 }

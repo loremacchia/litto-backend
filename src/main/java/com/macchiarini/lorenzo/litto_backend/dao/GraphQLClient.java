@@ -11,6 +11,10 @@ import java.net.http.HttpResponse.BodyHandlers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * @author lorem
+ *
+ */
 public class GraphQLClient {
 
 	private URI url;
@@ -21,29 +25,18 @@ public class GraphQLClient {
 		client = HttpClient.newHttpClient();
 	}
 
-//	public <T> T query(String queryName, String queryBody, Class<T> returnType) {
-//		queryBody = "{\"query\":\"query { " + queryName + " " + queryBody + "}\"}";
-//		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(queryBody))
-//				.header("Content-Type", "application/json").uri(url).build();
-//		HttpResponse<String> response;
-//		try {
-//			System.out.println(queryBody);
-//
-//			ObjectMapper mapper = new ObjectMapper();
-//			response = client.send(request, BodyHandlers.ofString());
-//			System.out.println(response.body());
-//			JsonNode node = mapper.readTree(response.body());
-//			return mapper.readValue(node.get("data").get(queryName).toString(), returnType);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return null;
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
-
-	public <T> T query(String entityName, String whereClause, String returnFields, Class<T> returnType) {
+	/**
+	 * @param <T>
+	 * @param entityName
+	 * @param whereClause
+	 * @param returnFields
+	 * @param returnType
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public <T> T query(String entityName, String whereClause, String returnFields, Class<T> returnType)
+			throws IOException, InterruptedException {
 		String queryBody = "{\"query\":\"query { " + entityName + " ";
 		if (whereClause != null) {
 			queryBody += "(where: {" + whereClause + "}) ";
@@ -54,85 +47,60 @@ public class GraphQLClient {
 		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(queryBody))
 				.header("Content-Type", "application/json").uri(url).build();
 		HttpResponse<String> response;
-		try {
-			System.out.println(queryBody);
-			
-			ObjectMapper mapper = new ObjectMapper();
-			response = client.send(request, BodyHandlers.ofString());
-			System.out.println(response.body());
-			JsonNode node = mapper.readTree(response.body());
-			return mapper.readValue(node.get("data").get(entityName).toString(), returnType);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
+
+		System.out.println(queryBody);
+
+		ObjectMapper mapper = new ObjectMapper();
+		response = client.send(request, BodyHandlers.ofString());
+		System.out.println(response.body());
+		JsonNode node = mapper.readTree(response.body());
+		return mapper.readValue(node.get("data").get(entityName).toString(), returnType);
+
 	}
-	
-	public <T> T customQuery(String queryBody, String finalEntity, Class<T> returnType) {
+
+	/**
+	 * @param <T>
+	 * @param queryBody
+	 * @param finalEntity
+	 * @param returnType
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public <T> T customQuery(String queryBody, String finalEntity, Class<T> returnType)
+			throws IOException, InterruptedException {
 		System.out.println(queryBody);
 		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(queryBody))
 				.header("Content-Type", "application/json").uri(url).build();
 		HttpResponse<String> response;
-		try {
 
-			ObjectMapper mapper = new ObjectMapper();
-			response = client.send(request, BodyHandlers.ofString());
-			System.out.println(response.body());
-			JsonNode node = mapper.readTree(response.body());
-			if(finalEntity!= null) {
-				System.out.println(node.findPath(finalEntity).toString());
-				return mapper.readValue(node.findPath(finalEntity).toString(), returnType);
-			}
-			return mapper.readValue(node.get("data").toString(), returnType);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
+		ObjectMapper mapper = new ObjectMapper();
+		response = client.send(request, BodyHandlers.ofString());
+		System.out.println(response.body());
+		JsonNode node = mapper.readTree(response.body());
+		if (finalEntity != null) {
+			System.out.println(node.findPath(finalEntity).toString());
+			return mapper.readValue(node.findPath(finalEntity).toString(), returnType);
 		}
+		return mapper.readValue(node.get("data").toString(), returnType);
+
 	}
 
-	public <T> T mutate(String mutationName, String entityName, String updateClause, String whereClause,
-			String returnFields, Class<T> returnType) {
-		String mutationBody = "{\"query\":\"mutation {" + mutationName;
-
-		if (updateClause != null || whereClause != null) {
-			mutationBody += "( ";
-			if (updateClause != null) {
-				mutationBody += "update: {" + updateClause + "}, ";
-			}
-			if (whereClause != null) {
-				mutationBody += "where: {" + whereClause + "} ";
-			}
-			mutationBody += ") ";
-		}
-		mutationBody += "{ " + entityName + " { " + returnFields + " }}}\"}";
-
-		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(mutationBody))
-				.header("Content-Type", "application/json").uri(url).build();
-		HttpResponse<String> response;
-		try {
-			System.out.println(mutationBody);
-			ObjectMapper mapper = new ObjectMapper();
-			response = client.send(request, BodyHandlers.ofString());
-			System.out.println(response.body());
-			JsonNode node = mapper.readTree(response.body());
-			return mapper.readValue(node.get("data").get(mutationName).get(entityName).toString(), returnType);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
+	/**
+	 * @param <T>
+	 * @param mutationTitle
+	 * @param mutationName
+	 * @param entityName
+	 * @param inputClause
+	 * @param whereClause
+	 * @param returnFields
+	 * @param returnType
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	public <T> T create(String mutationTitle, String mutationName, String entityName, String inputClause,
-			String whereClause, String returnFields, Class<T> returnType) {
+			String whereClause, String returnFields, Class<T> returnType) throws IOException, InterruptedException {
 		String mutationBody = "{\"query\":\"mutation " + mutationTitle + "{" + mutationName;
 
 		if (inputClause != null || whereClause != null) {
@@ -150,24 +118,31 @@ public class GraphQLClient {
 		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(mutationBody))
 				.header("Content-Type", "application/json").uri(url).build();
 		HttpResponse<String> response;
-		try {
-			System.out.println(mutationBody);
-			ObjectMapper mapper = new ObjectMapper();
-			response = client.send(request, BodyHandlers.ofString());
-			System.out.println(response.body());
-			JsonNode node = mapper.readTree(response.body());
-			return mapper.readValue(node.get("data").get(mutationName).get(entityName).toString(), returnType);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
+
+		System.out.println(mutationBody);
+		ObjectMapper mapper = new ObjectMapper();
+		response = client.send(request, BodyHandlers.ofString());
+		System.out.println(response.body());
+		JsonNode node = mapper.readTree(response.body());
+		return mapper.readValue(node.get("data").get(mutationName).get(entityName).toString(), returnType);
+
 	}
 
+	/**
+	 * @param <T>
+	 * @param mutationTitle
+	 * @param mutationName
+	 * @param entityName
+	 * @param updateClause
+	 * @param whereClause
+	 * @param returnFields
+	 * @param returnType
+	 * @return
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	public <T> T update(String mutationTitle, String mutationName, String entityName, String updateClause,
-			String whereClause, String returnFields, Class<T> returnType) {
+			String whereClause, String returnFields, Class<T> returnType) throws IOException, InterruptedException {
 		String mutationBody = "{\"query\":\"mutation " + mutationTitle + "{" + mutationName;
 
 		if (updateClause != null || whereClause != null) {
@@ -185,38 +160,13 @@ public class GraphQLClient {
 		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(mutationBody))
 				.header("Content-Type", "application/json").uri(url).build();
 		HttpResponse<String> response;
-		try {
-			System.out.println(mutationBody);
-			ObjectMapper mapper = new ObjectMapper();
-			response = client.send(request, BodyHandlers.ofString());
-			System.out.println(response.body());
-			JsonNode node = mapper.readTree(response.body());
-			return mapper.readValue(node.get("data").get(mutationName).get(entityName).toString(), returnType);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
-	public <T> T plainRequest(String requestBody, String entityName, Class<T> returnType) {
-		HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(requestBody))
-				.header("Content-Type", "application/json").uri(url).build();
-		HttpResponse<String> response;
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			response = client.send(request, BodyHandlers.ofString());
-			System.out.println(response.body());
-			JsonNode node = mapper.readTree(response.body());
-			return mapper.readValue(node.get("data").get(entityName).toString(), returnType);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
+		System.out.println(mutationBody);
+		ObjectMapper mapper = new ObjectMapper();
+		response = client.send(request, BodyHandlers.ofString());
+		System.out.println(response.body());
+		JsonNode node = mapper.readTree(response.body());
+		return mapper.readValue(node.get("data").get(mutationName).get(entityName).toString(), returnType);
+
 	}
 }

@@ -3,7 +3,6 @@ package com.macchiarini.lorenzo.litto_backend.dto;
 import java.io.Serializable;
 import java.util.List;
 
-import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.Topic;
 
 public class SearchDto implements Serializable {

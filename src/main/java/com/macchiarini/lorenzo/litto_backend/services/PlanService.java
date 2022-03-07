@@ -22,17 +22,28 @@ public class PlanService extends BaseService {
 	PlanController planController;
 
 	@GET
-	@Path("/{id}") //TODO da errore se non ci sono plan
+	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getPlan(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, planController.getPlan(ID)); 
+	public Response getPlan(
+							@PathParam("id") String ID, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, null);
+		if(result)
+			return responseCreator(true, token, planController.getPlan(ID));
+		return responseCreator(false, "", null); 
 	}
 
-	@POST 
-	@Path("/create/{userId}") //TODO da errore 
+	@POST
+	@Path("/create/{userId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response createPlan(@PathParam("userId") String userID, @HeaderParam("Authorization") String token, Plan plan) {
-		return responseCreator(token, planController.createPlan(userID, plan)); // TODO fare la verifica prima di eseguire la funzione
+	public Response createPlan(
+							@PathParam("userId") String userID, 
+							@HeaderParam("Authorization") String token,
+							Plan plan) {
+		boolean result = verifyToken(token, userID);
+		if(result)
+			return responseCreator(true, token, planController.createPlan(userID, plan)); 
+		return responseCreator(false, "", null); 
 	}
 }

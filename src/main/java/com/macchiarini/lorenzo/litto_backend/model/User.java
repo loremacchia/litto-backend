@@ -4,7 +4,7 @@ import java.util.*;
 
 public class User {
 
-	public User() { // TODO aggiungi UUID e id utente
+	public User() {
 	}
 
 	private String id;
@@ -16,8 +16,8 @@ public class User {
 	private String imageUrl;
 	private String username;
 	private int level;
-	private List<Interest> interests; // TODO anche solo i nomi?
-	private List<Plan> completedPlans; // TODO anche solo le chiavi/id?
+	private List<Interest> interests;
+	private List<Plan> completedPlans;
 	private List<PlanInProgress> progressingPlans;
 	private String token;
 

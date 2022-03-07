@@ -19,24 +19,40 @@ public class PlanController {
 	@Inject
 	PlanMapper planMapper;
 
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public PlanDto getPlan(String ID) {
-		PlanDto plan = planDao.getPlanDto(ID);
+		System.out.println("giaaa");
+		PlanDto plan;
+		try {
+			plan = planDao.getPlanDto(ID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the plan");
+			e.printStackTrace();
+			return null;
+		}
+		
 		for(StepPreviewDto s : plan.getSteps()) {
 			s.setPlanId(ID);
 		}
-		if (plan != null) { // TODO vedere se piano valido
-			return plan;
-		}
-		return null;
+		return plan;
 	}
 
-	public String createPlan(String userId, Plan plan) { // TODO vedere se andare a modificare lo user (penso di si)
-		
-//		System.out.println(plan.getSteps().get(0).getMaterial().get(0).getFile());
-		// TODO mettere anche la creazione dello step qua, usare poi ID dello step da
-		// dare a planDao (Forse non serve visto che la mutation spinge)
-		plan.setId(planDao.createPlan(plan)); // TODO cambiare e mettere tutte le relazioni qua
-//		userDao.addCreatedPlan(userId, planId); // TODO passare anche solo il plan id..
+	/**
+	 * @param userId
+	 * @param plan
+	 * @return
+	 */
+	public String createPlan(String userId, Plan plan) { 
+		try {
+			plan.setId(planDao.createPlan(plan));
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot create the plan");
+			e.printStackTrace();
+			return null;
+		} 
 		return plan.getId();
 	}
 

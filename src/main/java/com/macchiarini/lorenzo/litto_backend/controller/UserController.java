@@ -3,11 +3,9 @@ package com.macchiarini.lorenzo.litto_backend.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.security.auth.login.Token;
-
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
-import com.macchiarini.lorenzo.litto_backend.dto.IDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
@@ -16,7 +14,6 @@ import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserLoginDto;
-import com.macchiarini.lorenzo.litto_backend.dto.UserPlanDto;
 import com.macchiarini.lorenzo.litto_backend.mapper.PlanMapper;
 import com.macchiarini.lorenzo.litto_backend.mapper.StepMapper;
 import com.macchiarini.lorenzo.litto_backend.mapper.UserMapper;
@@ -54,135 +51,242 @@ public class UserController {
 	@Inject
 	DateHandler dateHandler;
 
-	public void name(UserInitDto userInitDto) {
-		String ID = userDao.addUser(userInitDto);
-		System.out.println(ID);
-		List<User> u = userDao.searchUserbyEmail(userInitDto.getEmail());
-		System.out.println(u);
-	
-	}
-	
-	
+	/**
+	 * 
+	 * @param userInitDto
+	 * @return
+	 */
 	public TokenIDDto createUser(UserInitDto userInitDto) {
-		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
-//			User user = userMapper.toUser(userInitDto);
-			String ID = userDao.addUser(userInitDto);
-			String token = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
-			TokenIDDto returnDto = new TokenIDDto();
-			returnDto.setId(ID);
-			returnDto.setToken(token);
-			return returnDto;
+		try {
+			if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
+				String ID;
+				try {
+					ID = userDao.addUser(userInitDto);
+				} catch (Exception e1) {
+					return null;
+				}
+				
+				String token;
+				try {
+					token = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
+				} catch (JWTCreationException e) {
+					System.err.println("ERROR: JWT creation");
+					e.printStackTrace();
+					return null;
+				} catch (Exception e) {
+					System.err.println("ERROR: cannot assign token to user");
+					e.printStackTrace();
+					return null;
+				}
+				
+				TokenIDDto returnDto = new TokenIDDto();
+				returnDto.setId(ID);
+				returnDto.setToken(token);
+				return returnDto;
+			}
+			return null;
+		} catch (Exception e) {
+			System.err.println("ERROR: email retrieve is corrupted");
+			e.printStackTrace();
+			return null;
 		}
-		return null; //TODO gestire i ritorni nei casi sbagliati
 	}
 	
-	public String createToken(String email, String password, String userID) {
+	/**
+	 * @param email
+	 * @param password
+	 * @param userID
+	 * @return
+	 * @throws JWTCreationException
+	 * @throws Exception
+	 */
+	public String createToken(String email, String password, String userID) throws JWTCreationException, Exception {
 		return authorizer.createToken(userID, email, password);
 	}
 
+	/**
+	 * @param ID
+	 * @param userCompleteDto
+	 * @return
+	 */
 	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
-		if (ID != "") { // TODO controllare se JWT o id è corretto
-//			User user = userDao.getUser(ID); // TODO aggiungere ritorno se non c'è user
-//			user.setBio(userCompleteDto.getBio());
-//			user.setName(userCompleteDto.getName());
-//			user.setSurname(userCompleteDto.getSurname());
-//			user.setImageUrl(userCompleteDto.getImageUrl());
-			List<String> topics = userCompleteDto.getInterests();
-			List<Interest> interests = new ArrayList<Interest>();
-			for (String t : topics) {
-				Interest i = new Interest();
-				Topic ts = new Topic();
-				ts.setName(t);
-				i.setTopic(ts);
-				i.setLevel(1);
-				interests.add(i);
-			}
-//			user.setInterests(interests); // TODO vedere se far passare direttamente dallo user anche le immagini
-			User user = userMapper.toUser(userCompleteDto, ID, interests);
-			System.out.println("intesss");
-			for(Interest i : user.getInterests()) {
-				System.out.println(i.getLevel() + i.getTopic().getName());
-			}
+		List<String> topics = userCompleteDto.getInterests();
+		List<Interest> interests = new ArrayList<Interest>();
+		for (String t : topics) {
+			Interest i = new Interest();
+			Topic ts = new Topic();
+			ts.setName(t);
+			i.setTopic(ts);
+			i.setLevel(1);
+			interests.add(i);
+		}
+		User user = userMapper.toUser(userCompleteDto, ID, interests);
+		for(Interest i : user.getInterests()) {
+			System.err.println(i.getLevel() + i.getTopic().getName());
+		}
+		try {
 			userDao.updateUser(user);
-			return true;
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot update user values");
+			e.printStackTrace();
+			return false;
 		}
-		return false;
-	}
-
-	public TokenIDDto loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
-		
-		String ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-		
-		if (ID != "") { // TODO controlla che l'id sia corretto
-			String token = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
-			userDao.setUserToken(ID, token);
-			TokenIDDto t = new TokenIDDto();
-			t.setId(ID);
-			t.setToken(token);
-			return t;
-		}
-		
-		return null;
-	}
-
-	public boolean logoutUser(String ID) {
-		authorizer.removeUserAuth(ID);
 		return true;
 	}
 
+	/**
+	 * @param userLoginDto
+	 * @return
+	 */
+	public TokenIDDto loginUser(UserLoginDto userLoginDto) {
+		
+		String ID;
+		try {
+			ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		} catch (Exception e1) {
+			System.err.println("ERROR: cannot login user and retrieve the user ID");
+			e1.printStackTrace();
+			return null;
+		}
+		
+		String token;
+		try {
+			token = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
+		} catch (JWTCreationException e) {
+			System.err.println("ERROR: JWT creation");
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot assign token to user");
+			e.printStackTrace();
+			return null;
+		}
+		
+		TokenIDDto t = new TokenIDDto();
+		t.setId(ID);
+		t.setToken(token);
+		return t;
+		
+		
+	}
+
+	/**
+	 * @param ID
+	 * @return
+	 */
+	public boolean logoutUser(String ID) {
+		try {
+			authorizer.removeUserAuth(ID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot logout the user");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public UserDto getUser(String ID) {
-		UserDto userDto = userDao.getFullUser(ID); // TODO forse farsi ritornare direttamente lo user corretto potrebbe andare
-												// bene ugualmente
-		System.out.println(userDto.getId() + " "+ userDto.getName());
-//		UserDto userDto = userMapper.toUserDto(user);
+		UserDto userDto;
+		try {
+			userDto = userDao.getUser(ID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the user");
+			e.printStackTrace();
+			return null;
+		} 
 		return userDto;
 	}
 
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public List<StepDto> getUserGoals(String ID) {
-//		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
-//		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
-//		for (StepInProgress s : activeSteps) { // TODO n+1 queries
-//			Plan p = planDao.getPlan(s.getStep().getPlanId());
-//			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(s, p));
-//		}
-		List<StepFromDBDto> stepsDB = userDao.getAllActiveSteps(ID);
+		List<StepFromDBDto> stepsDB;
+		try {
+			stepsDB = userDao.getAllActiveSteps(ID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the active steps of the user");
+			e.printStackTrace();
+			return null;
+		}
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for(StepFromDBDto s : stepsDB) {
-			activeStepDtos.add(stepMapper.fromDBToStepDto(s));
+			StepDto st = stepMapper.fromDBToStepDto(s);
+			st.setEndDate(dateHandler.fromDBtoClient(st.getEndDate()));
+			activeStepDtos.add(st);
 		}
-		
-		// TODO ricontrollare quando posso inserire piani ecc, qua da errore (teoricamente no)
 		return activeStepDtos;
 	}
 
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public List<PlanPreviewDto> getUserRecommendedPlans(String ID) {
-		List<PlanPreviewDto> recommendedPlansDto = userDao.getRecommendedPlans(ID);
-//		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
-//		for (Plan p : recommendedPlans) {
-//			recommendedPlansDto.add(planMapper.toPlanPreviewDto(p));
-//		}
+		List<PlanPreviewDto> recommendedPlansDto;
+		try {
+			recommendedPlansDto = userDao.getRecommendedPlans(ID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the recommended plans for the user");
+			e.printStackTrace();
+			return null;
+		}
 		return recommendedPlansDto;
 	}
 
+	/**
+	 * @return
+	 */
 	public List<Topic> getInterests() {
-		List<Topic> interests = userDao.getInterests();
+		List<Topic> interests;
+		try {
+			interests = userDao.getInterests();
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the interests");
+			e.printStackTrace();
+			return null;
+		}
 		return interests;
 	}
 
+	/**
+	 * @param planID
+	 * @param userID
+	 * @param dateFrom
+	 * @param dateTo
+	 * @return
+	 */
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
 		
-		List<String> planIds = userDao.getPlansInProgress(userID);
+		List<String> planIds;
+		try {
+			planIds = userDao.getPlansInProgress(userID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the plans in progress of the user");
+			e.printStackTrace();
+			return false;
+		}
 		
 		for(String i : planIds) {
-			System.out.println(i + " "+planID + " " + i.equals(planID));
 			if(i.equals(planID)) {
 				return false;
 			}
 		}
 		
-		Plan plan = planDao.getPlan(planID);
-		System.out.println(plan);
-		System.out.println(dateFrom + " "+ dateTo + " " + dateHandler.toDate(dateTo));
+		Plan plan;
+		try {
+			plan = planDao.getPlan(planID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the plan to start");
+			e.printStackTrace();
+			return false;
+		}
+		
 		PlanInProgress planInProgress = new PlanInProgress();
 		planInProgress.setPlan(plan);
 		planInProgress.setEndingDate(dateTo);
@@ -194,13 +298,28 @@ public class UserController {
 			sip.setEndDate(dateHandler.incrementDate(dateFrom, s.getPlanWeek()));
 			stepsInProgress.add(sip);
 		}
-		System.out.println(dateHandler.incrementDate(dateFrom, steps.size()) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
-		userDao.startPlan(userID, planInProgress);
+		try {
+			userDao.startPlan(userID, planInProgress);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot add the started plan to the user");
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 	
+	/**
+	 * @param userID
+	 * @return
+	 */
 	public boolean deleteUser(String userID) {
-		return userDao.deleteUser(userID);
+		try {
+			return userDao.deleteUser(userID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot delete the user");
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

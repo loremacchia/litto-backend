@@ -1,13 +1,10 @@
 package com.macchiarini.lorenzo.litto_backend.controller;
 
-import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.StepDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.mapper.StepMapper;
-import com.macchiarini.lorenzo.litto_backend.model.Plan;
-import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
-import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
+import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
 
@@ -21,22 +18,52 @@ public class StepController {
 
 	@Inject
 	StepMapper stepMapper;
-
+	
 	@Inject
-	PlanDao planDao;
+	DateHandler dateHandler;
 
-	// Function that gets the current step in progress of the user with userID and planID
+	/**
+	 * Function that gets the current step in progress of the user with userID and planID
+	 * @param userID
+	 * @param planID
+	 * @return
+	 */
 	public StepActiveDto getActiveStep(String userID, String planID) {
-//		Plan plan = planDao.getPlan(planID);
-//		StepInProgress step = stepDao.getActiveStep(userID, planID);
-//		return stepMapper.fromPlanAtiveStepToActiveDto(plan, step);
-		return stepMapper.fromPlanProgressToActiveStep(stepDao.getActiveStep(userID, planID), userID);
+		StepActiveDto s;
+		try {
+			s = stepMapper.fromPlanProgressToActiveStep(stepDao.getActiveStep(userID, planID), userID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the current step of the plan for the user");
+			e.printStackTrace();
+			return null;
+		}
+		s.setEndDate(dateHandler.fromDBtoClient(s.getEndDate()));
+		return s;
 	}
 
+	/**
+	 * @param userID
+	 * @param planID
+	 * @param planWeek
+	 * @return
+	 */
 	public boolean getNextActiveStep(String userID, String planID, int planWeek) {
-		int remainingSteps = userDao.removeActiveStep(userID, planID, planWeek);
-		if(remainingSteps == 0) { //TODO forse a 0 non ci arriva e da errore
-			userDao.removePlanInProgress(userID, planID);
+		int remainingSteps;
+		try {
+			remainingSteps = userDao.removeActiveStep(userID, planID, planWeek);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot go to the next step");
+			e.printStackTrace();
+			return false;
+		}
+		if(remainingSteps == 0) {
+			try {
+				userDao.removePlanInProgress(userID, planID);
+			} catch (Exception e) {
+				System.err.println("ERROR: cannot complete the plan correctly");
+				e.printStackTrace();
+				return false; // TODO il ritorno cosi no
+			}
 			return false;
 		}
 		return true;

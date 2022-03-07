@@ -1,8 +1,5 @@
 package com.macchiarini.lorenzo.litto_backend.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.macchiarini.lorenzo.litto_backend.controller.Authorizer;
 
 import jakarta.inject.Inject;
@@ -11,14 +8,29 @@ import jakarta.ws.rs.core.Response;
 public class BaseService {
 	@Inject
 	Authorizer authorizer;
-	
-	public Response responseCreator(String token, Object toReturn) {
-		if(token.startsWith("Bearer"))
+
+	/**
+	 * @param token
+	 * @param userID
+	 * @return
+	 */
+	public boolean verifyToken(String token, String userID) {
+		if (token.startsWith("Bearer"))
 			token = token.split(" ")[1].toString();
-		if (authorizer.verifyToken(token)) {
-			return Response.ok().header("Authorization",  "Bearer " +token).entity(toReturn).build();
+		return authorizer.verifyToken(token, userID);
+	}
+
+	/**
+	 * @param correct
+	 * @param token
+	 * @param toReturn
+	 * @return
+	 */
+	public Response responseCreator(boolean correct, String token, Object toReturn) {
+		if (correct) {
+			return Response.ok().header("Authorization", "Bearer " + token).entity(toReturn).build();
 		} else {
-			return Response.ok().header("Authorization",  "Bearer " +"").entity("").build(); // TODO errore
+			return Response.ok().header("Authorization", "Bearer " + "").entity(false).build(); // TODO errore
 		}
 	}
 

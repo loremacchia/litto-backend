@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class StepDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String endDate; // TODO cambia il tipo della data
+	private String endDate;
 	private String title;
 	private String subtitle;
 	private String imageUrl;

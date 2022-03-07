@@ -7,12 +7,11 @@ public class Step {
 	public Step() {
 	}
 
-	private String id; // TODO vedere se ID è utile in fase di query o per essere linkato da setpInProgress o plan ecc..
 	private String title;
 	private String subtitle;
 	private List<Material> materials; // TODO lista ordinata
 	private String planId;
-	private int planWeek; // TODO va bene così o meglio un id vero e proprio?
+	private int planWeek;
 
 	public int getPlanWeek() {
 		return planWeek;
@@ -53,13 +52,4 @@ public class Step {
 	public void setMaterials(List<Material> materials) {
 		this.materials = materials;
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 }

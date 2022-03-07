@@ -13,72 +13,54 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.macchiarini.lorenzo.litto_backend.controller.UserController;
 import com.macchiarini.lorenzo.litto_backend.dto.DateDto;
 import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserLoginDto;
-import com.macchiarini.lorenzo.litto_backend.model.User;
 
 @Path("/user")
 public class UserService extends BaseService {
 
 	@Inject
 	UserController userController;
-	
-	@GET
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response create(UserInitDto userInitDto, @HeaderParam("Authorization") String token) {
-		
-		System.out.println(userInitDto.getPassword());
-		System.out.println(userInitDto.getEmail());
-		System.out.println(userInitDto.getUsername());
-		
-//		Algorithm algorithm = Algorithm.HMAC256("secret");
-//		String token = JWT.create()
-//						.withIssuer("auth0")
-//				        .withClaim("userID", ID)
-//				        .withClaim("email", userInitDto.getEmail())
-//				        .withClaim("password", userInitDto.getPassword())
-//						.sign(algorithm);
-		System.out.println(token);
-		userController.createUser(userInitDto);
-		
-		
-		System.out.println(token.split(" ")[1].toString());
-		return Response.ok(token).header("Authorization", "Bearer " + token).build();
-	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response createUser(UserInitDto userInitDto) {
 		TokenIDDto u = userController.createUser(userInitDto);
-		if (u != null) {
-			return Response.ok().header("Authorization",  "Bearer " +u.getToken()).entity(u.getId()).build();
-		}
-		return Response.ok().header("Authorization",  "Bearer " +"").entity(false).build();
+		if (u != null)
+			return responseCreator(true, u.getToken(), u.getId());
+		return responseCreator(false, "", null);
 	}
 
 	@POST
 	@Path("/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response completeUser(@PathParam("id") String ID, @HeaderParam("Authorization") String token, UserCompleteDto userCompleteDto) {
-		return responseCreator(token, userController.completeUser(ID, userCompleteDto ));
+	public Response completeUser(
+							@PathParam("id") String ID, 
+							@HeaderParam("Authorization") String token,
+			UserCompleteDto userCompleteDto) {
+		boolean result = verifyToken(token, ID);
+		if (result)
+			return responseCreator(true, token, userController.completeUser(ID, userCompleteDto));
+		return responseCreator(false, "", null);
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deleteUser(@PathParam("id") String userID, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, userController.deleteUser(userID));
+	public Response deleteUser(
+							@PathParam("id") String userID, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, userID);
+		if (result)
+			return responseCreator(true, token, userController.deleteUser(userID));
+		return responseCreator(false, "", null);
 	}
 
 	@POST
@@ -87,58 +69,82 @@ public class UserService extends BaseService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response loginUser(UserLoginDto userLoginDto) {
 		TokenIDDto u = userController.loginUser(userLoginDto);
-		if (u != null) {
-			return Response.ok().header("Authorization",  "Bearer " +u.getToken()).entity(u.getId()).build();
-		}
-		return Response.ok().entity(false).build(); // TODO errore
+		if (u != null)
+			return responseCreator(true, u.getToken(), u.getId());
+		return responseCreator(false, "", null);
 	}
 
 	@GET
 	@Path("/{id}/logout")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response logoutUser(@PathParam("id") String ID) {
-		return Response.ok().header("Authorization",  "Bearer " +"").entity(userController.logoutUser(ID)).build();
+	public Response logoutUser(
+							@PathParam("id") String ID, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, ID);
+		if (result)
+			return responseCreator(true, token, userController.logoutUser(ID));
+		return responseCreator(false, "", null);
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUser(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, userController.getUser(ID)); // TODO nell'applicazione dovrà essere parsato correttamente
+	public Response getUser(
+							@PathParam("id") String ID, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, ID);
+		if (result)
+			return responseCreator(true, token, userController.getUser(ID));
+		return responseCreator(false, "", null); // TODO nell'applicazione dovrà essere parsato correttamente
 		// TODO i campi null non vengono inviati
 	}
 
 	@GET
 	@Path("/{id}/goals")
-	@Produces({ MediaType.APPLICATION_JSON }) //TODO da errore se non ci sono goals
+	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUserGoals(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, userController.getUserGoals(ID));
+		boolean result = verifyToken(token, ID);
+		if (result)
+			return responseCreator(true, token, userController.getUserGoals(ID));
+		return responseCreator(false, "", null);
 	}
 
 	@GET
 	@Path("/{id}/recommended")
-	@Produces({ MediaType.APPLICATION_JSON }) //TODO da errore se non ci sono piani
-	public Response getUserRecommendedPlans(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, userController.getUserRecommendedPlans(ID));
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getUserRecommendedPlans(
+							@PathParam("id") String ID, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, ID);
+		if (result)
+			return responseCreator(true, token, userController.getUserRecommendedPlans(ID));
+		return responseCreator(false, "", null);
 	}
 
 	@GET
 	@Path("/interests")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getInterests(@HeaderParam("Authorization") String token) {
-		return responseCreator(token, userController.getInterests());
+		boolean result = verifyToken(token, null);
+		if (result)
+			return responseCreator(true, token, userController.getInterests());
+		return responseCreator(false, "", null);
 	}
 
 	@POST
-	@Path("/{userId}/start/{planId}") //TODO da errore se non ci sono piani con quell'id
+	@Path("/{userId}/start/{planId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response startPlan(@PathParam("planId") String planID, @PathParam("userId") String userID,
-			@HeaderParam("Authorization") String token, DateDto dateDto) {
-		return responseCreator(token,
-				userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo())); // TODO fare la verifica prima di eseguire la funzione
+	public Response startPlan(
+							@PathParam("userId") String userID, 
+							@PathParam("planId") String planID,
+							@HeaderParam("Authorization") String token, 
+							DateDto dateDto) {
+		boolean result = verifyToken(token, userID);
+		if (result)
+			return responseCreator(true, token,
+					userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo()));
+		return responseCreator(false, "", null);
 	}
-	
-	
 
 }

@@ -8,8 +8,8 @@ public class PlanInProgress {
 	}
 
 	private String endingDate;
-	private Plan plan; // TODO cambia in planId e non plan
-	private List<StepInProgress> toDoSteps; // TODO cambia in stepId e non step
+	private Plan plan;
+	private List<StepInProgress> toDoSteps; 
 
 	public String getEndingDate() {
 		return endingDate;

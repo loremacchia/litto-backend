@@ -1,7 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class StepFromDBDto implements Serializable {
 
@@ -28,7 +27,4 @@ public class StepFromDBDto implements Serializable {
 	public void setPlan(PlanPreviewDto plan) {
 		this.plan = plan;
 	}
-	
-
-
 }

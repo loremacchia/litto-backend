@@ -18,19 +18,30 @@ public class StepService extends BaseService {
 	@Inject
 	StepController stepController;
 
-	@GET //TODO da errore se non ci sono goals
-	@Path("/{userId}/{planId}") // /user/{userId}/plan/{planId}/step
+	@GET 
+	@Path("/{userId}/{planId}") 
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getActiveStep(@PathParam("userId") String userID, @PathParam("planId") String planID,
-			@HeaderParam("Authorization") String token) {
-		return responseCreator(token, stepController.getActiveStep(userID, planID));
+	public Response getActiveStep(
+								@PathParam("userId") String userID, 
+								@PathParam("planId") String planID,
+								@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, userID);
+		if(result)
+			return responseCreator(true, token, stepController.getActiveStep(userID, planID));
+		return responseCreator(false, "", null);
 	}
 
-	@GET //TODO da errore se non ci sono goals
-	@Path("/{userId}/{planId}/next/{planWeek}") // /user/{userId}/plan/{planId}/step
+	@GET 
+	@Path("/{userId}/{planId}/next/{planWeek}") 
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getNextActiveStep(@PathParam("userId") String userID, @PathParam("planId") String planID, @PathParam("planWeek") int planWeek,
-			@HeaderParam("Authorization") String token) {
-		return responseCreator(token, stepController.getNextActiveStep(userID, planID, planWeek)); // TODO fare la verifica prima di eseguire la funzione
+	public Response getNextActiveStep(
+								@PathParam("userId") String userID, 
+								@PathParam("planId") String planID,
+								@PathParam("planWeek") int planWeek, 
+								@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, userID);
+		if(result)
+			return responseCreator(true, token, stepController.getNextActiveStep(userID, planID, planWeek));
+		return responseCreator(false, "", null);
 	}
 }
