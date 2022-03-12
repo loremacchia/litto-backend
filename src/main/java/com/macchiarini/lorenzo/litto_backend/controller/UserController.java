@@ -26,6 +26,8 @@ import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 import jakarta.inject.Inject;
 
 public class UserController {
+	
+	// TODO in fase di creazione user e plan settare il nuovo id
 
 	@Inject 
 	Authorizer authorizer;
@@ -51,19 +53,19 @@ public class UserController {
 	public User createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
 			User user = userMapper.toUser(userInitDto);
-			long ID = userDao.addUser(user);
+			String ID = userDao.addUser(user);
 			User u = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
 			return u;
 		}
 		return null;
 	}
 	
-	public User createToken(String email, String password, long userID) {
+	public User createToken(String email, String password, String userID) {
 		return authorizer.createToken(userID, email, password);
 	}
 
-	public boolean completeUser(long ID, UserCompleteDto userCompleteDto) {
-		if (ID == 0) { // TODO controllare se JWT o id è corretto
+	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
+		if (ID == "") { // TODO controllare se JWT o id è corretto
 			User user = userDao.getUser(ID); // TODO aggiungere ritorno se non c'è user
 			user.setBio(userCompleteDto.getBio());
 			user.setName(userCompleteDto.getName());
@@ -85,27 +87,27 @@ public class UserController {
 	}
 
 	public User loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
-		long ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		String ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
 		User u = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
-		if (ID != 0) { // TODO controlla che l'id sia corretto
+		if (ID != "") { // TODO controlla che l'id sia corretto
 			return u;
 		}
 		return null;
 	}
 
-	public boolean logoutUser(long ID) {
+	public boolean logoutUser(String ID) {
 		authorizer.removeUserAuth(ID);
 		return true;
 	}
 
-	public UserDto getUser(long ID) {
+	public UserDto getUser(String ID) {
 		User user = userDao.getFullUser(ID); // TODO forse farsi ritornare direttamente lo user corretto potrebbe andare
 												// bene ugualmente
 		UserDto userDto = userMapper.toUserDto(user);
 		return userDto;
 	}
 
-	public List<StepDto> getUserGoals(long ID) {
+	public List<StepDto> getUserGoals(String ID) {
 		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for (StepInProgress s : activeSteps) { // TODO n+1 queries
@@ -115,7 +117,7 @@ public class UserController {
 		return activeStepDtos;
 	}
 
-	public List<PlanPreviewDto> getUserRecommendedPlans(long ID) {
+	public List<PlanPreviewDto> getUserRecommendedPlans(String ID) {
 		List<Plan> recommendedPlans = userDao.getRecommendedPlans(ID);
 		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
 		for (Plan p : recommendedPlans) {
@@ -129,7 +131,7 @@ public class UserController {
 		return interests;
 	}
 
-	public boolean startPlan(long planID, long userID, String dateFrom, String dateTo) {
+	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
 		Plan plan = planDao.getPlan(planID);
 		PlanInProgress planInProgress = new PlanInProgress();
 		planInProgress.setPlan(plan);

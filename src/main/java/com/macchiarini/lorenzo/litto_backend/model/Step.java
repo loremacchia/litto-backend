@@ -2,16 +2,22 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.List;
 
-public class Step {
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+@NodeEntity
+public class Step extends Entity {
 
 	public Step() {
 	}
 
-	private long id; // TODO vedere se ID è utile in fase di query o per essere linkato da setpInProgress o plan ecc..
 	private String title;
 	private String subtitle;
+	@Relationship(type = "COMPOSED_BY", direction = Relationship.INCOMING)
+	private Plan plan;
+	@Relationship(type = "HAS_MATERIAL", direction = Relationship.OUTGOING)
 	private List<Material> materials; // TODO lista ordinata
-	private long planId;
+	private String planId; // TODO non dovrebbe servire
 	private int planWeek; // TODO va bene così o meglio un id vero e proprio?
 
 	public int getPlanWeek() {
@@ -22,11 +28,11 @@ public class Step {
 		this.planWeek = planWeek;
 	}
 
-	public long getPlanId() {
+	public String getPlanId() {
 		return planId;
 	}
 
-	public void setPlanId(long planId) {
+	public void setPlanId(String planId) {
 		this.planId = planId;
 	}
 
@@ -53,13 +59,4 @@ public class Step {
 	public void setMaterials(List<Material> materials) {
 		this.materials = materials;
 	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 }

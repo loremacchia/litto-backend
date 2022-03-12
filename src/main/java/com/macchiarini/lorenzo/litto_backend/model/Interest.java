@@ -1,11 +1,26 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-public class Interest {
-	public Interest() {
+import org.neo4j.ogm.annotation.EndNode;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.StartNode;
+
+@RelationshipEntity
+public class Interest extends Entity{
+	
+	public Interest() {}
+	
+	@StartNode private User user;
+	@EndNode private Topic topic;
+	@Property private int level;
+	
+	public User getUser() {
+		return user;
 	}
 
-	private Topic topic;
-	private int level;
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public Topic getTopic() {
 		return topic;

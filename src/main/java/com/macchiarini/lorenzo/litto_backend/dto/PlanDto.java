@@ -7,7 +7,7 @@ public class PlanDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private long id;
+	private String id;
 	private String imageUrl;
 	private String title;
 	private String subtitle;
@@ -15,11 +15,11 @@ public class PlanDto implements Serializable {
 	private List<StepPreviewDto> steps;
 	private int duration;
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

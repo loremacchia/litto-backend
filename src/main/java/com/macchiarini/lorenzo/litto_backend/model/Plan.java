@@ -2,27 +2,25 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.*;
 
-public class Plan {
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+@NodeEntity
+public class Plan extends Entity {
 
 	public Plan() {
 	}
+	// TODO serve costruttore con ID?
 
-	private long id;
 	private String imageUrl;
 	private String title;
 	private String subtitle;
 	private int level;
+	@Relationship(type = "RELATED_TO", direction = Relationship.OUTGOING)
 	private List<Topic> tags;
+	@Relationship(type = "COMPOSED_BY", direction = Relationship.OUTGOING)
 	private List<Step> steps;
 	private int duration;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getImageUrl() {
 		return imageUrl;

@@ -54,7 +54,7 @@ public class UserService extends BaseService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response createUser(UserInitDto userInitDto) {
 		User u = userController.createUser(userInitDto);
-		if (u.getId() != -1) {
+		if (u.getId() != "") {
 			return Response.ok().header("Authorization",  "Bearer " +u.getToken()).entity(u.getId()).build();
 		}
 		return Response.ok().header("Authorization",  "Bearer " +"").entity(false).build();
@@ -64,7 +64,7 @@ public class UserService extends BaseService {
 	@Path("/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response completeUser(@PathParam("id") long ID, @HeaderParam("Authorization") String token,
+	public Response completeUser(@PathParam("id") String ID, @HeaderParam("Authorization") String token,
 			UserCompleteDto userCompleteDto) {
 		return responseCreator(token, userController.completeUser(ID, userCompleteDto));
 	}
@@ -84,28 +84,28 @@ public class UserService extends BaseService {
 	@GET
 	@Path("/{id}/logout")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response logoutUser(@PathParam("id") long ID) {
+	public Response logoutUser(@PathParam("id") String ID) {
 		return Response.ok().header("Authorization",  "Bearer " +"").entity(userController.logoutUser(ID)).build();
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUser(@PathParam("id") long ID, @HeaderParam("Authorization") String token) {
+	public Response getUser(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, userController.getUser(ID));
 	}
 
 	@GET
 	@Path("/{id}/goals")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserGoals(@PathParam("id") long ID, @HeaderParam("Authorization") String token) {
+	public Response getUserGoals(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, userController.getUserGoals(ID));
 	}
 
 	@GET
 	@Path("/{id}/recommended")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserRecommendedPlans(@PathParam("id") long ID, @HeaderParam("Authorization") String token) {
+	public Response getUserRecommendedPlans(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
 		return responseCreator(token, userController.getUserRecommendedPlans(ID));
 	}
 
@@ -120,7 +120,7 @@ public class UserService extends BaseService {
 	@Path("/{userId}/start/{planId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response startPlan(@PathParam("planId") long planID, @PathParam("userId") long userID,
+	public Response startPlan(@PathParam("planId") String planID, @PathParam("userId") String userID,
 			@HeaderParam("Authorization") String token, DateDto dateDto) {
 		return responseCreator(token,
 				userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo())); // TODO fare la verifica prima di eseguire la funzione

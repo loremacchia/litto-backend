@@ -2,12 +2,19 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.*;
 
-public class User {
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
-	public User() { // TODO aggiungi UUID e id utente
+@NodeEntity
+public class User extends Entity {
+
+	public User() {
 	}
 
-	private long id;
+	public User(String id) {
+		setId(id);
+	}
+
 	private String name;
 	private String surname;
 	private String bio;
@@ -16,11 +23,13 @@ public class User {
 	private String imageUrl;
 	private String username;
 	private int level;
-	private List<Interest> interests; // TODO anche solo i nomi?
-	private List<Plan> completedPlans; // TODO anche solo le chiavi/id?
+	@Relationship(type = "IS_INTERESTED_IN", direction = Relationship.OUTGOING)
+	private List<Interest> interests;
+	@Relationship(type = "HAS_COMPLETED", direction = Relationship.OUTGOING)
+	private List<Plan> completedPlans;
+	@Relationship(type = "HAS_TO_COMPLETE", direction = Relationship.OUTGOING)
 	private List<PlanInProgress> progressingPlans;
 	private String token;
-
 
 	public String getToken() {
 		return token;
@@ -28,14 +37,6 @@ public class User {
 
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getName() {

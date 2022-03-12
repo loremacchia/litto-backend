@@ -2,12 +2,29 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.Date;
 
+import org.neo4j.ogm.annotation.EndNode;
+import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.StartNode;
+
+@RelationshipEntity
 public class StepInProgress {
 	public StepInProgress() {
 	}
 
-	private Date endDate; // Date è il tipo di tutti gli attributi data interni all'architettura, String solo quelli che si interfacciano con l'esterno
-	private Step step; // TODO lasciare solo stepid?
+	@Property private Date endDate; 
+	@StartNode
+	private PlanInProgress planInProgress;
+	@EndNode
+	private Step step; 
+	
+	public PlanInProgress getPlanInProgress() {
+		return planInProgress;
+	}
+
+	public void setPlanInProgress(PlanInProgress planInProgress) {
+		this.planInProgress = planInProgress;
+	}
 
 	public Date getEndDate() {
 		return endDate;

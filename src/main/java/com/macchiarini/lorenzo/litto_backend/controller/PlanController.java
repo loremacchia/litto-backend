@@ -18,7 +18,7 @@ public class PlanController {
 	@Inject
 	PlanMapper planMapper;
 
-	public PlanDto getPlan(long ID) {
+	public PlanDto getPlan(String ID) {
 		Plan plan = planDao.getPlan(ID);
 		if (plan != null) { // TODO vedere se piano valido
 			return planMapper.toPlanDto(plan);
@@ -26,7 +26,7 @@ public class PlanController {
 		return null;
 	}
 
-	public long createPlan(long userId, Plan plan) { // TODO vedere se andare a modificare lo user (penso di si)
+	public String createPlan(String userId, Plan plan) { // TODO vedere se andare a modificare lo user (penso di si)
 		// TODO mettere anche la creazione dello step qua, usare poi ID dello step da
 		// dare a planDao (Forse non serve visto che la mutation spinge)
 		plan.setId(planDao.createPlan(plan)); // TODO cambiare e mettere tutte le relazioni qua

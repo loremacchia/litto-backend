@@ -2,14 +2,22 @@ package com.macchiarini.lorenzo.litto_backend.model;
 
 import java.util.*;
 
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+@NodeEntity
 public class PlanInProgress {
 
 	public PlanInProgress() {
 	}
 
 	private Date endingDate;
-	private Plan plan; // TODO cambia in planId e non plan
-	private List<StepInProgress> toDoSteps; // TODO cambia in stepId e non step
+	@Relationship(type = "HAS_TO_COMPLETE", direction = Relationship.INCOMING)
+	private User user;
+	@Relationship(type = "REFERS_TO", direction = Relationship.OUTGOING)
+	private Plan plan;
+	@Relationship(type = "HAS_LEFT", direction = Relationship.OUTGOING)
+	private List<StepInProgress> toDoSteps;
 
 	public Date getEndingDate() {
 		return endingDate;
@@ -17,6 +25,14 @@ public class PlanInProgress {
 
 	public void setEndingDate(Date endingDate) {
 		this.endingDate = endingDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Plan getPlan() {

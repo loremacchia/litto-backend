@@ -3,13 +3,21 @@ package com.macchiarini.lorenzo.litto_backend.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.neo4j.ogm.cypher.query.Pagination;
+import org.neo4j.ogm.session.Session;
+
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.Topic;
 import com.macchiarini.lorenzo.litto_backend.model.User;
 
+import jakarta.inject.Inject;
+
 public class UserDao {
+	
+	@Inject
+	Session session = SessionFactoryNeo4J.getInstance().getSession();
 
 	// Function to serach if a user has already registered with the given email
 	public List<User> searchUserbyEmail(String email) {
@@ -18,12 +26,12 @@ public class UserDao {
 
 	// Function to persist the User and to get back the userId
 	// TODO cifrare password
-	public long addUser(User user) {
-		return 0;
+	public String addUser(User user) {
+		return "";
 	}
 
 	// Function to return the user with a given ID
-	public User getUser(long ID) {
+	public User getUser(String ID) {
 		return null;
 	}
 
@@ -33,27 +41,27 @@ public class UserDao {
 	}
 
 	// Function to get the ID of the user by giving the email and password
-	public long loginUser(String email, String password) {
-		return 0;
+	public String loginUser(String email, String password) {
+		return "";
 	}
 
 	// Function to get the user and all its composited values (plans, interests ecc)
-	public User getFullUser(long ID) { // TODO può essere fatto solamente in addUser?
+	public User getFullUser(String ID) { // TODO può essere fatto solamente in addUser?
 		return null;
 	}
 
 	// Function to get the topic from the strings
 	public List<Topic> getTopics(List<String> topicNames) {
-		return new ArrayList<Topic>();
+		return new ArrayList<Topic>(session.loadAll(Topic.class, new Pagination(0, 12)));
 	}
 
 	// Function to get all the active steps of the User having ID
-	public List<StepInProgress> getAllActiveSteps(long ID) {
+	public List<StepInProgress> getAllActiveSteps(String ID) {
 		return null;
 	}
 
 	// Function to get all the recommended plans of the User having ID
-	public List<Plan> getRecommendedPlans(long ID) {
+	public List<Plan> getRecommendedPlans(String ID) {
 		return null;
 	}
 
@@ -63,37 +71,37 @@ public class UserDao {
 	}
 
 	// Function to add a created plan to the user with the ID = userId
-	public void addCreatedPlan(long userId, Plan plan) {
+	public void addCreatedPlan(String userId, Plan plan) {
 	}
 
 	// Function that gets the user and adds the plan in progress
 	// Here the plan in progress must be linked to a real plan and not recreate all
 	// plan infos (so for the steps)
-	public boolean startPlan(long userID, PlanInProgress planInProgress) {
+	public boolean startPlan(String userID, PlanInProgress planInProgress) {
 		return false;
 
 	}
 	
 	// Function that sets the plan in progress to the userID (the plan is different only for the toDoSteps)
-	public void updatePlanInProgress(long userID, PlanInProgress plan) {		
+	public void updatePlanInProgress(String userID, PlanInProgress plan) {		
 	}
 
 	// Function that removes the progressing plan from the userID
-	public void removePlanInProgress(long userID, long planID) {	
+	public void removePlanInProgress(String userID, String planID) {	
 	}
 
 	// Function to remove the token from the user db
-	public void removeUserToken(long userID) {
+	public void removeUserToken(String userID) {
 		
 	}
 
 	// Function to set the token 
-	public User setUserToken(long userID, String token) {
+	public User setUserToken(String userID, String token) {
 		return null;
 	}
 	
 	// Function that returns the token value of the user
-	public String getUserToken(long userID) {
+	public String getUserToken(String userID) {
 		return "";
 	}
 

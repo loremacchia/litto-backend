@@ -1,6 +1,10 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-public class Material {
+import org.neo4j.ogm.annotation.NodeEntity;
+
+@NodeEntity
+public class Material extends Entity{
+	
 	public Material() {
 	}
 

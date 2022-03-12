@@ -18,7 +18,7 @@ public class Authorizer {
 	@Inject
 	UserDao userDao;
 	
-	public User createToken(long userID, String email, String password) throws JWTCreationException {
+	public User createToken(String userID, String email, String password) throws JWTCreationException {
 
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 		String token = JWT.create()
@@ -35,7 +35,7 @@ public class Authorizer {
 
 	public boolean verifyToken(String token) throws JWTVerificationException {
 		Map<String, Claim> claims = decodeToken(token);
-		long userID = Long.valueOf(claims.get("userID").toString());
+		String userID = claims.get("userID").toString();
 		String tokenFromDB = userDao.getUserToken(userID);
 	    if(tokenFromDB != null) { // TODO vedere se va effettivamente bene
 //	    	Algorithm algorithm = Algorithm.HMAC256("secret");
@@ -61,11 +61,11 @@ public class Authorizer {
 
 	public void invalidateToken(String token) throws JWTDecodeException {
 		Map<String, Claim> claims = decodeToken(token);
-		long userID = Long.valueOf(claims.get("userID").toString());
+		String userID = claims.get("userID").toString();
 		userDao.removeUserToken(userID);
 	}
 	
-	public void removeUserAuth(long userID) {
+	public void removeUserAuth(String userID) {
 		userDao.removeUserToken(userID);
 	}
 	
