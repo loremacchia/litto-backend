@@ -1,6 +1,7 @@
 package com.macchiarini.lorenzo.litto_backend.controller;
 
-import java.util.Map;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -9,6 +10,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.model.User;
 
@@ -18,60 +20,84 @@ public class Authorizer {
 	@Inject
 	UserDao userDao;
 	
-	public User createToken(String userID, String email, String password) throws JWTCreationException {
-
+	@Inject
+	GenericDao genericDao;
+	
+	/**
+	 * @param userID
+	 * @param email
+	 * @param password
+	 * @return
+	 * @throws JWTCreationException
+	 * @throws Exception
+	 */
+	public String createToken(User user) {
 		Algorithm algorithm = Algorithm.HMAC256("secret");
 		String token = JWT.create()
 						.withIssuer("auth0")
-				        .withClaim("userID", userID)
-				        .withClaim("email", email)
-				        .withClaim("password", password)
+				        .withClaim("userID", user.getId())
+				        .withClaim("email", user.getEmail())
+				        .withClaim("password", user.getPassword())
+				        .withClaim("timestamp", Timestamp.from(Instant.now()))
 						.sign(algorithm);
-		System.out.println(token);
-		User u = userDao.setUserToken(userID, token);
-		return u;
-
+		System.out.println("Generated token: "+token);
+		user.setToken(token);
+		genericDao.savePreview(user);
+		return token;
 	}
 
-	public boolean verifyToken(String token) throws JWTVerificationException {
-		Map<String, Claim> claims = decodeToken(token);
-		String userID = claims.get("userID").toString();
-		String tokenFromDB = userDao.getUserToken(userID);
-	    if(tokenFromDB != null) { // TODO vedere se va effettivamente bene
-//	    	Algorithm algorithm = Algorithm.HMAC256("secret");
-//		    JWTVerifier verifier = JWT.require(algorithm)
-//		        .withIssuer("auth0")
-//		        .withClaim("userID", u.getId())
-//		        .withClaim("email", u.getEmail())
-//		        .withClaim("password", u.getPassword())
-//		        .build(); //Reusable verifier instance
-//		    DecodedJWT jwt = verifier.verify(token);
-	    	if(token == tokenFromDB) {
-	    		return true;
-	    	}
-	    	else {
-	    		return false;
-	    	}
-	    }
-	    else {
-	    	return false;
-//	    	throw JWTVerificationException;
-	    }
+	/**
+	 * @param token
+	 * @param userIDOuter
+	 * @return
+	 * @throws JWTVerificationException
+	 */
+	public boolean verifyToken(String token, String userIDOuter) throws JWTVerificationException {
+		String userID = getUserIDFromToken(token);
+		if(userIDOuter != null && !userIDOuter.equals(userID))
+			return false;
+		String tokenFromDB;
+		tokenFromDB = genericDao.getPreview(User.class, userID).getToken();
+	    if(tokenFromDB != null && token.equals(tokenFromDB)) 
+	    	return true;	
+	    return false;
 	}
 
-	public void invalidateToken(String token) throws JWTDecodeException {
-		Map<String, Claim> claims = decodeToken(token);
-		String userID = claims.get("userID").toString();
+	/**
+	 * @param token
+	 * @throws JWTDecodeException
+	 */
+	public void invalidateToken(String token) {
+		String userID = getUserIDFromToken(token);
 		userDao.removeUserToken(userID);
 	}
 	
-	public void removeUserAuth(String userID) {
-		userDao.removeUserToken(userID);
+	/**
+	 * @param userID
+	 */
+	public void removeUserAuth(User user) {
+		user.setToken(null);
+		genericDao.savePreview(user); // TODO va bene qua save preview o deve essere piu profondo?
 	}
 	
-	public Map<String, Claim> decodeToken(String token) {
+	/**
+	 * @param token
+	 * @return
+	 */
+	private String getUserIDFromToken(String token) {
+		String userID = getTokenField(token, "userID").toString();
+		userID = userID.substring(1, userID.length()-1);
+		return userID;
+	}
+	
+	/**
+	 * @param token
+	 * @param field
+	 * @return
+	 */
+	private Claim getTokenField(String token, String field) {
 		DecodedJWT jwt = JWT.decode(token);
-		return jwt.getClaims();
+		return jwt.getClaims().get(field);
 	}
 	
 }

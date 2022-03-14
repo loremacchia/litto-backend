@@ -3,10 +3,12 @@ package com.macchiarini.lorenzo.litto_backend.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
+import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
@@ -33,6 +35,9 @@ public class UserController {
 	Authorizer authorizer;
 	
 	@Inject
+	GenericDao genericDao;
+	
+	@Inject
 	UserMapper userMapper;
 
 	@Inject
@@ -50,64 +55,68 @@ public class UserController {
 	@Inject
 	DateHandler dateHandler;
 
-	public User createUser(UserInitDto userInitDto) {
+	public TokenIDDto createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
 			User user = userMapper.toUser(userInitDto);
-			String ID = userDao.addUser(user);
-			User u = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
-			return u;
+			user.generateId();
+			String token = authorizer.createToken(user);
+			user.setToken(token);
+			return userMapper.toTokenID(user);
 		}
 		return null;
 	}
 	
-	public User createToken(String email, String password, String userID) {
-		return authorizer.createToken(userID, email, password);
-	}
-
 	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
-		if (ID == "") { // TODO controllare se JWT o id è corretto
-			User user = userDao.getUser(ID); // TODO aggiungere ritorno se non c'è user
-			user.setBio(userCompleteDto.getBio());
-			user.setName(userCompleteDto.getName());
-			user.setSurname(userCompleteDto.getSurname());
-			user.setImageUrl(userCompleteDto.getImageUrl());
-			List<Topic> topics = userDao.getTopics(userCompleteDto.getInterests());
-			List<Interest> interests = new ArrayList<Interest>();
-			for (Topic t : topics) {
-				Interest i = new Interest();
-				i.setTopic(t);
-				i.setLevel(1);
-				interests.add(i);
-			}
-			user.setInterests(interests); // TODO vedere se far passare direttamente dallo user anche le immagini
-			userDao.updateUser(user);
-			return true;
+		User user = genericDao.get(User.class, ID); // TODO aggiungere ritorno se non c'è user
+		user.setBio(userCompleteDto.getBio());
+		user.setName(userCompleteDto.getName());
+		user.setSurname(userCompleteDto.getSurname());
+		user.setImageUrl(userCompleteDto.getImageUrl());
+		List<Topic> topics = userDao.getTopics(userCompleteDto.getInterests());
+		List<Interest> interests = new ArrayList<Interest>();
+		for (Topic t : topics) {
+			Interest i = new Interest();
+			i.setTopic(t);
+			i.setLevel(1);
+			i.generateId();
+			interests.add(i);
 		}
-		return false;
+		user.setInterests(interests);
+		genericDao.save(user);
+		return true;
 	}
 
-	public User loginUser(UserLoginDto userLoginDto) { // TODO ritorna JWT
-		String ID = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
-		User u = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
-		if (ID != "") { // TODO controlla che l'id sia corretto
-			return u;
+	public TokenIDDto loginUser(UserLoginDto userLoginDto) {
+		User user = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		if(user != null) {
+			System.out.println(user);
+			String token = authorizer.createToken(user);
+			System.out.println(token);
+			user.setToken(token);
+			System.out.println(user);
+			return userMapper.toTokenID(user);
 		}
 		return null;
 	}
 
 	public boolean logoutUser(String ID) {
-		authorizer.removeUserAuth(ID);
+		User user = genericDao.get(User.class, ID);
+		authorizer.removeUserAuth(user);
 		return true;
 	}
 
+	public boolean deleteUser(String userID){ // TODO modificaaaaaaaa
+		return false;
+		
+	}
+	
 	public UserDto getUser(String ID) {
-		User user = userDao.getFullUser(ID); // TODO forse farsi ritornare direttamente lo user corretto potrebbe andare
-												// bene ugualmente
+		User user = genericDao.getCustom(User.class, ID, 3);
 		UserDto userDto = userMapper.toUserDto(user);
 		return userDto;
 	}
 
-	public List<StepDto> getUserGoals(String ID) {
+	public List<StepDto> getUserGoals(String ID) { // TODO da fare
 		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for (StepInProgress s : activeSteps) { // TODO n+1 queries
@@ -117,8 +126,20 @@ public class UserController {
 		return activeStepDtos;
 	}
 
+	
+	/**
+	 * TODO qua trovo solamente una lista di piani recommended, non una per ogni token
+	 * TODO testare meglio
+	 * @param ID
+	 * @return
+	 */
 	public List<PlanPreviewDto> getUserRecommendedPlans(String ID) {
-		List<Plan> recommendedPlans = userDao.getRecommendedPlans(ID);
+		List<Interest> interests = genericDao.getCustom(User.class, ID, 3).getInterests();
+		List<String> keywords = new ArrayList<String>();
+		for(Interest i : interests) {
+			keywords.add(i.getTopic().getName());
+		}
+		List<Plan> recommendedPlans = planDao.searchPlanByWords(keywords);
 		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
 		for (Plan p : recommendedPlans) {
 			recommendedPlansDto.add(planMapper.toPlanPreviewDto(p));

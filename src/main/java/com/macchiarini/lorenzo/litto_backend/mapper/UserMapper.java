@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
@@ -35,10 +36,20 @@ public class UserMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 		userDto.setImageUrl(user.getImageUrl());
 		userDto.setInterests(user.getInterests());
 		List<PlanPreviewDto> planPreviewDtos = new ArrayList<PlanPreviewDto>();
-		for(Plan p : user.getCompletedPlans()) {
-			planPreviewDtos.add(planMapper.toPlanPreviewDto(p));
+		if(user.getCompletedPlans() != null) {
+			for(Plan p : user.getCompletedPlans()) {
+				planPreviewDtos.add(planMapper.toPlanPreviewDto(p));
+			}
 		}
+		userDto.setCompletedPlans(planPreviewDtos);
 		return userDto;
+	}
+	
+	public TokenIDDto toTokenID(User user) {
+		TokenIDDto u = new TokenIDDto();
+		u.setId(user.getId());
+		u.setToken(user.getToken());
+		return u;
 	}
 	
 }

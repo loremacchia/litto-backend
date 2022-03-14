@@ -19,9 +19,14 @@ public class SearchService extends BaseService {
 	SearchController searchController;
 
 	@GET
-	@Path("/{word}") // /user/{userId}/plan/{planId}/step
+	@Path("/{word}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response searchWord(@PathParam("word") String word, @HeaderParam("Authorization") String token) {
-		return responseCreator(token, searchController.search(word));
+	public Response searchWord(
+							@PathParam("word") String word, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, null);
+		if(result)
+			return responseCreator(true, token, searchController.search(word));
+		return responseCreator(false, "", null); 
 	}
 }

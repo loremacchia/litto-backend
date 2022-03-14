@@ -5,6 +5,8 @@ import java.util.*;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @NodeEntity
 public class User extends Entity {
 
@@ -27,6 +29,7 @@ public class User extends Entity {
 	private List<Interest> interests;
 	@Relationship(type = "HAS_COMPLETED", direction = Relationship.OUTGOING)
 	private List<Plan> completedPlans;
+	@JsonIgnoreProperties("user")	
 	@Relationship(type = "HAS_TO_COMPLETE", direction = Relationship.OUTGOING)
 	private List<PlanInProgress> progressingPlans;
 	private String token;
@@ -126,5 +129,15 @@ public class User extends Entity {
 	public void setProgressingPlans(List<PlanInProgress> progressingPlans) {
 		this.progressingPlans = progressingPlans;
 	}
+
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", surname=" + surname + ", bio=" + bio + ", email=" + email + ", password="
+				+ password + ", imageUrl=" + imageUrl + ", username=" + username + ", level=" + level + ", interests="
+				+ interests + ", completedPlans=" + completedPlans + ", progressingPlans=" + progressingPlans
+				+ ", token=" + token + "]";
+	}
+	
+	
 
 }

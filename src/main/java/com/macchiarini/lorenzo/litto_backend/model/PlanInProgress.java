@@ -5,6 +5,8 @@ import java.util.*;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @NodeEntity
 public class PlanInProgress {
 
@@ -12,6 +14,7 @@ public class PlanInProgress {
 	}
 
 	private Date endingDate;
+	@JsonIgnore
 	@Relationship(type = "HAS_TO_COMPLETE", direction = Relationship.INCOMING)
 	private User user;
 	@Relationship(type = "REFERS_TO", direction = Relationship.OUTGOING)
