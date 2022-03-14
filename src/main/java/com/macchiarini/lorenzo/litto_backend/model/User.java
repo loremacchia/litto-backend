@@ -129,6 +129,13 @@ public class User extends Entity {
 	public void setProgressingPlans(List<PlanInProgress> progressingPlans) {
 		this.progressingPlans = progressingPlans;
 	}
+	
+	public void addProgressingPlans(PlanInProgress planInProgress) {
+		if(this.progressingPlans == null) {
+			this.progressingPlans = new ArrayList<PlanInProgress>();
+		}
+		this.progressingPlans.add(planInProgress);	
+	}
 
 	@Override
 	public String toString() {
@@ -137,6 +144,7 @@ public class User extends Entity {
 				+ interests + ", completedPlans=" + completedPlans + ", progressingPlans=" + progressingPlans
 				+ ", token=" + token + "]";
 	}
+
 	
 	
 

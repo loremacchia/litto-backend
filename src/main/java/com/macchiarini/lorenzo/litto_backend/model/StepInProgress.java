@@ -1,10 +1,11 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 import org.neo4j.ogm.annotation.NodeEntity;
 
 @NodeEntity
-public class StepInProgress {
+public class StepInProgress extends Entity{
 	public StepInProgress() {
 	}
 

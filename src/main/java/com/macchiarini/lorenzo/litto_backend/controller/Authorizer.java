@@ -5,9 +5,6 @@ import java.time.Instant;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
@@ -28,8 +25,6 @@ public class Authorizer {
 	 * @param email
 	 * @param password
 	 * @return
-	 * @throws JWTCreationException
-	 * @throws Exception
 	 */
 	public String createToken(User user) {
 		Algorithm algorithm = Algorithm.HMAC256("secret");
@@ -50,9 +45,8 @@ public class Authorizer {
 	 * @param token
 	 * @param userIDOuter
 	 * @return
-	 * @throws JWTVerificationException
 	 */
-	public boolean verifyToken(String token, String userIDOuter) throws JWTVerificationException {
+	public boolean verifyToken(String token, String userIDOuter) {
 		String userID = getUserIDFromToken(token);
 		if(userIDOuter != null && !userIDOuter.equals(userID))
 			return false;
@@ -65,11 +59,11 @@ public class Authorizer {
 
 	/**
 	 * @param token
-	 * @throws JWTDecodeException
 	 */
 	public void invalidateToken(String token) {
 		String userID = getUserIDFromToken(token);
-		userDao.removeUserToken(userID);
+		User user = genericDao.getPreview(User.class, userID);
+		removeUserAuth(user);
 	}
 	
 	/**

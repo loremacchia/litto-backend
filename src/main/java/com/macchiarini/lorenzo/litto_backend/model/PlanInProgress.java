@@ -1,5 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -8,7 +9,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @NodeEntity
-public class PlanInProgress {
+public class PlanInProgress extends Entity{
 
 	public PlanInProgress() {
 	}

@@ -17,7 +17,6 @@ public class Step extends Entity {
 	private Plan plan;
 	@Relationship(type = "HAS_MATERIAL", direction = Relationship.OUTGOING)
 	private List<Material> materials; // TODO lista ordinata
-	private String planId; // TODO non dovrebbe servire
 	private int planWeek; // TODO va bene così o meglio un id vero e proprio?
 
 	public int getPlanWeek() {
@@ -26,14 +25,6 @@ public class Step extends Entity {
 
 	public void setPlanWeek(int planWeek) {
 		this.planWeek = planWeek;
-	}
-
-	public String getPlanId() {
-		return planId;
-	}
-
-	public void setPlanId(String planId) {
-		this.planId = planId;
 	}
 
 	public String getTitle() {

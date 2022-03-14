@@ -1,10 +1,13 @@
 package com.macchiarini.lorenzo.litto_backend.controller;
 
+import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanDto;
 import com.macchiarini.lorenzo.litto_backend.mapper.PlanMapper;
+import com.macchiarini.lorenzo.litto_backend.model.Material;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
+import com.macchiarini.lorenzo.litto_backend.model.Step;
 
 import jakarta.inject.Inject;
 
@@ -14,24 +17,30 @@ public class PlanController {
 
 	@Inject
 	PlanDao planDao;
+	
+	@Inject
+	GenericDao genericDao;
 
 	@Inject
 	PlanMapper planMapper;
 
 	public PlanDto getPlan(String ID) {
-		Plan plan = planDao.getPlan(ID);
+		Plan plan =	genericDao.getOverview(Plan.class, ID);
 		if (plan != null) { // TODO vedere se piano valido
 			return planMapper.toPlanDto(plan);
 		}
 		return null;
 	}
 
-	public String createPlan(String userId, Plan plan) { // TODO vedere se andare a modificare lo user (penso di si)
-		// TODO mettere anche la creazione dello step qua, usare poi ID dello step da
-		// dare a planDao (Forse non serve visto che la mutation spinge)
-		plan.setId(planDao.createPlan(plan)); // TODO cambiare e mettere tutte le relazioni qua
-		userDao.addCreatedPlan(userId, plan); // TODO passare anche solo il plan id..
+	public String createPlan(String userId, Plan plan) { 
+		plan.generateId();
+		for(Step s : plan.getSteps()) {
+			s.generateId();
+			for(Material m : s.getMaterials()) {
+				m.generateId();
+			}
+		}
+		genericDao.save(plan);
 		return plan.getId();
 	}
-
 }

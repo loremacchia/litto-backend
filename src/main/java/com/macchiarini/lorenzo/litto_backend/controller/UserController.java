@@ -124,8 +124,8 @@ public class UserController {
 		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for (StepInProgress s : activeSteps) { // TODO n+1 queries
-			Plan p = planDao.getPlan(s.getStep().getPlanId());
-			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(s, p));
+//			Plan p = planDao.getPlan(s.getStep().getPlanId());
+//			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(s, p));
 		}
 		return activeStepDtos;
 	}
@@ -157,10 +157,22 @@ public class UserController {
 	}
 
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
-		Plan plan = planDao.getPlan(planID);
+		System.out.println(dateFrom + " " + dateTo);
+		User user = genericDao.get(User.class, userID);
+		for(PlanInProgress p : user.getProgressingPlans()) {
+			if(p.getPlan().getId().equals(planID)) 
+				return false;
+		}
+		
+		Plan plan = genericDao.get(Plan.class, planID);
+		if(plan == null) {
+			return false;
+		}
 		PlanInProgress planInProgress = new PlanInProgress();
 		planInProgress.setPlan(plan);
 		planInProgress.setEndingDate(dateHandler.toDate(dateTo));
+		System.out.println(planInProgress.getEndingDate());
+		planInProgress.generateId();
 		List<Step> steps = plan.getSteps();
 		int counter = 0;
 		List<StepInProgress> stepsInProgress = new ArrayList<StepInProgress>();
@@ -168,12 +180,15 @@ public class UserController {
 			counter++;
 			StepInProgress sip = new StepInProgress();
 			sip.setStep(s);
+			sip.generateId();
 			sip.setEndDate(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter));
+			System.out.println(sip.getEndDate());
 			stepsInProgress.add(sip);
 		}
 		System.out.println(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
-		userDao.startPlan(userID, planInProgress);
+		user.addProgressingPlans(planInProgress);
+		genericDao.save(user);
 		return true;
 	}
 }

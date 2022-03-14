@@ -36,7 +36,7 @@ public class PlanMapper {
 		List<Step> steps = plan.getSteps();
 		for (Step s : steps) {
 			StepPreviewDto sP = new StepPreviewDto();
-			sP.setPlanId(s.getPlanId());
+			sP.setPlanId(plan.getId());
 			sP.setSubtitle(s.getSubtitle());
 			sP.setTitle(s.getTitle());
 			stepPreviews.add(sP);
