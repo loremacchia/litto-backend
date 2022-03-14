@@ -34,15 +34,6 @@ public class PlanDao {
 		return null;
 	}
 
-	public List<Plan> searchPlanByWords(List<String> keywords) {
-		Session session = sessionFactory.getSession();
-		Filters f = new Filters();
-		for(String s : keywords) {
-			Filter fnew = new Filter("title", ComparisonOperator.CONTAINING, s);
-			f.or(fnew);
-		}
-		return new ArrayList<Plan>(session.loadAll(Plan.class, f, 0));
-		
-	}
+
 	
 }

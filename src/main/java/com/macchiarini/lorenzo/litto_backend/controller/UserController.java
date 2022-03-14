@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
+import com.macchiarini.lorenzo.litto_backend.dao.SearchDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
@@ -48,6 +49,9 @@ public class UserController {
 
 	@Inject
 	PlanDao planDao;
+	
+	@Inject
+	SearchDao searchDao;
 
 	@Inject
 	PlanMapper planMapper;
@@ -139,7 +143,7 @@ public class UserController {
 		for(Interest i : interests) {
 			keywords.add(i.getTopic().getName());
 		}
-		List<Plan> recommendedPlans = planDao.searchPlanByWords(keywords);
+		List<Plan> recommendedPlans = searchDao.searchPlanByWords(keywords);
 		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
 		for (Plan p : recommendedPlans) {
 			recommendedPlansDto.add(planMapper.toPlanPreviewDto(p));
