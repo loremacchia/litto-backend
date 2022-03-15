@@ -39,23 +39,35 @@ public class StepController {
 			if(p.getPlan().getId().equals(planID)) {
 				plan = p.getPlan();
 				pp = p;
-			}
-				
+			}	
 		}
 		return stepMapper.fromPlanAtiveStepToActiveDto(plan, pp.getActiveStep());
 	}
 
-	public boolean getNextActiveStep(String userID, String planID, int planWeek) { // TODO gestire planweek
-		PlanInProgress plan = planDao.getPlanInProgress(userID, planID);
-		plan.getToDoSteps().remove(0);
-		if(plan.getToDoSteps().size() != 0) {
-			plan.setToDoSteps(plan.getToDoSteps());
-			userDao.updatePlanInProgress(userID,plan);
-			return true; // TODO vedere se i valori di ritorno vanno bene o devono essere invertiti
+	public boolean getNextActiveStep(String userID, String planID, int planWeek) {
+		User user = genericDao.getCustom(User.class, userID,4); 
+		Plan plan = null;
+		PlanInProgress pp = null;
+		for(PlanInProgress p : user.getProgressingPlans()) {
+			if(p.getPlan().getId().equals(planID)) {
+				plan = p.getPlan();
+				pp = p;
+			}
 		}
-		else {
-			userDao.removePlanInProgress(userID, planID);
-			return false;
+		StepInProgress step = pp.getActiveStep();
+		if(step != null) {
+			pp.getToDoSteps().remove(step);
+			genericDao.delete(step);
+			
+			if(pp.getToDoSteps().isEmpty()) {
+				user.addCompletedPlans(plan);
+				user.getProgressingPlans().remove(pp);
+				genericDao.delete(pp);
+			}
+			genericDao.save(user);
+			return !pp.getToDoSteps().isEmpty();
 		}
+		return false;
+		
 	}
 }

@@ -107,6 +107,8 @@ public class User extends Entity {
 	}
 
 	public List<Interest> getInterests() {
+		if(interests == null)
+			interests = new ArrayList<Interest>();
 		return interests;
 	}
 
@@ -115,6 +117,8 @@ public class User extends Entity {
 	}
 
 	public List<Plan> getCompletedPlans() {
+		if(completedPlans == null)
+			completedPlans = new ArrayList<Plan>();
 		return completedPlans;
 	}
 
@@ -123,6 +127,8 @@ public class User extends Entity {
 	}
 
 	public List<PlanInProgress> getProgressingPlans() {
+		if(progressingPlans == null)
+			progressingPlans = new ArrayList<PlanInProgress>();
 		return progressingPlans;
 	}
 
@@ -135,6 +141,13 @@ public class User extends Entity {
 			this.progressingPlans = new ArrayList<PlanInProgress>();
 		}
 		this.progressingPlans.add(planInProgress);	
+	}
+	
+	public void addCompletedPlans(Plan plan) {
+		if(this.completedPlans == null) {
+			this.completedPlans = new ArrayList<Plan>();
+		}
+		this.completedPlans.add(plan);	
 	}
 
 	@Override

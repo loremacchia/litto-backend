@@ -112,6 +112,7 @@ public class UserController {
 	}
 
 	public boolean deleteUser(String userID){ // TODO modificaaaaaaaa
+		userDao.deleteUser(userID);
 		return false;
 		
 	}
@@ -163,13 +164,13 @@ public class UserController {
 
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
 		System.out.println(dateFrom + " " + dateTo);
-		User user = genericDao.get(User.class, userID);
+		User user = genericDao.getCustom(User.class, userID, 5);
 		for(PlanInProgress p : user.getProgressingPlans()) {
 			if(p.getPlan().getId().equals(planID)) 
 				return false;
 		}
 		
-		Plan plan = genericDao.get(Plan.class, planID);
+		Plan plan = genericDao.getOverview(Plan.class, planID);
 		if(plan == null) {
 			return false;
 		}
@@ -187,7 +188,6 @@ public class UserController {
 			sip.setStep(s);
 			sip.generateId();
 			sip.setEndDate(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter));
-			System.out.println(sip.getEndDate());
 			stepsInProgress.add(sip);
 		}
 		System.out.println(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter) + dateTo);

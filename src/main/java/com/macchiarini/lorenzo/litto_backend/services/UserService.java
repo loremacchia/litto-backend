@@ -58,6 +58,7 @@ public class UserService extends BaseService {
 							@PathParam("id") String userID, 
 							@HeaderParam("Authorization") String token) {
 		boolean result = verifyToken(token, userID);
+		System.out.println(result);
 		if (result)
 			return responseCreator(true, token, userController.deleteUser(userID));
 		return responseCreator(false, "", null);

@@ -50,4 +50,12 @@ public class Step extends Entity {
 	public void setMaterials(List<Material> materials) {
 		this.materials = materials;
 	}
+
+	@Override
+	public String toString() {
+		return "Step [ id "+ getId()+" title=" + title + ", subtitle=" + subtitle + ", plan=" + plan + ", materials=" + materials
+				+ ", planWeek=" + planWeek + "]";
+	}
+	
+	
 }

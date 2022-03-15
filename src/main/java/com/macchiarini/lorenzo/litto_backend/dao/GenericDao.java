@@ -33,4 +33,8 @@ public class GenericDao {
 	public <T> void save(T obj) {
 		sessionFactory.getSession().save(obj);
 	}
+	
+	public <T> void delete(T obj) {
+		sessionFactory.getSession().delete(obj);
+	}
 }

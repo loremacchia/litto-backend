@@ -24,7 +24,13 @@ public class PlanInProgress extends Entity{
 	private List<StepInProgress> toDoSteps;
 
 	public StepInProgress getActiveStep() {
-		return Collections.min(toDoSteps, Comparator.comparing(s -> s.getStep().getPlanWeek()));
+		if(toDoSteps != null) {
+			if(!toDoSteps.isEmpty()) {
+				return Collections.min(toDoSteps, Comparator.comparing(s -> s.getStep().getPlanWeek()));
+			}
+			return null;
+		}
+		return null;
 	}
 	
 	public Date getEndingDate() {
@@ -58,5 +64,13 @@ public class PlanInProgress extends Entity{
 	public void setToDoSteps(List<StepInProgress> toDoSteps) {
 		this.toDoSteps = toDoSteps;
 	}
+
+	@Override
+	public String toString() {
+		return "PlanInProgress [endingDate=" + endingDate +", plan=" + plan + ", toDoSteps="
+				+ toDoSteps + "]";
+	}
+	
+	
 
 }

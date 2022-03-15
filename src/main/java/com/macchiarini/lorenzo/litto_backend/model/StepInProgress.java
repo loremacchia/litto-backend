@@ -28,4 +28,11 @@ public class StepInProgress extends Entity{
 		this.step = step;
 	}
 
+	@Override
+	public String toString() {
+		return "StepInProgress [endDate=" + endDate + ", step=" + step + "]";
+	}
+	
+	
+
 }

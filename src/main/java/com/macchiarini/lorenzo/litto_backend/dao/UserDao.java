@@ -1,6 +1,7 @@
 package com.macchiarini.lorenzo.litto_backend.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.neo4j.ogm.cypher.ComparisonOperator;
@@ -9,6 +10,7 @@ import org.neo4j.ogm.cypher.Filters;
 import org.neo4j.ogm.cypher.query.Pagination;
 import org.neo4j.ogm.session.Session;
 
+import com.macchiarini.lorenzo.litto_backend.model.Interest;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
@@ -119,6 +121,28 @@ public class UserDao {
 	// Function that returns the token value of the user
 	public String getUserToken(String userID) {
 		return "";
+	}
+
+	public void deleteUser(String userID) {
+		Session session = sessionFactory.getSession();
+		User user = session.load(User.class, userID, 3);
+//		List<String> ids = new ArrayList<String>();
+		for(PlanInProgress p : user.getProgressingPlans()) {
+			for(StepInProgress s : p.getToDoSteps()) {
+//				ids.add(s.getId());
+				session.delete(s);
+			}
+//			ids.add(p.getId());
+			session.delete(p);
+		}
+		for(Interest i : user.getInterests()) {
+//			ids.add(i.getId());
+			session.delete(i);
+		}
+		
+//		session.delete(ids);
+		session.delete(user);
+		System.out.println("gigi");
 	}
 
 }
