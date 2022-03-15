@@ -23,6 +23,10 @@ public class PlanInProgress extends Entity{
 	@Relationship(type = "HAS_LEFT", direction = Relationship.OUTGOING)
 	private List<StepInProgress> toDoSteps;
 
+	public StepInProgress getActiveStep() {
+		return Collections.min(toDoSteps, Comparator.comparing(s -> s.getStep().getPlanWeek()));
+	}
+	
 	public Date getEndingDate() {
 		return endingDate;
 	}

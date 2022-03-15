@@ -36,19 +36,13 @@ public class StepController {
 		Plan plan = null;
 		PlanInProgress pp = null;
 		for(PlanInProgress p : user.getProgressingPlans()) {
-			if(p.getPlan().getId().equals(planID))
+			if(p.getPlan().getId().equals(planID)) {
 				plan = p.getPlan();
 				pp = p;
-		}
-		int min = pp.getToDoSteps().get(0).getStep().getPlanWeek();
-		StepInProgress step = pp.getToDoSteps().get(0);
-		for(StepInProgress s : pp.getToDoSteps()) {
-			if(s.getStep().getPlanWeek() < min) {
-				min = s.getStep().getPlanWeek();
-				step = s;
 			}
+				
 		}
-		return stepMapper.fromPlanAtiveStepToActiveDto(plan, step);
+		return stepMapper.fromPlanAtiveStepToActiveDto(plan, pp.getActiveStep());
 	}
 
 	public boolean getNextActiveStep(String userID, String planID, int planWeek) { // TODO gestire planweek

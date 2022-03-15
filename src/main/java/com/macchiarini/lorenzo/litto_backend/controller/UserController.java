@@ -1,6 +1,8 @@
 package com.macchiarini.lorenzo.litto_backend.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
@@ -120,12 +122,15 @@ public class UserController {
 		return userDto;
 	}
 
-	public List<StepDto> getUserGoals(String ID) { // TODO da fare
-		List<StepInProgress> activeSteps = userDao.getAllActiveSteps(ID);
+	public List<StepDto> getUserGoals(String ID) {
+		User user = genericDao.getCustom(User.class, ID, 3);
+
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
-		for (StepInProgress s : activeSteps) { // TODO n+1 queries
-//			Plan p = planDao.getPlan(s.getStep().getPlanId());
-//			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(s, p));
+		for(PlanInProgress p : user.getProgressingPlans()) {
+			PlanPreviewDto ppdto = planMapper.toPlanPreviewDto(p.getPlan());
+			StepInProgress step = p.getActiveStep();
+			System.out.println(step.getStep().getTitle());
+			activeStepDtos.add(stepMapper.fromPlanStepToStepDto(step, ppdto));
 		}
 		return activeStepDtos;
 	}

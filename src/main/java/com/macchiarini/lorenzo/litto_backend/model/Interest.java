@@ -1,12 +1,14 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
 @NodeEntity
 public class Interest extends Entity{
 	
 	public Interest() {}
-	
+
+	@Relationship(type = "COUPLED_TO", direction = Relationship.OUTGOING)
 	private Topic topic;
 	private int level;
 	

@@ -1,5 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.mapper;
 
+import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.model.Plan;
@@ -15,7 +16,7 @@ public class StepMapper { //TODO aggiungi un'interfaccia comune "base mapper"
 	@Inject
 	DateHandler dateHandler;
 	
-	public StepDto fromPlanStepToStepDto(StepInProgress step, Plan plan) {
+	public StepDto fromPlanStepToStepDto(StepInProgress step, PlanPreviewDto plan) {
 		StepDto stepDto = new StepDto();
 		stepDto.setEndDate(dateHandler.toString(step.getEndDate()));
 		stepDto.setSubtitle(step.getStep().getSubtitle());
