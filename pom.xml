@@ -69,7 +69,7 @@
 		<!-- uncomment this to get JSON support -->
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-binding</artifactId>
+			<artifactId>jersey-media-json-jackson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.auth0</groupId>

@@ -38,6 +38,7 @@ public class PlanController {
 			s.generateId();
 			for(Material m : s.getMaterials()) {
 				m.generateId();
+				System.out.println(m);
 			}
 		}
 		genericDao.save(plan);

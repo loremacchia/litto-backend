@@ -78,7 +78,12 @@ public class UserController {
 		user.setName(userCompleteDto.getName());
 		user.setSurname(userCompleteDto.getSurname());
 		user.setImageUrl(userCompleteDto.getImageUrl());
-		List<Topic> topics = userDao.getTopics(userCompleteDto.getInterests());
+		List<String> correctInterests = new ArrayList<String>(userCompleteDto.getInterests());
+		for(Interest i : user.getInterests()) {
+			if(correctInterests.contains(i.getTopic().getName()))
+				correctInterests.remove(i.getTopic().getName());
+		}
+		List<Topic> topics = userDao.getTopics(correctInterests);
 		List<Interest> interests = new ArrayList<Interest>();
 		for (Topic t : topics) {
 			Interest i = new Interest();
