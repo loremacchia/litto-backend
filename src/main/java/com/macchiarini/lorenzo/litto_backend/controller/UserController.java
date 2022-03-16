@@ -1,13 +1,11 @@
 package com.macchiarini.lorenzo.litto_backend.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.dao.SearchDao;
+import com.macchiarini.lorenzo.litto_backend.dao.TopicDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
@@ -36,25 +34,25 @@ public class UserController {
 	Authorizer authorizer;
 	
 	@Inject
-	GenericDao genericDao;
-	
-	@Inject
-	UserMapper userMapper;
-
-	@Inject
 	UserDao userDao;
-
-	@Inject
-	StepMapper stepMapper;
 
 	@Inject
 	PlanDao planDao;
 	
 	@Inject
 	SearchDao searchDao;
+	
+	@Inject
+	TopicDao topicDao;
+	
+	@Inject
+	UserMapper userMapper;
 
 	@Inject
 	PlanMapper planMapper;
+	
+	@Inject
+	StepMapper stepMapper;
 
 	public TokenIDDto createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
@@ -68,7 +66,7 @@ public class UserController {
 	}
 	
 	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
-		User user = genericDao.get(User.class, ID); // TODO aggiungere ritorno se non c'è user
+		User user = userDao.getUserOverview(ID); // TODO aggiungere ritorno se non c'è user
 		user.setBio(userCompleteDto.getBio());
 		user.setName(userCompleteDto.getName());
 		user.setSurname(userCompleteDto.getSurname());
@@ -78,7 +76,7 @@ public class UserController {
 			if(correctInterests.contains(i.getTopic().getName()))
 				correctInterests.remove(i.getTopic().getName());
 		}
-		List<Topic> topics = userDao.getTopics(correctInterests);
+		List<Topic> topics = topicDao.getTopics(correctInterests);
 		List<Interest> interests = new ArrayList<Interest>();
 		for (Topic t : topics) {
 			Interest i = new Interest();
@@ -88,43 +86,39 @@ public class UserController {
 			interests.add(i);
 		}
 		user.setInterests(interests);
-		genericDao.save(user);
+		userDao.saveUserOverview(user);
 		return true;
 	}
 
 	public TokenIDDto loginUser(UserLoginDto userLoginDto) {
 		User user = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
 		if(user != null) {
-			System.out.println(user);
 			String token = authorizer.createToken(user);
-			System.out.println(token);
 			user.setToken(token);
-			System.out.println(user);
 			return userMapper.toTokenID(user);
 		}
 		return null;
 	}
 
 	public boolean logoutUser(String ID) {
-		User user = genericDao.get(User.class, ID);
+		User user = userDao.getUserPreview(ID);
 		authorizer.removeUserAuth(user);
 		return true;
 	}
 
-	public boolean deleteUser(String userID){ // TODO modificaaaaaaaa
+	public boolean deleteUser(String userID){
 		userDao.deleteUser(userID);
 		return false;
-		
 	}
 	
 	public UserDto getUser(String ID) {
-		User user = genericDao.getCustom(User.class, ID, 3);
+		User user = userDao.getUser(ID, 3);
 		UserDto userDto = userMapper.toUserDto(user);
 		return userDto;
 	}
 
 	public List<StepDto> getUserGoals(String ID) {
-		User user = genericDao.getCustom(User.class, ID, 3);
+		User user = userDao.getUser(ID, 3);
 
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for(PlanInProgress p : user.getProgressingPlans()) {
@@ -144,7 +138,7 @@ public class UserController {
 	 * @return
 	 */
 	public List<PlanPreviewDto> getUserRecommendedPlans(String ID) {
-		List<Interest> interests = genericDao.getCustom(User.class, ID, 3).getInterests();
+		List<Interest> interests = userDao.getUser(ID, 3).getInterests();
 		List<String> keywords = new ArrayList<String>();
 		for(Interest i : interests) {
 			keywords.add(i.getTopic().getName());
@@ -158,19 +152,18 @@ public class UserController {
 	}
 
 	public List<Topic> getInterests() {
-		List<Topic> interests = userDao.getInterests();
+		List<Topic> interests = topicDao.getInterests();
 		return interests;
 	}
 
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
-		System.out.println(dateFrom + " " + dateTo);
-		User user = genericDao.getCustom(User.class, userID, 5);
+		User user = userDao.getUser(userID, 2);
 		for(PlanInProgress p : user.getProgressingPlans()) {
 			if(p.getPlan().getId().equals(planID)) 
 				return false;
 		}
 		
-		Plan plan = genericDao.getOverview(Plan.class, planID);
+		Plan plan = planDao.getPlanOverview(planID);
 		if(plan == null) {
 			return false;
 		}
@@ -193,7 +186,7 @@ public class UserController {
 		System.out.println(DateHandler.incrementDate(DateHandler.toDate(dateFrom), counter) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
 		user.addProgressingPlans(planInProgress);
-		genericDao.save(user);
+		userDao.saveUser(user, 4); // TODO penso che vada bene anche 3
 		return true;
 	}
 }

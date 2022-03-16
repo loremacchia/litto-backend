@@ -1,8 +1,5 @@
 package com.macchiarini.lorenzo.litto_backend.controller;
 
-import com.macchiarini.lorenzo.litto_backend.dao.GenericDao;
-import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
-import com.macchiarini.lorenzo.litto_backend.dao.StepDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.mapper.StepMapper;
@@ -19,20 +16,11 @@ public class StepController {
 	UserDao userDao;
 
 	@Inject
-	StepDao stepDao;
-
-	@Inject
 	StepMapper stepMapper;
-
-	@Inject
-	PlanDao planDao;
-	
-	@Inject
-	GenericDao genericDao;
 
 	// Function that gets the current step in progress of the user with userID and planID
 	public StepActiveDto getActiveStep(String userID, String planID) {
-		User user = genericDao.getCustom(User.class, userID,4); // TODO ottimizza perche qua tira su un sacco di roba
+		User user = userDao.getUser(userID, 4); // TODO ottimizza perche qua tira su un sacco di roba
 		Plan plan = null;
 		PlanInProgress pp = null;
 		for(PlanInProgress p : user.getProgressingPlans()) {
@@ -45,7 +33,7 @@ public class StepController {
 	}
 
 	public boolean getNextActiveStep(String userID, String planID, int planWeek) {
-		User user = genericDao.getCustom(User.class, userID,4); 
+		User user = userDao.getUser(userID, 4);
 		Plan plan = null;
 		PlanInProgress pp = null;
 		for(PlanInProgress p : user.getProgressingPlans()) {
@@ -55,19 +43,6 @@ public class StepController {
 			}
 		}
 		StepInProgress step = pp.getActiveStep();
-		if(step != null) {
-			pp.getToDoSteps().remove(step);
-			genericDao.delete(step);
-			
-			if(pp.getToDoSteps().isEmpty()) {
-				user.addCompletedPlans(plan);
-				user.getProgressingPlans().remove(pp);
-				genericDao.delete(pp);
-			}
-			genericDao.save(user);
-			return !pp.getToDoSteps().isEmpty();
-		}
-		return false;
-		
+		return userDao.completeStep(user, step, pp, plan);
 	}
 }
