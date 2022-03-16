@@ -31,8 +31,6 @@ import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 import jakarta.inject.Inject;
 
 public class UserController {
-	
-	// TODO in fase di creazione user e plan settare il nuovo id
 
 	@Inject 
 	Authorizer authorizer;
@@ -57,9 +55,6 @@ public class UserController {
 
 	@Inject
 	PlanMapper planMapper;
-	
-	@Inject
-	DateHandler dateHandler;
 
 	public TokenIDDto createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
@@ -181,7 +176,7 @@ public class UserController {
 		}
 		PlanInProgress planInProgress = new PlanInProgress();
 		planInProgress.setPlan(plan);
-		planInProgress.setEndingDate(dateHandler.toDate(dateTo));
+		planInProgress.setEndingDate(DateHandler.toDate(dateTo));
 		System.out.println(planInProgress.getEndingDate());
 		planInProgress.generateId();
 		List<Step> steps = plan.getSteps();
@@ -192,10 +187,10 @@ public class UserController {
 			StepInProgress sip = new StepInProgress();
 			sip.setStep(s);
 			sip.generateId();
-			sip.setEndDate(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter));
+			sip.setEndDate(DateHandler.incrementDate(DateHandler.toDate(dateFrom), counter));
 			stepsInProgress.add(sip);
 		}
-		System.out.println(dateHandler.incrementDate(dateHandler.toDate(dateFrom), counter) + dateTo);
+		System.out.println(DateHandler.incrementDate(DateHandler.toDate(dateFrom), counter) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
 		user.addProgressingPlans(planInProgress);
 		genericDao.save(user);

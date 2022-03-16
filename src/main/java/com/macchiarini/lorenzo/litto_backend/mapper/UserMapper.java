@@ -14,11 +14,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class UserMapper { //TODO aggiungi un'interfaccia comune "base mapper"
+public class UserMapper {
 	@Inject
 	PlanMapper planMapper;
 	
-	public User toUser(UserInitDto userInitDto) { //TODO meglio settare anche tutti gli altri campi?
+	public User toUser(UserInitDto userInitDto) { 
 		User user = new User();
 		user.setEmail(userInitDto.getEmail());
 		user.setPassword(userInitDto.getPassword());
