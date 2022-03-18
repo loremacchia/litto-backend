@@ -14,6 +14,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class PlanMapper {
 
+	/**
+	 * @param plan
+	 * @return
+	 */
 	public PlanPreviewDto toPlanPreviewDto(Plan plan) {
 		PlanPreviewDto planPreviewDto = new PlanPreviewDto();
 		planPreviewDto.setId(plan.getId());
@@ -23,6 +27,10 @@ public class PlanMapper {
 		return planPreviewDto;
 	}
 
+	/**
+	 * @param plan
+	 * @return
+	 */
 	public PlanDto toPlanDto(Plan plan) {
 		PlanDto planDto = new PlanDto();
 		planDto.setId(plan.getId());

@@ -18,7 +18,11 @@ public class SearchDao {
 	@Inject
 	SessionFactoryNeo4J sessionFactory;
 
-	// Function that, given a word, searches for all the plans related to that word
+	/**
+	 * Function that, given a word, searches for all the plans related to that word
+	 * @param keywords
+	 * @return
+	 */
 	public List<Plan> searchPlanByWords(List<String> keywords) {
 		Session session = sessionFactory.getSession();
 		Filters f = new Filters();
@@ -30,7 +34,11 @@ public class SearchDao {
 		
 	}
 
-	// Function that, given a word, searches for all the tags(topics) related to that word
+	/**
+	 * Function that, given a word, searches for all the tags(topics) related to that word
+	 * @param word
+	 * @return
+	 */
 	public List<Topic> searchTags(String word) {
 		Session session = sessionFactory.getSession();
 		return new ArrayList<Topic>(session.loadAll(Topic.class, new Filter("name", ComparisonOperator.CONTAINING, word)));	

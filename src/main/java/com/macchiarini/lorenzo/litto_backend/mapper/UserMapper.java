@@ -18,6 +18,10 @@ public class UserMapper {
 	@Inject
 	PlanMapper planMapper;
 	
+	/**
+	 * @param userInitDto
+	 * @return
+	 */
 	public User toUser(UserInitDto userInitDto) { 
 		User user = new User();
 		user.setEmail(userInitDto.getEmail());
@@ -26,6 +30,10 @@ public class UserMapper {
 		return user;
 	}
 	
+	/**
+	 * @param user
+	 * @return
+	 */
 	public UserDto toUserDto(User user) {
 		UserDto userDto = new UserDto();
 		userDto.setId(user.getId());;
@@ -45,6 +53,10 @@ public class UserMapper {
 		return userDto;
 	}
 	
+	/**
+	 * @param user
+	 * @return
+	 */
 	public TokenIDDto toTokenID(User user) {
 		TokenIDDto u = new TokenIDDto();
 		u.setId(user.getId());

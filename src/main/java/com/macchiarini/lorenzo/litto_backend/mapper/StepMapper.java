@@ -12,6 +12,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class StepMapper {
 	
+	/**
+	 * @param step
+	 * @param plan
+	 * @return
+	 */
 	public StepDto fromPlanStepToStepDto(StepInProgress step, PlanPreviewDto plan) {
 		StepDto stepDto = new StepDto();
 		stepDto.setEndDate(DateHandler.toString(step.getEndDate()));
@@ -23,6 +28,11 @@ public class StepMapper {
 		return stepDto;
 	}
 	
+	/**
+	 * @param plan
+	 * @param step
+	 * @return
+	 */
 	public StepActiveDto fromPlanAtiveStepToActiveDto(Plan plan, StepInProgress step) {
 		StepActiveDto stepActiveDto = new StepActiveDto();
 		stepActiveDto.setEndDate(DateHandler.toString(step.getEndDate()));

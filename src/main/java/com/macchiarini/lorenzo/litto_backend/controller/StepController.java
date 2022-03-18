@@ -18,7 +18,12 @@ public class StepController {
 	@Inject
 	StepMapper stepMapper;
 
-	// Function that gets the current step in progress of the user with userID and planID
+	/**
+	 * Function that gets the current step in progress of the user with userID and planID
+	 * @param userID
+	 * @param planID
+	 * @return
+	 */
 	public StepActiveDto getActiveStep(String userID, String planID) {
 		User user = userDao.getUser(userID, 4); // TODO ottimizza perche qua tira su un sacco di roba
 		Plan plan = null;
@@ -32,6 +37,12 @@ public class StepController {
 		return stepMapper.fromPlanAtiveStepToActiveDto(plan, pp.getActiveStep());
 	}
 
+	/**
+	 * @param userID
+	 * @param planID
+	 * @param planWeek
+	 * @return
+	 */
 	public boolean getNextActiveStep(String userID, String planID, int planWeek) {
 		User user = userDao.getUser(userID, 4);
 		Plan plan = null;

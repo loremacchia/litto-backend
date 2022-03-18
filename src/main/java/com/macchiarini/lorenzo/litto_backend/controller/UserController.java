@@ -54,6 +54,10 @@ public class UserController {
 	@Inject
 	StepMapper stepMapper;
 
+	/**
+	 * @param userInitDto
+	 * @return
+	 */
 	public TokenIDDto createUser(UserInitDto userInitDto) {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
 			User user = userMapper.toUser(userInitDto);
@@ -65,6 +69,11 @@ public class UserController {
 		return null;
 	}
 	
+	/**
+	 * @param ID
+	 * @param userCompleteDto
+	 * @return
+	 */
 	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
 		User user = userDao.getUserOverview(ID); // TODO aggiungere ritorno se non c'è user
 		user.setBio(userCompleteDto.getBio());
@@ -90,6 +99,10 @@ public class UserController {
 		return true;
 	}
 
+	/**
+	 * @param userLoginDto
+	 * @return
+	 */
 	public TokenIDDto loginUser(UserLoginDto userLoginDto) {
 		User user = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
 		if(user != null) {
@@ -100,23 +113,39 @@ public class UserController {
 		return null;
 	}
 
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public boolean logoutUser(String ID) {
 		User user = userDao.getUserPreview(ID);
 		authorizer.removeUserAuth(user);
 		return true;
 	}
 
+	/**
+	 * @param userID
+	 * @return
+	 */
 	public boolean deleteUser(String userID){
 		userDao.deleteUser(userID);
 		return false;
 	}
 	
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public UserDto getUser(String ID) {
 		User user = userDao.getUser(ID, 3);
 		UserDto userDto = userMapper.toUserDto(user);
 		return userDto;
 	}
 
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public List<StepDto> getUserGoals(String ID) {
 		User user = userDao.getUser(ID, 3);
 
@@ -151,11 +180,21 @@ public class UserController {
 		return recommendedPlansDto;
 	}
 
+	/**
+	 * @return
+	 */
 	public List<Topic> getInterests() {
 		List<Topic> interests = topicDao.getInterests();
 		return interests;
 	}
 
+	/**
+	 * @param planID
+	 * @param userID
+	 * @param dateFrom
+	 * @param dateTo
+	 * @return
+	 */
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
 		User user = userDao.getUser(userID, 2);
 		for(PlanInProgress p : user.getProgressingPlans()) {

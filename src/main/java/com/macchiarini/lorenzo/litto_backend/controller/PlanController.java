@@ -17,6 +17,10 @@ public class PlanController {
 	@Inject
 	PlanMapper planMapper;
 
+	/**
+	 * @param ID
+	 * @return
+	 */
 	public PlanDto getPlan(String ID) {
 		Plan plan =	planDao.getPlanOverview(ID);
 		if (plan != null) { // TODO vedere se piano valido
@@ -25,6 +29,11 @@ public class PlanController {
 		return null;
 	}
 
+	/**
+	 * @param userId
+	 * @param plan
+	 * @return
+	 */
 	public String createPlan(String userId, Plan plan) { 
 		plan.generateId();
 		for(Step s : plan.getSteps()) {

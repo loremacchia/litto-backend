@@ -16,14 +16,20 @@ public class TopicDao {
 	@Inject
 	SessionFactoryNeo4J sessionFactory;
 
-	// Function to get the first 12 topics
+	/**
+	 * Function to get the first 12 topics
+	 * @return
+	 */
 	public List<Topic> getInterests() {
 		Session session = sessionFactory.getSession();
 		return new ArrayList<Topic>(session.loadAll(Topic.class, new Pagination(0, 12)));
 	}
 	
-
-	// Function to get the topic from the strings
+	/**
+	 * Function to get the topic from the strings
+	 * @param topicNames
+	 * @return
+	 */
 	public List<Topic> getTopics(List<String> topicNames) {
 		Session session = sessionFactory.getSession();
 		return new ArrayList<Topic>(session.loadAll(Topic.class, new Filter("name", ComparisonOperator.IN, topicNames)));

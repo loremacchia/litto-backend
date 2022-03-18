@@ -15,6 +15,10 @@ public class SearchController {
 	@Inject
 	SearchDao searchDao;
 
+	/**
+	 * @param word
+	 * @return
+	 */
 	public SearchDto search(String word) {
 		List<Plan> plans = searchDao.searchPlanByWords(Arrays.asList(word));
 		List<Topic> tags = searchDao.searchTags(word);
