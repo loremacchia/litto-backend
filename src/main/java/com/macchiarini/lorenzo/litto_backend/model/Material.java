@@ -1,16 +1,28 @@
 package com.macchiarini.lorenzo.litto_backend.model;
 
-public class Material {
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+		  use = JsonTypeInfo.Id.NAME, 
+		  include = JsonTypeInfo.As.PROPERTY, 
+		  property = "type")
+	@JsonSubTypes({ 
+		  @Type(value = Link.class, name = "Link"), 
+		  @Type(value = YouTube.class, name = "YouTube"), 
+		  @Type(value = Pdf.class, name = "PDF"), 
+		  @Type(value = Spreaker.class, name = "Spreaker"), 
+		  @Type(value = Text.class, name = "Text") 
+	})
+public abstract class Material {
 	public Material() {
 	}
 
 	private String title;
 	private MaterialType type;
-	private String file;
-	private String link;
-	private String description;
-	private String text;
-	
 
 	public String getTitle() {
 		return title;
@@ -27,37 +39,7 @@ public class Material {
 	public void setType(MaterialType type) {
 		this.type = type;
 	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-	public String getLink() {
-		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
+	
+	public abstract List<String> getAdditionalInfos();
 
 }
