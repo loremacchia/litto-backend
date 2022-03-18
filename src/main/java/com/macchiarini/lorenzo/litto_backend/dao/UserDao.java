@@ -9,13 +9,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.macchiarini.lorenzo.litto_backend.dto.IDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
-import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserDto;
 import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.model.Interest;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.model.StepInProgress;
-import com.macchiarini.lorenzo.litto_backend.model.Topic;
 import com.macchiarini.lorenzo.litto_backend.model.User;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
@@ -26,20 +24,6 @@ public class UserDao {
 	@Inject
 	GraphQLClient gql;
 	
-	@Inject
-	DateHandler dateHandler;
-
-	/**
-	 * Function to serach if a user has already registered with the given email
-	 * @param email
-	 * @return
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public List<User> searchUserbyEmail(String email) throws IOException, InterruptedException {
-		return Arrays.asList(gql.query("users", "email: \\\"" + email + "\\\"", "id email", User[].class));
-	}
-
 	/**
 	 * Function to persist the User and to get back the userId
 	 * TODO cifrare password
@@ -48,7 +32,7 @@ public class UserDao {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public String addUser(UserInitDto userInitDto) throws IOException, InterruptedException {
+	public String createUser(UserInitDto userInitDto) throws IOException, InterruptedException {
 		String inputString = "email: \\\"" + userInitDto.getEmail() + "\\\"";
 		inputString += "password: \\\"" + userInitDto.getPassword() + "\\\"";
 		inputString += "username: \\\"" + userInitDto.getUsername() + "\\\"";
@@ -59,22 +43,18 @@ public class UserDao {
 	}
 	
 	/**
-	 * @param userID
+	 * Function to get the user and all its composited values (plans, interests ecc)
+	 * @param ID
 	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 */
-	public boolean deleteUser(String userID) throws IOException, InterruptedException {
-		String queryBody = "{\"query\":\"mutation { deleteUsers(where: {"
-				+ "id: \\\""+userID+"\\\""
-				+ "}, delete: { "
-				+ "progressingPlans: [ { delete: { toDoSteps: [ {} ] } } ], "
-				+ "interests: [ {} ] }) "
-				+ "{ nodesDeleted } }\"}";
-		gql.customQuery(queryBody, "nodesDeleted", int.class);
-		return true;
+	public UserDto getUser(String ID) throws IOException, InterruptedException {
+		return gql.query("users", "id: \\\"" + ID + "\\\"",
+				"id name surname bio imageUrl level interests { level topic { name imageUrl } } completedPlans { id imageUrl title duration }",
+				UserDto[].class)[0];
 	}
-
+	
 	/**
 	 * Function to update a user giving the new user field in input. 
 	 * It has to search for it in the DB and overwrite its data 
@@ -100,6 +80,34 @@ public class UserDao {
 		gql.update("UpdateUsers", "updateUsers", "users", updateClause, "id: \\\"" + user.getId() + "\\\"", "id",
 				IDDto[].class);
 	}
+	
+	/**
+	 * @param userID
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public boolean deleteUser(String userID) throws IOException, InterruptedException {
+		String queryBody = "{\"query\":\"mutation { deleteUsers(where: {"
+				+ "id: \\\""+userID+"\\\""
+				+ "}, delete: { "
+				+ "progressingPlans: [ { delete: { toDoSteps: [ {} ] } } ], "
+				+ "interests: [ {} ] }) "
+				+ "{ nodesDeleted } }\"}";
+		gql.customQuery(queryBody, "nodesDeleted", int.class);
+		return true;
+	}	
+
+	/**
+	 * Function to serach if a user has already registered with the given email
+	 * @param email
+	 * @return
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	public List<User> searchUserbyEmail(String email) throws IOException, InterruptedException {
+		return Arrays.asList(gql.query("users", "email: \\\"" + email + "\\\"", "id email", User[].class));
+	}
 
 	/**
 	 * Function to get the ID of the user by giving the email and password
@@ -112,20 +120,6 @@ public class UserDao {
 	public String loginUser(String email, String password) throws IOException, InterruptedException {
 		return gql.query("users", "email: \\\"" + email + "\\\" password: \\\"" + password + "\\\"", "id",
 				IDDto[].class)[0].getId();
-
-	}
-
-	/**
-	 * Function to get the user and all its composited values (plans, interests ecc)
-	 * @param ID
-	 * @return
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public UserDto getUser(String ID) throws IOException, InterruptedException {
-		return gql.query("users", "id: \\\"" + ID + "\\\"",
-				"id name surname bio imageUrl level interests { level topic { name imageUrl } } completedPlans { id imageUrl title duration }",
-				UserDto[].class)[0];
 
 	}
 
@@ -167,18 +161,6 @@ public class UserDao {
 	}
 
 	/**
-	 * Function to get the first 12 topics
-	 * @return
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public List<Topic> getInterests() throws IOException, InterruptedException {
-		return Arrays.asList(gql.customQuery(
-				"{\"query\":\"query { topics(options: {limit:12}) { name imageUrl }}\"}",
-				"topics", Topic[].class));
-	}
-
-	/**
 	 * Function that gets the user and adds the plan in progress 
 	 * Here the plan in progress must be linked to a real plan and not recreate all plan infos (so for the steps)
 	 * @param userID
@@ -193,7 +175,7 @@ public class UserDao {
 		
 		String updateClause = "progressingPlans: [{ create :[{ node: {";
 		updateClause += "progress: "+1+",";
-		updateClause += "endingDate: \\\""+dateHandler.fromClientToDB(planInProgress.getEndingDate())+"\\\",";
+		updateClause += "endingDate: \\\""+DateHandler.fromClientToDB(planInProgress.getEndingDate())+"\\\",";
 		updateClause += "user: { connect: { where: { node: {";
 		updateClause += "id: \\\""+userID+"\\\"} } } },";
 		updateClause += "plan: { connect: { where: { node: {";
@@ -201,7 +183,7 @@ public class UserDao {
 		updateClause += "toDoSteps: {create: [";
 		for(StepInProgress s : planInProgress.getToDoSteps()) {
 			updateClause += "{node: {";
-			updateClause += "endDate: \\\""+dateHandler.fromClientToDB(s.getEndDate())+"\\\",";
+			updateClause += "endDate: \\\""+DateHandler.fromClientToDB(s.getEndDate())+"\\\",";
 			updateClause += "plan: { connect: { where: { node: {";
 			updateClause += "id: \\\""+planInProgress.getPlan().getId()+"\\\"} } } },";
 			updateClause += "step: { connect: { where: { node: {";
@@ -217,7 +199,7 @@ public class UserDao {
 	}
 	
 	/**
-	 * Function that returns the plan in progress of a user
+	 * Function that returns the IDs of the plans in progress of a user
 	 * @param userID
 	 * @return
 	 * @throws InterruptedException 
@@ -276,46 +258,4 @@ public class UserDao {
 				+ "{ users { id  } } } \"}";
 		gql.customQuery(mutationBody, "users", IDDto[].class);
 	}
-	
-	/**
-	 * Function to remove the token from the user db
-	 * @param userID
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public void removeUserToken(String userID) throws IOException, InterruptedException {
-		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\"\\\"", "id: \\\"" + userID + "\\\"", "id",
-				IDDto[].class);
-	}
-
-	/**
-	 * Function to set the token
-	 * @param userID
-	 * @param token
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public void setUserToken(String userID, String token) throws IOException, InterruptedException {
-		gql.update("UpdateUsers", "updateUsers", "users", "token: \\\"" + token + "\\\"", "id: \\\"" + userID + "\\\"",
-				"id", IDDto[].class);
-	}
-
-	/**
-	 * Function that returns the token value of the user
-	 * @param userID
-	 * @return
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public String getUserToken(String userID) throws IOException, InterruptedException {
-		System.out.println(userID);
-		String token = gql.query("users", "id: \\\"" + userID + "\\\"", "token", TokenIDDto[].class)[0].getToken();
-		if (token == null) {
-			return null;
-		}
-		return token;
-	}
-
-
-
 }

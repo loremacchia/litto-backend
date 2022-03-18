@@ -4,16 +4,11 @@ import com.macchiarini.lorenzo.litto_backend.dto.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepFromDBDto;
 import com.macchiarini.lorenzo.litto_backend.model.PlanInProgress;
-import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class StepMapper {
-	
-	@Inject
-	DateHandler dateHandler;
 	
 	public StepDto fromDBToStepDto(StepFromDBDto stepDB) {
 		StepDto step = new StepDto();

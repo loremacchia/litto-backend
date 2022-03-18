@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.macchiarini.lorenzo.litto_backend.dao.PlanDao;
+import com.macchiarini.lorenzo.litto_backend.dao.TopicDao;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
 import com.macchiarini.lorenzo.litto_backend.dto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.dto.StepDto;
@@ -38,6 +39,9 @@ public class UserController {
 
 	@Inject
 	UserDao userDao;
+	
+	@Inject
+	TopicDao topicDao;
 
 	@Inject
 	StepMapper stepMapper;
@@ -48,9 +52,6 @@ public class UserController {
 	@Inject
 	PlanMapper planMapper;
 	
-	@Inject
-	DateHandler dateHandler;
-
 	/**
 	 * 
 	 * @param userInitDto
@@ -61,7 +62,7 @@ public class UserController {
 			if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
 				String ID;
 				try {
-					ID = userDao.addUser(userInitDto);
+					ID = userDao.createUser(userInitDto);
 				} catch (Exception e1) {
 					return null;
 				}
@@ -217,7 +218,7 @@ public class UserController {
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for(StepFromDBDto s : stepsDB) {
 			StepDto st = stepMapper.fromDBToStepDto(s);
-			st.setEndDate(dateHandler.fromDBtoClient(st.getEndDate()));
+			st.setEndDate(DateHandler.fromDBtoClient(st.getEndDate()));
 			activeStepDtos.add(st);
 		}
 		return activeStepDtos;
@@ -245,7 +246,7 @@ public class UserController {
 	public List<Topic> getInterests() {
 		List<Topic> interests;
 		try {
-			interests = userDao.getInterests();
+			interests = topicDao.getInterests();
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot retrieve the interests");
 			e.printStackTrace();
@@ -295,7 +296,7 @@ public class UserController {
 		for(Step s : steps) {
 			StepInProgress sip = new StepInProgress();
 			sip.setStep(s);
-			sip.setEndDate(dateHandler.incrementDate(dateFrom, s.getPlanWeek()));
+			sip.setEndDate(DateHandler.incrementDate(dateFrom, s.getPlanWeek()));
 			stepsInProgress.add(sip);
 		}
 		planInProgress.setToDoSteps(stepsInProgress);

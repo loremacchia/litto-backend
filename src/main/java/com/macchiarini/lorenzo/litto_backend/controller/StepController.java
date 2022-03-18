@@ -18,9 +18,6 @@ public class StepController {
 
 	@Inject
 	StepMapper stepMapper;
-	
-	@Inject
-	DateHandler dateHandler;
 
 	/**
 	 * Function that gets the current step in progress of the user with userID and planID
@@ -37,7 +34,7 @@ public class StepController {
 			e.printStackTrace();
 			return null;
 		}
-		s.setEndDate(dateHandler.fromDBtoClient(s.getEndDate()));
+		s.setEndDate(DateHandler.fromDBtoClient(s.getEndDate()));
 		return s;
 	}
 

@@ -14,7 +14,7 @@ public class DateHandler {
 	 * @param string
 	 * @return
 	 */
-	public String fromDBtoClient (String string) { 
+	public static String fromDBtoClient (String string) { 
 		return toString(fromDBDate(string));
 	}
 	
@@ -22,7 +22,7 @@ public class DateHandler {
 	 * @param string
 	 * @return
 	 */
-	public String fromClientToDB(String string) {
+	public static String fromClientToDB(String string) {
 		return toDBDate(toDate(string));
 	}
 	
@@ -30,7 +30,7 @@ public class DateHandler {
 	 * @param date
 	 * @return
 	 */
-	public String toString(Date date) {
+	public static String toString(Date date) {
 		return new SimpleDateFormat("dd.MM.yyyy").format(date);
 	}
 	
@@ -38,7 +38,7 @@ public class DateHandler {
 	 * @param string
 	 * @return
 	 */
-	public Date toDate(String string) {
+	public static Date toDate(String string) {
 		try {
 			Date date = new SimpleDateFormat("dd.MM.yyyy").parse(string);
 			return date;  
@@ -52,7 +52,7 @@ public class DateHandler {
 	 * @param weeks
 	 * @return
 	 */
-	public String incrementDate(String string, int weeks) {
+	public static String incrementDate(String string, int weeks) {
 		Date date = toDate(string);
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -64,7 +64,7 @@ public class DateHandler {
 	 * @param date
 	 * @return
 	 */
-	public String toDBDate(Date date) {
+	public static String toDBDate(Date date) {
 		return new SimpleDateFormat("yyyy-MM-dd").format(date); 
 	}
 	
@@ -72,7 +72,7 @@ public class DateHandler {
 	 * @param string
 	 * @return
 	 */
-	public Date fromDBDate(String string) {
+	public static Date fromDBDate(String string) {
 		try {
 			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(string);
 			return date;  

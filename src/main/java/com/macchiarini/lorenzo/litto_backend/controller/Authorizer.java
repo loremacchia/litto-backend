@@ -11,12 +11,13 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.macchiarini.lorenzo.litto_backend.dao.UserDao;
+import com.macchiarini.lorenzo.litto_backend.dao.UserTokenDao;
 
 import jakarta.inject.Inject;
 
 public class Authorizer {
 	@Inject
-	UserDao userDao;
+	UserTokenDao userTokenDao;
 	
 	/**
 	 * @param userID
@@ -36,7 +37,7 @@ public class Authorizer {
 				        .withClaim("timestamp", Timestamp.from(Instant.now()))
 						.sign(algorithm);
 		System.out.println("Generated token: "+token);
-		userDao.setUserToken(userID, token);
+		userTokenDao.setUserToken(userID, token);
 		return token;
 	}
 
@@ -52,7 +53,7 @@ public class Authorizer {
 			return false;
 		String tokenFromDB;
 		try {
-			tokenFromDB = userDao.getUserToken(userID);
+			tokenFromDB = userTokenDao.getUserToken(userID);
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot retrieve the user token");
 			e.printStackTrace();
@@ -70,7 +71,7 @@ public class Authorizer {
 	public void invalidateToken(String token) throws JWTDecodeException {
 		String userID = getUserIDFromToken(token);
 		try {
-			userDao.removeUserToken(userID);
+			userTokenDao.removeUserToken(userID);
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot remove the token from the user");
 			e.printStackTrace();
@@ -82,7 +83,7 @@ public class Authorizer {
 	 */
 	public void removeUserAuth(String userID) {
 		try {
-			userDao.removeUserToken(userID);
+			userTokenDao.removeUserToken(userID);
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot remove the token from the user");
 			e.printStackTrace();
