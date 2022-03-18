@@ -30,7 +30,7 @@ public class BaseService {
 		if (correct) {
 			return Response.ok().header("Authorization", "Bearer " + token).entity(toReturn).build();
 		} else {
-			return Response.ok().header("Authorization", "Bearer " + "").entity(false).build(); // TODO errore
+			return Response.ok().header("Authorization", "Bearer " + "").entity(false).build();
 		}
 	}
 
