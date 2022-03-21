@@ -12,7 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class StepControllerOGM {
+public class StepController {
 
 	@Inject
 	UserDao userDao;

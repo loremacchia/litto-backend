@@ -1,14 +1,14 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.services;
+package com.macchiarini.lorenzo.litto_backend.ogm.servicesOGM;
 
-import com.macchiarini.lorenzo.litto_backend.ogm.controllerOGM.AuthorizerOGM;
+import com.macchiarini.lorenzo.litto_backend.ogm.controllerOGM.Authorizer;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
-public class BaseServiceOGM {
+public class BaseService {
 	
 	@Inject
-	AuthorizerOGM authorizerOGM;	
+	Authorizer authorizer;	
 
 	/**
 	 * @param token
@@ -18,7 +18,7 @@ public class BaseServiceOGM {
 	public boolean verifyToken(String token, String userID) {
 		if (token.startsWith("Bearer"))
 			token = token.split(" ")[1].toString();
-		return authorizerOGM.verifyToken(token, userID);
+		return authorizer.verifyToken(token, userID);
 	}
 
 	/**

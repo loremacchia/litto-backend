@@ -31,10 +31,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class UserControllerGQL {
+public class UserController {
 
 	@Inject 
-	AuthorizerGQL authorizer;
+	Authorizer authorizer;
 	
 	@Inject
 	UserMapper userMapper;

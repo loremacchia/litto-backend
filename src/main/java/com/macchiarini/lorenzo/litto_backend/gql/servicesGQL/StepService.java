@@ -1,6 +1,6 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.services;
+package com.macchiarini.lorenzo.litto_backend.gql.servicesGQL;
 
-import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.StepControllerGQL;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.StepController;
 
 import jakarta.inject.Inject;
 
@@ -12,11 +12,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/ogm/step")
-public class StepServiceOGM extends BaseServiceOGM {
+@Path("/gql/step")
+public class StepService extends BaseService {
 
 	@Inject
-	StepControllerGQL stepController;
+	StepController stepController;
 
 	@GET 
 	@Path("/{userId}/{planId}") 

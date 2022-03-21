@@ -16,7 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class AuthorizerGQL {
+public class Authorizer {
 	@Inject
 	UserTokenDao userTokenDao;
 	

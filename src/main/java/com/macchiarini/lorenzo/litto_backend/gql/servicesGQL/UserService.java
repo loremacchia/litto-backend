@@ -1,6 +1,6 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.services;
+package com.macchiarini.lorenzo.litto_backend.gql.servicesGQL;
 
-import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.UserControllerGQL;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.UserController;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.DateDto;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserCompleteDto;
@@ -20,11 +20,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/ogm/user")
-public class UserServiceOGM extends BaseServiceOGM {
+@Path("/gql/user")
+public class UserService extends BaseService {
 
 	@Inject
-	UserControllerGQL userController;
+	UserController userController;
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })

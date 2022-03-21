@@ -10,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class StepControllerGQL {
+public class StepController {
 
 	@Inject
 	UserDao userDao;

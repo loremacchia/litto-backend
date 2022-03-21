@@ -12,7 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class SearchControllerOGM {
+public class SearchController {
 
 	@Inject
 	SearchDao searchDao;

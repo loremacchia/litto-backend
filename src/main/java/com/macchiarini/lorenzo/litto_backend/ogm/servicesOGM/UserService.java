@@ -1,11 +1,11 @@
-package com.macchiarini.lorenzo.litto_backend.gql.services;
+package com.macchiarini.lorenzo.litto_backend.ogm.servicesOGM;
 
-import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.UserControllerGQL;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.DateDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.TokenIDDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserCompleteDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserInitDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserLoginDto;
+import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.DateDto;
+import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.TokenIDDto;
+import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.UserCompleteDto;
+import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.UserLoginDto;
+import com.macchiarini.lorenzo.litto_backend.ogm.controllerOGM.UserController;
 
 import jakarta.inject.Inject;
 
@@ -20,11 +20,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/gql/user")
-public class UserServiceGQL extends BaseServiceGQL {
+@Path("/ogm/user")
+public class UserService extends BaseService {
 
 	@Inject
-	UserControllerGQL userController;
+	UserController userController;
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })

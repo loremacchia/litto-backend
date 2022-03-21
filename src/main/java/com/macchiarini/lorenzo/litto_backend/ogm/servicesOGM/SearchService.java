@@ -1,6 +1,6 @@
-package com.macchiarini.lorenzo.litto_backend.gql.services;
+package com.macchiarini.lorenzo.litto_backend.ogm.servicesOGM;
 
-import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.SearchControllerGQL;
+import com.macchiarini.lorenzo.litto_backend.ogm.controllerOGM.SearchController;
 
 import jakarta.inject.Inject;
 
@@ -12,11 +12,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/gql/search")
-public class SearchServiceGQL extends BaseServiceGQL {
+@Path("/ogm/search")
+public class SearchService extends BaseService {
 
 	@Inject
-	SearchControllerGQL searchController;
+	SearchController searchController;
 
 	@GET
 	@Path("/{word}")

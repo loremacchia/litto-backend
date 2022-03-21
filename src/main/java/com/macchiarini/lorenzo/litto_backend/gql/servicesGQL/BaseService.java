@@ -1,13 +1,13 @@
-package com.macchiarini.lorenzo.litto_backend.gql.services;
+package com.macchiarini.lorenzo.litto_backend.gql.servicesGQL;
 
-import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.AuthorizerGQL;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.Authorizer;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
-public class BaseServiceGQL {
+public class BaseService {
 	@Inject
-	AuthorizerGQL authorizerGQL;
+	Authorizer authorizer;
 
 	/**
 	 * @param token
@@ -17,7 +17,7 @@ public class BaseServiceGQL {
 	public boolean verifyToken(String token, String userID) {
 		if (token.startsWith("Bearer"))
 			token = token.split(" ")[1].toString();
-		return authorizerGQL.verifyToken(token, userID);
+		return authorizer.verifyToken(token, userID);
 	}
 
 	/**

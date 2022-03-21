@@ -30,10 +30,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class UserControllerOGM {
+public class UserController {
 
 	@Inject 
-	AuthorizerOGM authorizer;
+	Authorizer authorizer;
 	
 	@Inject
 	UserDao userDao;
