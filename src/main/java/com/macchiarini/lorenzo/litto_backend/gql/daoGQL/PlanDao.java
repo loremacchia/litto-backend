@@ -11,8 +11,10 @@ import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Step;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Topic;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class PlanDao {
 
 	@Inject

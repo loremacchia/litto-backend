@@ -15,8 +15,10 @@ import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.User;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class UserDao {
 	@Inject
 	SessionFactoryNeo4J sessionFactory;

@@ -6,8 +6,10 @@ import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Topic;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class TopicDao {
 
 	@Inject

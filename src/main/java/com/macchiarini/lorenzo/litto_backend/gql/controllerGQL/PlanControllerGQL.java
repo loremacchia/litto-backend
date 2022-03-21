@@ -7,8 +7,10 @@ import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.gql.mapperGQL.PlanMapper;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class PlanControllerGQL {
 	@Inject
 	UserDao userDao;

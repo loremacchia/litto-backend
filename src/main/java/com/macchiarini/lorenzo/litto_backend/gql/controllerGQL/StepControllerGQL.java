@@ -6,8 +6,10 @@ import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepActiveDto;
 import com.macchiarini.lorenzo.litto_backend.gql.mapperGQL.StepMapper;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class StepControllerGQL {
 
 	@Inject

@@ -10,11 +10,12 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.macchiarini.lorenzo.litto_backend.gql.daoGQL.UserDao;
 import com.macchiarini.lorenzo.litto_backend.gql.daoGQL.UserTokenDao;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class AuthorizerGQL {
 	@Inject
 	UserTokenDao userTokenDao;

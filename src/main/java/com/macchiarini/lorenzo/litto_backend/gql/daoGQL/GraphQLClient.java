@@ -11,10 +11,13 @@ import java.net.http.HttpResponse.BodyHandlers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
  * @author lorem
  *
  */
+@ApplicationScoped
 public class GraphQLClient {
 
 	private URI url;

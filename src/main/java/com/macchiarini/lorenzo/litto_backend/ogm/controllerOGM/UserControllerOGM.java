@@ -26,8 +26,10 @@ import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Topic;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.User;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class UserControllerOGM {
 
 	@Inject 

@@ -1,7 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.gql.services;
 
 import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.AuthorizerGQL;
-import com.macchiarini.lorenzo.litto_backend.ogm.controllerOGM.AuthorizerOGM;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;

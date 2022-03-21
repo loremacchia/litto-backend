@@ -5,10 +5,13 @@ import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
  * @author lorem
  *
  */
+@ApplicationScoped
 public class SessionFactoryNeo4J {
 
 	private static ClasspathConfigurationSource configurationSource = new ClasspathConfigurationSource("ogm.properties");

@@ -5,8 +5,10 @@ import java.io.IOException;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.IDGqlDto;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.TokenIDDto;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class UserTokenDao {
 
 	@Inject

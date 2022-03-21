@@ -7,8 +7,10 @@ import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Material;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Plan;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Step;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class PlanControllerOGM {
 
 	@Inject

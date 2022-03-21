@@ -17,8 +17,10 @@ import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.User;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class UserDao {
 
 	@Inject

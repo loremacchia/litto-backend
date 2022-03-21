@@ -27,8 +27,10 @@ import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Topic;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.User;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class UserControllerGQL {
 
 	@Inject 

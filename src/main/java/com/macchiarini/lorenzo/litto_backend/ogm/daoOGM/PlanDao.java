@@ -2,8 +2,10 @@ package com.macchiarini.lorenzo.litto_backend.ogm.daoOGM;
 
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Plan;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class PlanDao {
 
 	@Inject

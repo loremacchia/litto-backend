@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.SearchGqlDto;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class SearchDao {
 
 	@Inject

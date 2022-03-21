@@ -11,8 +11,10 @@ import com.macchiarini.lorenzo.litto_backend.ogm.daoOGM.UserDao;
 import com.macchiarini.lorenzo.litto_backend.ogm.daoOGM.UserTokenDao;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.User;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class AuthorizerOGM {
 	
 	@Inject

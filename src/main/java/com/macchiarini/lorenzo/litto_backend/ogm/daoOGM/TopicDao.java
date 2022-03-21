@@ -10,8 +10,10 @@ import org.neo4j.ogm.session.Session;
 
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Topic;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class TopicDao {
 	@Inject
 	SessionFactoryNeo4J sessionFactory;
