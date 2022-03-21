@@ -28,7 +28,14 @@ public class PlanDao {
 	public Plan getPlan(String ID) throws IOException, InterruptedException {
 		return gql.query("plans", "id: \\\"" + ID + "\\\"",
 				" id title subtitle imageUrl level duration tags { name imageUrl } "
-				+ "steps { title subtitle planWeek materials { title type text link description file }}",
+				+ "steps { title subtitle planWeek "
+				+ "materialsConnection { edges { node{ title type"
+				+ "... on Pdf { file },"
+				+ "... on Text { text },"
+				+ "... on Link { description link },"
+				+ "... on YouTube { description link },"
+				+ "... on Spreaker { description link }}}}"
+				+ "}",
 				Plan[].class)[0];
 	}
 
@@ -67,7 +74,7 @@ public class PlanDao {
 		parsedString += "]";
 		List<IDDto> topicIds = Arrays.asList(gql.query("topics", "name_IN: " + parsedString, "id", IDDto[].class));
 		queryBody += "tags: { connectOrCreate: [";
-		for (int i = 0; i < topicIds.size(); i++) {
+		for (int i = 0; i < topics.size(); i++) {
 			queryBody += "{ onCreate: {node: { name: \\\"" + topics.get(i).getName() 
 						+ "\\\"}}, where: {node:{id: \\\"" + topicIds.get(i).getId() + "\\\"";
 		}
@@ -86,32 +93,32 @@ public class PlanDao {
 			for (Material m : s.getMaterials()) {
 				switch (m.getType()) {
 				case PDF:
-					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
+					secondQueryBody += "{node: { Pdf: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "file: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "file: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}}";
 					break;
 				case Text:
-					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
+					secondQueryBody += "{node: { Text: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "text: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "text: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}}";
 					break;
 				case YouTube:
-					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
+					secondQueryBody += "{node: { YouTube: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
 										+ "description: \\\"" + m.getAdditionalInfos().get(1) + "\\\"," 
-										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}}";
 					break;
 				case Link:
-					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
+					secondQueryBody += "{node: { Link: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
 										+ "description: \\\"" + m.getAdditionalInfos().get(1) + "\\\"," 
-										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}}";
 					break;
 				case Spreaker:
-					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
+					secondQueryBody += "{node: { Spreaker: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
 										+ "description: \\\"" + m.getAdditionalInfos().get(1) + "\\\"," 
-										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}}";
 					break;
 				default:
 					break;

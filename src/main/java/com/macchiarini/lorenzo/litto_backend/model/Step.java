@@ -52,4 +52,12 @@ public class Step {
 	public void setMaterials(List<Material> materials) {
 		this.materials = materials;
 	}
+
+	@Override
+	public String toString() {
+		return "Step [title=" + title + ", subtitle=" + subtitle + ", materials=" + materials + ", planId=" + planId
+				+ ", planWeek=" + planWeek + "]";
+	}
+	
+	
 }

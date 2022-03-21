@@ -282,6 +282,7 @@ public class UserController {
 		Plan plan;
 		try {
 			plan = planDao.getPlan(planID);
+			System.out.println(plan);
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot retrieve the plan to start");
 			e.printStackTrace();

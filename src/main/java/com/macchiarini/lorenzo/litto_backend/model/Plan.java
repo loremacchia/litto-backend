@@ -80,4 +80,11 @@ public class Plan {
 		this.duration = duration;
 	}
 
+	@Override
+	public String toString() {
+		return "Plan [id=" + id + ", imageUrl=" + imageUrl + ", title=" + title + ", subtitle=" + subtitle + ", level="
+				+ level + ", tags=" + tags + ", steps=" + steps + ", duration=" + duration + "]";
+	}
+
+	
 }

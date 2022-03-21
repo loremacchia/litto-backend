@@ -25,8 +25,17 @@ public class StepDao {
 							+ "id: \\\""+planId+"\\\" "
 							+ "}}) { toDoSteps(options: { sort: [ { planWeek: ASC } ], limit: 1 }) "
 							+ "{ endDate step { title subtitle planWeek "
-							+ "materials { title type text link description file } } } "
+							+ "materialsConnection { edges { node{ title type"
+							+ "... on Pdf { file },"
+							+ "... on Text { text },"
+							+ "... on Link { description link },"
+							+ "... on YouTube { description link },"
+							+ "... on Spreaker { description link }}}}"
+							+ "} } "
 							+ "plan { title id imageUrl } } } }\"}";
 		return gql.customQuery(queryBody, "progressingPlans", PlanInProgress[].class)[0];
 	}
 }
+
+
+

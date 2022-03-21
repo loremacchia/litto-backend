@@ -49,6 +49,19 @@ public class UserService extends BaseService {
 			return responseCreator(true, token, userController.completeUser(ID, userCompleteDto));
 		return responseCreator(false, "", null);
 	}
+	
+	@GET
+	@Path("/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getUser(
+							@PathParam("id") String ID, 
+							@HeaderParam("Authorization") String token) {
+		boolean result = verifyToken(token, ID);
+		if (result)
+			return responseCreator(true, token, userController.getUser(ID));
+		return responseCreator(false, "", null); // TODO nell'applicazione dovrà essere parsato correttamente
+		// TODO i campi null non vengono inviati
+	}
 
 	@DELETE
 	@Path("/{id}")
@@ -84,19 +97,6 @@ public class UserService extends BaseService {
 		if (result)
 			return responseCreator(true, token, userController.logoutUser(ID));
 		return responseCreator(false, "", null);
-	}
-
-	@GET
-	@Path("/{id}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUser(
-							@PathParam("id") String ID, 
-							@HeaderParam("Authorization") String token) {
-		boolean result = verifyToken(token, ID);
-		if (result)
-			return responseCreator(true, token, userController.getUser(ID));
-		return responseCreator(false, "", null); // TODO nell'applicazione dovrà essere parsato correttamente
-		// TODO i campi null non vengono inviati
 	}
 
 	@GET
