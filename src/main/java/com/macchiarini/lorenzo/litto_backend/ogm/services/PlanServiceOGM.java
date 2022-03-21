@@ -1,6 +1,6 @@
-package com.macchiarini.lorenzo.litto_backend.services;
+package com.macchiarini.lorenzo.litto_backend.ogm.services;
 
-import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.PlanController;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.PlanControllerGQL;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 
 import jakarta.inject.Inject;
@@ -15,11 +15,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/plan")
-public class PlanService extends BaseService {
+@Path("/ogm/plan")
+public class PlanServiceOGM extends BaseServiceOGM {
 
 	@Inject
-	PlanController planController;
+	PlanControllerGQL planController;
 
 	@GET
 	@Path("/{id}")

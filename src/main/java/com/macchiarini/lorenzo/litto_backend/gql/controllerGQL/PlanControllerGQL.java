@@ -9,7 +9,7 @@ import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 
 import jakarta.inject.Inject;
 
-public class PlanController {
+public class PlanControllerGQL {
 	@Inject
 	UserDao userDao;
 

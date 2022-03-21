@@ -8,7 +8,7 @@ import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
 
-public class StepController {
+public class StepControllerGQL {
 
 	@Inject
 	UserDao userDao;

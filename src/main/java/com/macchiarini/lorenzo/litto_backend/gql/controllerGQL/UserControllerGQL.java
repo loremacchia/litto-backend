@@ -29,7 +29,7 @@ import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;
 
 import jakarta.inject.Inject;
 
-public class UserController {
+public class UserControllerGQL {
 
 	@Inject 
 	AuthorizerGQL authorizer;

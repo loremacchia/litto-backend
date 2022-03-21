@@ -5,7 +5,7 @@ import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.SearchGqlDto;
 
 import jakarta.inject.Inject;
 
-public class SearchController {
+public class SearchControllerGQL {
 
 	@Inject
 	SearchDao searchDao;
