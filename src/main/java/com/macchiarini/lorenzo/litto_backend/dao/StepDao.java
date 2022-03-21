@@ -23,7 +23,7 @@ public class StepDao {
 							+ "id: \\\""+userID+"\\\" "
 							+ "}) { progressingPlans(where: {plan: { "
 							+ "id: \\\""+planId+"\\\" "
-							+ "}}) { toDoSteps(options: { sort: [ { planWeek: ASC } ], limit: 1 }) "
+							+ "}}) { toDoSteps(options: { sort: [ { endDate: ASC } ], limit: 1 }) "
 							+ "{ endDate step { title subtitle planWeek "
 							+ "materials { title type text link description file } } } "
 							+ "plan { title id imageUrl } } } }\"}";

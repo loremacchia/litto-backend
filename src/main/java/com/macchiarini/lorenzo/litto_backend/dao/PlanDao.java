@@ -88,30 +88,30 @@ public class PlanDao {
 				case PDF:
 					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "file: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "file: \\\"" + m.getFile() + "\\\"}}";
 					break;
 				case Text:
 					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "text: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "text: \\\"" + m.getText() + "\\\"}}";
 					break;
 				case YouTube:
 					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "description: \\\"" + m.getAdditionalInfos().get(1) + "\\\"," 
-										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "description: \\\"" + m.getDescription() + "\\\"," 
+										+ "link: \\\"" + m.getLink() + "\\\"}}";
 					break;
 				case Link:
 					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "description: \\\"" + m.getAdditionalInfos().get(1) + "\\\"," 
-										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "description: \\\"" + m.getDescription() + "\\\"," 
+										+ "link: \\\"" + m.getLink() + "\\\"}}";
 					break;
 				case Spreaker:
 					secondQueryBody += "{node: {title: \\\"" + m.getTitle() + "\\\"," 
 										+ "type: \\\"" + m.getType() + "\\\"," 
-										+ "description: \\\"" + m.getAdditionalInfos().get(1) + "\\\"," 
-										+ "link: \\\"" + m.getAdditionalInfos().get(0) + "\\\"}}";
+										+ "description: \\\"" + m.getDescription() + "\\\"," 
+										+ "link: \\\"" + m.getLink() + "\\\"}}";
 					break;
 				default:
 					break;

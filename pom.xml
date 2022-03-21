@@ -68,7 +68,7 @@
 		<!-- uncomment this to get JSON support -->
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-jackson</artifactId>
+			<artifactId>jersey-media-json-binding</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.auth0</groupId>
@@ -76,18 +76,12 @@
 			<version>3.18.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.neo4j</groupId>
-			<artifactId>neo4j-ogm-core</artifactId>
-			<version>3.2.30</version>
-		</dependency>
-
-		<dependency> <!-- If you're using the HTTP driver -->
-			<groupId>org.neo4j</groupId>
-			<artifactId>neo4j-ogm-bolt-driver</artifactId>
-			<version>3.2.30</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.10.2</version>
 		</dependency>
 	</dependencies>
-	<properties> 
+	<properties>
 		<jersey.version>3.0.4</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
