@@ -1,6 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.services;
 
-import com.macchiarini.lorenzo.litto_backend.controller.SearchController;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.SearchController;
 
 import jakarta.inject.Inject;
 

@@ -1,5 +1,12 @@
 package com.macchiarini.lorenzo.litto_backend.services;
 
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.UserController;
+import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.DateDto;
+import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.TokenIDDto;
+import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserCompleteDto;
+import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserLoginDto;
+
 import jakarta.inject.Inject;
 
 import jakarta.ws.rs.Consumes;
@@ -12,13 +19,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import com.macchiarini.lorenzo.litto_backend.controller.UserController;
-import com.macchiarini.lorenzo.litto_backend.dto.DateDto;
-import com.macchiarini.lorenzo.litto_backend.dto.TokenIDDto;
-import com.macchiarini.lorenzo.litto_backend.dto.UserCompleteDto;
-import com.macchiarini.lorenzo.litto_backend.dto.UserInitDto;
-import com.macchiarini.lorenzo.litto_backend.dto.UserLoginDto;
 
 @Path("/user")
 public class UserService extends BaseService {

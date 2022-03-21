@@ -1,6 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.services;
 
-import com.macchiarini.lorenzo.litto_backend.controller.StepController;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.StepController;
 
 import jakarta.inject.Inject;
 

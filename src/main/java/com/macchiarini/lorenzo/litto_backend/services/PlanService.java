@@ -1,7 +1,7 @@
 package com.macchiarini.lorenzo.litto_backend.services;
 
-import com.macchiarini.lorenzo.litto_backend.controller.PlanController;
-import com.macchiarini.lorenzo.litto_backend.model.Plan;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.PlanController;
+import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 
 import jakarta.inject.Inject;
 

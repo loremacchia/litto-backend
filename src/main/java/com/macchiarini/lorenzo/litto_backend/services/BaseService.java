@@ -1,13 +1,13 @@
 package com.macchiarini.lorenzo.litto_backend.services;
 
-import com.macchiarini.lorenzo.litto_backend.controller.Authorizer;
+import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.AuthorizerGQL;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 
 public class BaseService {
 	@Inject
-	Authorizer authorizer;
+	AuthorizerGQL authorizer;
 
 	/**
 	 * @param token

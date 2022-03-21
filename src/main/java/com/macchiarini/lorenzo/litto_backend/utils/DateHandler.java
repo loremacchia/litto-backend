@@ -48,16 +48,25 @@ public class DateHandler {
 	}
 	
 	/**
+	 * @param date
+	 * @param weeks
+	 * @return
+	 */
+	public static Date incrementDate(Date date, int weeks) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.DATE, weeks*7);
+		return c.getTime();
+	}
+	
+	/**
 	 * @param string
 	 * @param weeks
 	 * @return
 	 */
-	public static String incrementDate(String string, int weeks) {
+	public static String incrementDateString(String string, int weeks) {
 		Date date = toDate(string);
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.add(Calendar.DATE, weeks*7);
-		return toString(c.getTime());
+		return toString(incrementDate(date, weeks));
 	}
 	
 	/**
