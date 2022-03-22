@@ -3,10 +3,10 @@ package com.macchiarini.lorenzo.litto_backend.ogm.mapperOGM;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.PlanPreviewDto;
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.TokenIDDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.TokenIDDto;
 import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.UserDto;
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Plan;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.User;
 

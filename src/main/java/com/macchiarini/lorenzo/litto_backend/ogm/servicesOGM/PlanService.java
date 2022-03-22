@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/ogm/plan")
-public class PlanService extends BaseService {
+public class PlanService {
 
 	@Inject
 	PlanController planController;
@@ -27,10 +27,7 @@ public class PlanService extends BaseService {
 	public Response getPlan(
 							@PathParam("id") String ID, 
 							@HeaderParam("Authorization") String token) {
-		boolean result = verifyToken(token, null);
-		if(result)
-			return responseCreator(true, token, planController.getPlan(ID));
-		return responseCreator(false, "", null); 
+		return Response.ok().entity(planController.getPlan(ID)).build();
 	}
 
 	@POST
@@ -41,9 +38,6 @@ public class PlanService extends BaseService {
 							@PathParam("userId") String userID, 
 							@HeaderParam("Authorization") String token,
 							Plan plan) {
-		boolean result = verifyToken(token, userID);
-		if(result)
-			return responseCreator(true, token, planController.createPlan(userID, plan)); 
-		return responseCreator(false, "", null); 
+		return Response.ok().entity(planController.createPlan(userID, plan)).build();
 	}
 }

@@ -1,8 +1,8 @@
 package com.macchiarini.lorenzo.litto_backend.ogm.mapperOGM;
 
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.StepActiveDto;
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.StepDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Plan;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.StepInProgress;
 import com.macchiarini.lorenzo.litto_backend.utils.DateHandler;

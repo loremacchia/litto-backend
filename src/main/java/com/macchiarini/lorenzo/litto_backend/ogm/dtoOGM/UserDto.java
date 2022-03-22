@@ -3,6 +3,7 @@ package com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM;
 import java.io.Serializable;
 import java.util.List;
 
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Interest;
 
 public class UserDto implements Serializable {

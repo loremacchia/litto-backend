@@ -1,7 +1,7 @@
 package com.macchiarini.lorenzo.litto_backend.gql.mapperGQL;
 
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepActiveDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepGqlDto;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.PlanInProgress;
 

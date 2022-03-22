@@ -3,6 +3,7 @@ package com.macchiarini.lorenzo.litto_backend.gql.dtoGQL;
 import java.io.Serializable;
 import java.util.List;
 
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Topic;
 
 public class SearchGqlDto implements Serializable {

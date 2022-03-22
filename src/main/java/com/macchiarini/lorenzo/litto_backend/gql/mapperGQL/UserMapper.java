@@ -2,7 +2,7 @@ package com.macchiarini.lorenzo.litto_backend.gql.mapperGQL;
 
 import java.util.List;
 
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserCompleteDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.UserCompleteDto;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Interest;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.User;
 

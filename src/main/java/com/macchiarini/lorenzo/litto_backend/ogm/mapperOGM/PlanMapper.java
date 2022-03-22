@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.PlanDto;
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.PlanPreviewDto;
-import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.StepPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.StepPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Plan;
 import com.macchiarini.lorenzo.litto_backend.ogm.modelOGM.Step;
 

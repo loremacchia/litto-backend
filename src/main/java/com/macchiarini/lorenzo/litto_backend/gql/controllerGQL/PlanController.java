@@ -1,9 +1,9 @@
 package com.macchiarini.lorenzo.litto_backend.gql.controllerGQL;
 
+import com.macchiarini.lorenzo.litto_backend.commondto.StepPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.gql.daoGQL.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.gql.daoGQL.UserDao;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.PlanDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.gql.mapperGQL.PlanMapper;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 

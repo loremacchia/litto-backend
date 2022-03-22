@@ -1,4 +1,4 @@
-package com.macchiarini.lorenzo.litto_backend.gql.dtoGQL;
+package com.macchiarini.lorenzo.litto_backend.commondto;
 
 import java.io.Serializable;
 import java.util.List;

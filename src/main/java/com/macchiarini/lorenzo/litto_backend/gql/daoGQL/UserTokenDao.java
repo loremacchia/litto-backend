@@ -3,7 +3,7 @@ package com.macchiarini.lorenzo.litto_backend.gql.daoGQL;
 import java.io.IOException;
 
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.IDGqlDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.TokenIDDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.TokenIDDto;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

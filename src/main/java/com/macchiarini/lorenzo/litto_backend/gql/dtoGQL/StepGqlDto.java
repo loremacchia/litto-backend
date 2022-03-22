@@ -2,6 +2,9 @@ package com.macchiarini.lorenzo.litto_backend.gql.dtoGQL;
 
 import java.io.Serializable;
 
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.StepPreviewDto;
+
 public class StepGqlDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;

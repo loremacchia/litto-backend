@@ -1,4 +1,4 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM;
+package com.macchiarini.lorenzo.litto_backend.commondto;
 
 import java.io.Serializable;
 

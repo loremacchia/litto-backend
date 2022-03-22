@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/gql/step")
-public class StepService extends BaseService {
+public class StepService {
 
 	@Inject
 	StepController stepController;
@@ -25,10 +25,7 @@ public class StepService extends BaseService {
 								@PathParam("userId") String userID, 
 								@PathParam("planId") String planID,
 								@HeaderParam("Authorization") String token) {
-		boolean result = verifyToken(token, userID);
-		if(result)
-			return responseCreator(true, token, stepController.getActiveStep(userID, planID));
-		return responseCreator(false, "", null);
+		return Response.ok().entity(stepController.getActiveStep(userID, planID)).build();
 	}
 
 	@GET 
@@ -39,9 +36,6 @@ public class StepService extends BaseService {
 								@PathParam("planId") String planID,
 								@PathParam("planWeek") int planWeek, 
 								@HeaderParam("Authorization") String token) {
-		boolean result = verifyToken(token, userID);
-		if(result)
-			return responseCreator(true, token, stepController.getNextActiveStep(userID, planID, planWeek));
-		return responseCreator(false, "", null);
+		return Response.ok().entity(stepController.getNextActiveStep(userID, planID, planWeek)).build();
 	}
 }

@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.IDGqlDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.StepGqlDto;
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserDto;
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.UserInitDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.UserInitDto;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Interest;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.PlanInProgress;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.StepInProgress;

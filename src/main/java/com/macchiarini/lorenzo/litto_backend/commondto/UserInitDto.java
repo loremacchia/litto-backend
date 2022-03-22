@@ -1,4 +1,4 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM;
+package com.macchiarini.lorenzo.litto_backend.commondto;
 
 import java.io.Serializable;
 
@@ -29,6 +29,4 @@ public class UserInitDto implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 }

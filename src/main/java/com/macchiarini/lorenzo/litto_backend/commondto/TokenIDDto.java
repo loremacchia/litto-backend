@@ -1,4 +1,4 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM;
+package com.macchiarini.lorenzo.litto_backend.commondto;
 
 import java.io.Serializable;
 
@@ -23,6 +23,11 @@ public class TokenIDDto implements Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	@Override
+	public String toString() {
+		return "TokenIDDto [id=" + id + ", token=" + token + "]";
 	}
 
 }

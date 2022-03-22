@@ -1,4 +1,4 @@
-package com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM;
+package com.macchiarini.lorenzo.litto_backend.commondto;
 
 import java.io.Serializable;
 
@@ -23,8 +23,8 @@ public class StepPreviewDto implements Serializable {
 	public String getPlanId() {
 		return planId;
 	}
-	public void setPlanId(String planId) {
-		this.planId = planId;
+	public void setPlanId(String string) {
+		this.planId = string;
 	}
 
 	

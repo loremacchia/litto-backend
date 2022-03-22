@@ -1,6 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.gql.mapperGQL;
 
-import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.PlanPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.Plan;
 
 import jakarta.enterprise.context.ApplicationScoped;

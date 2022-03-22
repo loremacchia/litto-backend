@@ -3,6 +3,8 @@ package com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM;
 import java.io.Serializable;
 import java.util.List;
 
+import com.macchiarini.lorenzo.litto_backend.commondto.StepPreviewDto;
+
 public class PlanDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;

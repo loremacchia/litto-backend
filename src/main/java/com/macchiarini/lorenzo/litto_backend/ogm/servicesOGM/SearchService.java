@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/ogm/search")
-public class SearchService extends BaseService {
+public class SearchService {
 
 	@Inject
 	SearchController searchController;
@@ -24,9 +24,6 @@ public class SearchService extends BaseService {
 	public Response searchWord(
 							@PathParam("word") String word, 
 							@HeaderParam("Authorization") String token) {
-		boolean result = verifyToken(token, null);
-		if(result)
-			return responseCreator(true, token, searchController.search(word));
-		return responseCreator(false, "", null); 
+		return Response.ok().entity(searchController.search(word)).build();
 	}
 }
