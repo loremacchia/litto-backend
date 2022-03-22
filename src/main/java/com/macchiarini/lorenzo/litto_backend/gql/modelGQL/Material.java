@@ -60,4 +60,10 @@ public class Material {
 		this.text = text;
 	}
 
+	@Override
+	public String toString() {
+		return "Material [title=" + title + ", type=" + type + ", file=" + file + ", link=" + link + ", description="
+				+ description + ", text=" + text + "]";
+	}
+
 }

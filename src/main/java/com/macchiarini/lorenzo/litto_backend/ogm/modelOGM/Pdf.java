@@ -28,4 +28,11 @@ public class Pdf extends Material {
 		super.setType(MaterialType.PDF);
         this.file = file;
     }
+
+	@Override
+	public String toString() {
+		return "Pdf [file=" + file + ", getTitle()=" + getTitle() + ", getType()=" + getType() + ", getId()=" + getId()
+				+ "]";
+	}
+	
 }

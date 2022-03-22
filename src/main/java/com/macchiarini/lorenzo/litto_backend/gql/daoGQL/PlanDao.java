@@ -1,7 +1,6 @@
 package com.macchiarini.lorenzo.litto_backend.gql.daoGQL;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import com.macchiarini.lorenzo.litto_backend.gql.dtoGQL.IDGqlDto;
@@ -52,26 +51,20 @@ public class PlanDao {
 	 * @throws IOException 
 	 */
 	public String createPlan(Plan plan) throws IOException, InterruptedException {
-		String queryBody = "{\"query\":\"mutation {createPlans(input: {" 
-								+ "title: \\\"" + plan.getTitle() + "\\\","
-								+ "subtitle: \\\"" + plan.getSubtitle() + "\\\"," 
-								+ "imageUrl: \\\"" + plan.getImageUrl() + "\\\","
-								+ "level: " + plan.getLevel() + "," 
-								+ "duration: " + plan.getDuration() + ",";
+
 
 		List<Topic> topics = plan.getTags();
 
-		String parsedString = "[";
-		for (Topic t : topics) {
-			parsedString += "\\\"" + t.getName() + "\\\",";
-		}
-		parsedString.substring(0, parsedString.length() - 1);
-		parsedString += "]";
-		List<IDGqlDto> topicIds = Arrays.asList(gql.query("topics", "name_IN: " + parsedString, "id", IDGqlDto[].class));
+		String queryBody = "{\"query\":\"mutation {createPlans(input: {" 
+				+ "title: \\\"" + plan.getTitle() + "\\\","
+				+ "subtitle: \\\"" + plan.getSubtitle() + "\\\"," 
+				+ "imageUrl: \\\"" + plan.getImageUrl() + "\\\","
+				+ "level: " + plan.getLevel() + "," 
+				+ "duration: " + plan.getDuration() + ",";
 		queryBody += "tags: { connectOrCreate: [";
-		for (int i = 0; i < topicIds.size(); i++) {
-			queryBody += "{ onCreate: {node: { name: \\\"" + topics.get(i).getName() 
-						+ "\\\"}}, where: {node:{id: \\\"" + topicIds.get(i).getId() + "\\\"";
+		for (int i = 0; i < topics.size(); i++) {
+			queryBody += "{ onCreate: {node: { name: \\\"" + topics.get(i).getName() + "\\\"}}, "
+						+ "where: {node:{name: \\\"" + topics.get(i).getName() + "\\\"";
 		}
 		queryBody += "}}}]}}) {plans {id}}}\"}";
 		String planId = gql.customQuery(queryBody, "plans", IDGqlDto[].class)[0].getId();

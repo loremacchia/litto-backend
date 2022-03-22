@@ -39,4 +39,11 @@ public class Link extends Material {
         this.link = link;
         this.description = description;
     }
+
+	@Override
+	public String toString() {
+		return "Link [link=" + link + ", description=" + description + ", getTitle()=" + getTitle() + ", getType()="
+				+ getType() + ", getId()=" + getId() + "]";
+	}
+	
 }

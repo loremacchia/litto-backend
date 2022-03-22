@@ -26,7 +26,6 @@ public class PlanController {
 	 * @return
 	 */
 	public PlanDto getPlan(String ID) {
-		System.out.println("giaaa");
 		PlanDto plan;
 		try {
 			plan = planDao.getPlanDto(ID);

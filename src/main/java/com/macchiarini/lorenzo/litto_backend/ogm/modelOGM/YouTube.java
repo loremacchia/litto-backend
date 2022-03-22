@@ -40,4 +40,10 @@ public class YouTube extends Material {
         this.description = description;
     }
 
+	@Override
+	public String toString() {
+		return "YouTube [link=" + link + ", description=" + description + ", getTitle()=" + getTitle() + ", getType()="
+				+ getType() + ", getId()=" + getId() + "]";
+	}
+
 }

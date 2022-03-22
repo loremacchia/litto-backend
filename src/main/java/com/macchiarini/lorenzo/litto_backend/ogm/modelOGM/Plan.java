@@ -10,7 +10,6 @@ public class Plan extends Entity {
 
 	public Plan() {
 	}
-	// TODO serve costruttore con ID?
 
 	private String imageUrl;
 	private String title;
@@ -76,6 +75,12 @@ public class Plan extends Entity {
 
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+
+	@Override
+	public String toString() {
+		return "Plan [imageUrl=" + imageUrl + ", title=" + title + ", subtitle=" + subtitle + ", level=" + level
+				+ ", tags=" + tags + ", steps=" + steps + ", duration=" + duration + ", getId()=" + getId() + "]";
 	}
 
 }

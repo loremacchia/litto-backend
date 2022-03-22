@@ -40,7 +40,6 @@ public class Authorizer {
 						.sign(algorithm);
 		System.out.println("Generated token: "+token);
 		userTokenDao.setUserToken(user, token);
-//		genericDao.savePreview(user);
 		return token;
 	}
 

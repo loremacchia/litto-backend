@@ -23,4 +23,9 @@ public class StepInProgress {
 		this.step = step;
 	}
 
+	@Override
+	public String toString() {
+		return "StepInProgress [endDate=" + endDate + ", step=" + step + "]";
+	}
+
 }

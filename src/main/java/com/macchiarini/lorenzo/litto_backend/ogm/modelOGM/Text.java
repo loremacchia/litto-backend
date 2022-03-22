@@ -28,4 +28,11 @@ public class Text extends Material {
 		super.setType(MaterialType.Text);
         this.text = text;
     }
+
+	@Override
+	public String toString() {
+		return "Text [text=" + text + ", getTitle()=" + getTitle() + ", getType()=" + getType() + ", getId()=" + getId()
+				+ "]";
+	}
+	
 }

@@ -35,4 +35,9 @@ public class PlanInProgress {
 		this.toDoSteps = toDoSteps;
 	}
 
+	@Override
+	public String toString() {
+		return "PlanInProgress [endingDate=" + endingDate + ", plan=" + plan + ", toDoSteps=" + toDoSteps + "]";
+	}
+
 }

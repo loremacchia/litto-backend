@@ -24,4 +24,9 @@ public class Topic {
 		this.imageUrl = imageUrl;
 	}
 
+	@Override
+	public String toString() {
+		return "Topic [name=" + name + ", imageUrl=" + imageUrl + "]";
+	}
+
 }

@@ -23,4 +23,9 @@ public class Interest {
 		this.level = level;
 	}
 
+	@Override
+	public String toString() {
+		return "Interest [topic=" + topic + ", level=" + level + "]";
+	}
+
 }

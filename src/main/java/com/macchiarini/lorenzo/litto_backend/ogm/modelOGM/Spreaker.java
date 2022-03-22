@@ -40,4 +40,10 @@ public class Spreaker extends Material {
         this.description = description;
     }
 
+	@Override
+	public String toString() {
+		return "Spreaker [link=" + link + ", description=" + description + ", getTitle()=" + getTitle() + ", getType()="
+				+ getType() + ", getId()=" + getId() + "]";
+	}
+
 }

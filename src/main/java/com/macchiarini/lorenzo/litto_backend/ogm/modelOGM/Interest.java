@@ -28,4 +28,9 @@ public class Interest extends Entity{
 		this.level = level;
 	}
 
+	@Override
+	public String toString() {
+		return "Interest [topic=" + topic + ", level=" + level + "]";
+	}
+
 }

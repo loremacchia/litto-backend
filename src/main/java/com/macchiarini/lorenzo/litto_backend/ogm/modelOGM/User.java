@@ -152,13 +152,9 @@ public class User extends Entity {
 
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", surname=" + surname + ", bio=" + bio + ", email=" + email + ", password="
-				+ password + ", imageUrl=" + imageUrl + ", username=" + username + ", level=" + level + ", interests="
-				+ interests + ", completedPlans=" + completedPlans + ", progressingPlans=" + progressingPlans
-				+ ", token=" + token + "]";
+		return "User [id=" + getId() + ", name=" + name + ", surname=" + surname + ", bio=" + bio + ", email=" + email
+				+ ", password=" + password + ", imageUrl=" + imageUrl + ", username=" + username + ", level=" + level
+				+ ", interests=" + interests + ", completedPlans=" + completedPlans + ", progressingPlans="
+				+ progressingPlans + ", token=" + token.substring(0, 10) + "...]";
 	}
-
-	
-	
-
 }

@@ -29,9 +29,7 @@ public class StepInProgress extends Entity{
 
 	@Override
 	public String toString() {
-		return "StepInProgress [endDate=" + endDate + ", step=" + step + "]";
+		return "StepInProgress [endDate=" + endDate + ", step=" + step + ", getId()=" + getId() + "]";
 	}
-	
-	
 
 }

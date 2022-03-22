@@ -87,7 +87,7 @@ public class UserController {
 			if(correctInterests.contains(i.getTopic().getName()))
 				correctInterests.remove(i.getTopic().getName());
 		}
-		List<Topic> topics = topicDao.getTopics(correctInterests);
+		List<Topic> topics = topicDao.getTopics(correctInterests); // TODO potrebbe non servire visto che topic ha come chiave il nome
 		List<Interest> interests = new ArrayList<Interest>();
 		for (Topic t : topics) {
 			Interest i = new Interest();
