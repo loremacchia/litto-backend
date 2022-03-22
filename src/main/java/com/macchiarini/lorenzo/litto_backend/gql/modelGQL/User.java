@@ -19,16 +19,6 @@ public class User {
 	private List<Interest> interests;
 	private List<Plan> completedPlans;
 	private List<PlanInProgress> progressingPlans;
-	private String token;
-
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	public String getId() {
 		return id;
@@ -131,7 +121,7 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", surname=" + surname + ", bio=" + bio + ", email=" + email
 				+ ", password=" + password + ", imageUrl=" + imageUrl + ", username=" + username + ", level=" + level
 				+ ", interests=" + interests + ", completedPlans=" + completedPlans + ", progressingPlans="
-				+ progressingPlans + ", token=" + token.substring(0, 10) + "...]";
+				+ progressingPlans +"]";
 	}
 
 }

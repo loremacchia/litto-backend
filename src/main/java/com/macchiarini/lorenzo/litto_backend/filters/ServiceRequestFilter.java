@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -12,7 +17,7 @@ import jakarta.ws.rs.ext.Provider;
 
 @Provider
 public class ServiceRequestFilter implements ContainerRequestFilter {
-
+    
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		List<String> pathsNoToken = Arrays.asList("gql/user", "gql/user/login", "ogm/user", "ogm/user/login");
@@ -33,7 +38,15 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
 	}
 	
 	private boolean verifyToken(String token) {
-		return true; // TODO aggiungi JWT auth
-		// TODO rimuovi authorizer
+		try {
+		    Algorithm algorithm = Algorithm.HMAC256("secret"); 
+		    JWTVerifier verifier = JWT.require(algorithm)
+		        .withIssuer("auth0")
+		        .build();
+		    verifier.verify(token);
+		    return true;
+		} catch (JWTVerificationException exception){
+		    return false;
+		}
 	}
 }

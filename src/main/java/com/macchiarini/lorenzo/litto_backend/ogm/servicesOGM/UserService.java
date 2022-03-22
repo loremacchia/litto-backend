@@ -12,7 +12,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -38,10 +37,7 @@ public class UserService {
 	@Path("/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response completeUser(
-							@PathParam("id") String ID, 
-							@HeaderParam("Authorization") String token,
-			UserCompleteDto userCompleteDto) {
+	public Response completeUser(@PathParam("id") String ID, UserCompleteDto userCompleteDto) {
 		return Response.ok().entity(userController.completeUser(ID, userCompleteDto)).build();
 	}
 
@@ -49,9 +45,7 @@ public class UserService {
 	@Path("/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response deleteUser(
-							@PathParam("id") String userID, 
-							@HeaderParam("Authorization") String token) {
+	public Response deleteUser(@PathParam("id") String userID) {
 		return Response.ok().entity(userController.deleteUser(userID)).build();
 	}
 
@@ -67,41 +61,35 @@ public class UserService {
 	@GET
 	@Path("/{id}/logout")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response logoutUser(
-							@PathParam("id") String ID, 
-							@HeaderParam("Authorization") String token) {
+	public Response logoutUser(@PathParam("id") String ID) {
 		return Response.ok().entity(userController.logoutUser(ID)).build();
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUser(
-							@PathParam("id") String ID, 
-							@HeaderParam("Authorization") String token) {
+	public Response getUser(@PathParam("id") String ID) {
 		return Response.ok().entity(userController.getUser(ID)).build();
 	}
 
 	@GET
 	@Path("/{id}/goals")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserGoals(@PathParam("id") String ID, @HeaderParam("Authorization") String token) {
+	public Response getUserGoals(@PathParam("id") String ID) {
 		return Response.ok().entity(userController.getUserGoals(ID)).build();
 	}
 
 	@GET
 	@Path("/{id}/recommended")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserRecommendedPlans(
-							@PathParam("id") String ID, 
-							@HeaderParam("Authorization") String token) {
+	public Response getUserRecommendedPlans(@PathParam("id") String ID) {
 		return Response.ok().entity(userController.getUserRecommendedPlans(ID)).build();
 	}
 
 	@GET
 	@Path("/interests")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getInterests(@HeaderParam("Authorization") String token) {
+	public Response getInterests() {
 		return Response.ok().entity(userController.getInterests()).build();
 	}
 
@@ -109,12 +97,9 @@ public class UserService {
 	@Path("/{userId}/start/{planId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response startPlan(
-							@PathParam("userId") String userID, 
-							@PathParam("planId") String planID,
-							@HeaderParam("Authorization") String token, 
-							DateDto dateDto) {
-		return Response.ok().entity(userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo())).build();
+	public Response startPlan(@PathParam("userId") String userID, @PathParam("planId") String planID, DateDto dateDto) {
+		return Response.ok()
+				.entity(userController.startPlan(planID, userID, dateDto.getDateFrom(), dateDto.getDateTo())).build();
 	}
 
 }

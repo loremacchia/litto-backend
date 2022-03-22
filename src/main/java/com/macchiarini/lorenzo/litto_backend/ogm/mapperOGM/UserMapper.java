@@ -57,10 +57,10 @@ public class UserMapper {
 	 * @param user
 	 * @return
 	 */
-	public TokenIDDto toTokenID(User user) {
+	public TokenIDDto toTokenID(String id, String token) {
 		TokenIDDto u = new TokenIDDto();
-		u.setId(user.getId());
-		u.setToken(user.getToken());
+		u.setId(id);
+		u.setToken(token);
 		return u;
 	}
 	

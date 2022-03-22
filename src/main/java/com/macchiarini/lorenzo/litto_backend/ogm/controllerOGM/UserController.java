@@ -8,6 +8,9 @@ import com.macchiarini.lorenzo.litto_backend.ogm.daoOGM.SearchDao;
 import com.macchiarini.lorenzo.litto_backend.ogm.daoOGM.TopicDao;
 import com.macchiarini.lorenzo.litto_backend.ogm.daoOGM.UserDao;
 import com.macchiarini.lorenzo.litto_backend.ogm.dtoOGM.UserDto;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.commondto.StepDto;
 import com.macchiarini.lorenzo.litto_backend.commondto.TokenIDDto;
@@ -32,9 +35,6 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class UserController {
 
-	@Inject 
-	Authorizer authorizer;
-	
 	@Inject
 	UserDao userDao;
 
@@ -64,9 +64,19 @@ public class UserController {
 		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
 			User user = userMapper.toUser(userInitDto);
 			user.generateId();
-			String token = authorizer.createToken(user);
-			user.setToken(token);
-			return userMapper.toTokenID(user);
+			String token;
+			try {
+				token = createToken(user.getEmail(), user.getId());
+			} catch (JWTCreationException e) {
+				System.err.println("ERROR: JWT creation");
+				e.printStackTrace();
+				return null;
+			} catch (Exception e) {
+				System.err.println("ERROR: cannot assign token to user");
+				e.printStackTrace();
+				return null;
+			}
+			return userMapper.toTokenID(user.getId(),token);
 		}
 		return null;
 	}
@@ -108,11 +118,38 @@ public class UserController {
 	public TokenIDDto loginUser(UserLoginDto userLoginDto) {
 		User user = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
 		if(user != null) {
-			String token = authorizer.createToken(user);
-			user.setToken(token);
-			return userMapper.toTokenID(user);
+			String token;
+			try {
+				token = createToken(user.getEmail(), user.getId());
+			} catch (JWTCreationException e) {
+				System.err.println("ERROR: JWT creation");
+				e.printStackTrace();
+				return null;
+			} catch (Exception e) {
+				System.err.println("ERROR: cannot assign token to user");
+				e.printStackTrace();
+				return null;
+			}
+			return userMapper.toTokenID(user.getId(), token);
 		}
 		return null;
+	}
+	
+	/**
+	 * @param email
+	 * @param userID
+	 * @return
+	 * @throws JWTCreationException
+	 * @throws Exception
+	 */
+	public String createToken(String email,String userID) throws JWTCreationException, Exception {
+		Algorithm algorithm = Algorithm.HMAC256("secret");
+		String token = JWT.create()
+						.withIssuer("auth0")
+				        .withClaim("userID", userID)
+				        .withClaim("email", email)
+						.sign(algorithm);
+		return token;
 	}
 
 	/**
@@ -120,8 +157,6 @@ public class UserController {
 	 * @return
 	 */
 	public boolean logoutUser(String ID) {
-		User user = userDao.getUserPreview(ID);
-		authorizer.removeUserAuth(user);
 		return true;
 	}
 

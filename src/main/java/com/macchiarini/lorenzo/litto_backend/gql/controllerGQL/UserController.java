@@ -3,6 +3,8 @@ package com.macchiarini.lorenzo.litto_backend.gql.controllerGQL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.macchiarini.lorenzo.litto_backend.gql.daoGQL.PlanDao;
 import com.macchiarini.lorenzo.litto_backend.gql.daoGQL.TopicDao;
@@ -32,9 +34,6 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class UserController {
-
-	@Inject 
-	Authorizer authorizer;
 	
 	@Inject
 	UserMapper userMapper;
@@ -71,7 +70,7 @@ public class UserController {
 				
 				String token;
 				try {
-					token = createToken(userInitDto.getEmail(), userInitDto.getPassword(), ID);
+					token = createToken(userInitDto.getEmail(), ID);
 				} catch (JWTCreationException e) {
 					System.err.println("ERROR: JWT creation");
 					e.printStackTrace();
@@ -95,16 +94,22 @@ public class UserController {
 		}
 	}
 	
+
 	/**
 	 * @param email
-	 * @param password
 	 * @param userID
 	 * @return
 	 * @throws JWTCreationException
 	 * @throws Exception
 	 */
-	public String createToken(String email, String password, String userID) throws JWTCreationException, Exception {
-		return authorizer.createToken(userID, email, password);
+	public String createToken(String email,String userID) throws JWTCreationException, Exception {
+		Algorithm algorithm = Algorithm.HMAC256("secret");
+		String token = JWT.create()
+						.withIssuer("auth0")
+				        .withClaim("userID", userID)
+				        .withClaim("email", email)
+						.sign(algorithm);
+		return token;
 	}
 
 	/**
@@ -154,7 +159,7 @@ public class UserController {
 		
 		String token;
 		try {
-			token = createToken(userLoginDto.getEmail(), userLoginDto.getPassword(), ID);
+			token = createToken(userLoginDto.getEmail(), ID);
 		} catch (JWTCreationException e) {
 			System.err.println("ERROR: JWT creation");
 			e.printStackTrace();
@@ -178,14 +183,7 @@ public class UserController {
 	 * @return
 	 */
 	public boolean logoutUser(String ID) {
-		try {
-			authorizer.removeUserAuth(ID);
-		} catch (Exception e) {
-			System.err.println("ERROR: cannot logout the user");
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return true; // TODO serve davvero?
 	}
 
 	/**

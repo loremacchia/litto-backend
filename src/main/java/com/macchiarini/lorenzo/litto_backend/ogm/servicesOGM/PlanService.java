@@ -7,7 +7,6 @@ import jakarta.inject.Inject;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -24,9 +23,7 @@ public class PlanService {
 	@GET
 	@Path("/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getPlan(
-							@PathParam("id") String ID, 
-							@HeaderParam("Authorization") String token) {
+	public Response getPlan(@PathParam("id") String ID) {
 		return Response.ok().entity(planController.getPlan(ID)).build();
 	}
 
@@ -34,10 +31,7 @@ public class PlanService {
 	@Path("/create/{userId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response createPlan(
-							@PathParam("userId") String userID, 
-							@HeaderParam("Authorization") String token,
-							Plan plan) {
+	public Response createPlan(@PathParam("userId") String userID, Plan plan) {
 		return Response.ok().entity(planController.createPlan(userID, plan)).build();
 	}
 }

@@ -5,7 +5,6 @@ import com.macchiarini.lorenzo.litto_backend.gql.controllerGQL.StepController;
 import jakarta.inject.Inject;
 
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -18,24 +17,18 @@ public class StepService {
 	@Inject
 	StepController stepController;
 
-	@GET 
-	@Path("/{userId}/{planId}") 
+	@GET
+	@Path("/{userId}/{planId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getActiveStep(
-								@PathParam("userId") String userID, 
-								@PathParam("planId") String planID,
-								@HeaderParam("Authorization") String token) {
+	public Response getActiveStep(@PathParam("userId") String userID, @PathParam("planId") String planID) {
 		return Response.ok().entity(stepController.getActiveStep(userID, planID)).build();
 	}
 
-	@GET 
-	@Path("/{userId}/{planId}/next/{planWeek}") 
+	@GET
+	@Path("/{userId}/{planId}/next/{planWeek}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getNextActiveStep(
-								@PathParam("userId") String userID, 
-								@PathParam("planId") String planID,
-								@PathParam("planWeek") int planWeek, 
-								@HeaderParam("Authorization") String token) {
+	public Response getNextActiveStep(@PathParam("userId") String userID, @PathParam("planId") String planID,
+			@PathParam("planWeek") int planWeek) {
 		return Response.ok().entity(stepController.getNextActiveStep(userID, planID, planWeek)).build();
 	}
 }

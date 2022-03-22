@@ -5,7 +5,6 @@ import com.macchiarini.lorenzo.litto_backend.ogm.controllerOGM.SearchController;
 import jakarta.inject.Inject;
 
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -21,9 +20,7 @@ public class SearchService {
 	@GET
 	@Path("/{word}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response searchWord(
-							@PathParam("word") String word, 
-							@HeaderParam("Authorization") String token) {
+	public Response searchWord(@PathParam("word") String word) {
 		return Response.ok().entity(searchController.search(word)).build();
 	}
 }
