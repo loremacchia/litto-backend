@@ -83,7 +83,7 @@ public class UserDao {
 	 * @param userID
 	 * @throws Exception 
 	 */
-	public void deleteUser(String userID) throws Exception { // TODO attenzione se c'è gia transaction
+	public void deleteUser(String userID) throws Exception {
 		Session session = sessionFactory.getSession();
 		User user = session.load(User.class, userID, 3);
 		Transaction t = session.beginTransaction();

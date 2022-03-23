@@ -32,10 +32,7 @@ public class PlanController {
 			e.printStackTrace();
 			return null;
 		}
-		if (plan != null) { // TODO vedere se piano valido
-			return planMapper.toPlanDto(plan);
-		}
-		return null;
+		return planMapper.toPlanDto(plan);
 	}
 
 	/**

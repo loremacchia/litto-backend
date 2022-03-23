@@ -61,9 +61,9 @@ public class StepController {
 			} catch (Exception e) {
 				System.err.println("ERROR: cannot complete the plan correctly");
 				e.printStackTrace();
-				return false; // TODO il ritorno cosi no
+				return false; 
 			}
-			return false;
+			return true;
 		}
 		return true;
 	}

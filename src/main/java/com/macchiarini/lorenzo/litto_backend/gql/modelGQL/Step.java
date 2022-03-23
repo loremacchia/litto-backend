@@ -9,7 +9,7 @@ public class Step {
 
 	private String title;
 	private String subtitle;
-	private List<Material> materials; // TODO lista ordinata
+	private List<Material> materials;
 	private String planId;
 	private int planWeek;
 

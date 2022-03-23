@@ -25,6 +25,7 @@ public class StepMapper {
 		stepDto.setImageUrl(plan.getImageUrl());
 		stepDto.setPlanId(plan.getId());
 		stepDto.setPlanName(plan.getTitle());
+		stepDto.setPlanWeek(step.getStep().getPlanWeek());
 		return stepDto;
 	}
 	

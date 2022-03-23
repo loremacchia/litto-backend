@@ -16,8 +16,8 @@ public class Step extends Entity {
 	@Relationship(type = "COMPOSED_BY", direction = Relationship.INCOMING)
 	private Plan plan;
 	@Relationship(type = "HAS_MATERIAL", direction = Relationship.OUTGOING)
-	private List<Material> materials; // TODO lista ordinata
-	private int planWeek; // TODO va bene così o meglio un id vero e proprio?
+	private List<Material> materials;
+	private int planWeek;
 
 	public int getPlanWeek() {
 		return planWeek;

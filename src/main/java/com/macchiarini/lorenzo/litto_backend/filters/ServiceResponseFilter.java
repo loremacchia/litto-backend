@@ -18,6 +18,7 @@ public class ServiceResponseFilter implements ContainerResponseFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
 			throws IOException {
+		
 		List<String> pathsNoToken = Arrays.asList("gql/user", "gql/user/login", "ogm/user", "ogm/user/login");
 		String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (responseContext.getEntity() != null) {
@@ -35,10 +36,16 @@ public class ServiceResponseFilter implements ContainerResponseFilter {
 				responseContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
 			}
 		} else {
-			responseContext.setStatus(400);
-		}
+			if(requestContext.getMethod().equals("OPTIONS")) {
+				responseContext.setStatus(200);
+			}
+			else {
+				responseContext.setStatus(400);
+			}
+		}     
 		responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
 		responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
-		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE");
+		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, HEAD, OPTIONS");
+		responseContext.getHeaders().add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	}
 }

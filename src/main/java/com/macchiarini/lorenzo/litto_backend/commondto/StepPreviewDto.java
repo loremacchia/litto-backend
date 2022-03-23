@@ -7,6 +7,7 @@ public class StepPreviewDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String title;
 	private String subtitle;
+	private int planWeek;
 	private String planId;
 	public String getTitle() {
 		return title;
@@ -25,6 +26,12 @@ public class StepPreviewDto implements Serializable {
 	}
 	public void setPlanId(String string) {
 		this.planId = string;
+	}
+	public int getPlanWeek() {
+		return planWeek;
+	}
+	public void setPlanWeek(int planWeek) {
+		this.planWeek = planWeek;
 	}
 
 	

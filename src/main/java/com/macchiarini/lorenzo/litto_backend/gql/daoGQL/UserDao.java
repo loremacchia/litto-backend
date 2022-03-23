@@ -28,7 +28,6 @@ public class UserDao {
 	
 	/**
 	 * Function to persist the User and to get back the userId
-	 * TODO cifrare password
 	 * @param userInitDto
 	 * @return
 	 * @throws InterruptedException 
@@ -134,7 +133,7 @@ public class UserDao {
 	 */
 	public List<StepGqlDto> getAllActiveSteps(String ID) throws IOException, InterruptedException {
 		String queryBody = "{\"query\":\"query { users(where: {id:\\\"" + ID
-				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title subtitle } plan { id imageUrl title }}}}}\"}";
+				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title planWeek subtitle } plan { id imageUrl title }}}}}\"}";
 		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps", StepGqlDto[].class)); 
 	}
 

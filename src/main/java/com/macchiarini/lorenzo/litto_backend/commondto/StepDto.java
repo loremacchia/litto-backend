@@ -11,6 +11,7 @@ public class StepDto implements Serializable {
 	private String imageUrl;
 	private String planName;
 	private String planId;
+	private int planWeek;
 
 	public String getEndDate() {
 		return endDate;
@@ -58,6 +59,14 @@ public class StepDto implements Serializable {
 
 	public void setPlanId(String planId) {
 		this.planId = planId;
+	}
+
+	public int getPlanWeek() {
+		return planWeek;
+	}
+
+	public void setPlanWeek(int planWeek) {
+		this.planWeek = planWeek;
 	}
 
 }
