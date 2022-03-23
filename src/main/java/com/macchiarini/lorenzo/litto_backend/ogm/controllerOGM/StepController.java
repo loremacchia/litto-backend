@@ -27,7 +27,14 @@ public class StepController {
 	 * @return
 	 */
 	public StepActiveDto getActiveStep(String userID, String planID) {
-		User user = userDao.getUser(userID, 4); // TODO ottimizza perche qua tira su un sacco di roba
+		User user;
+		try {
+			user = userDao.getUser(userID, 4);
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot retrieve the user");
+			e.printStackTrace();
+			return null;
+		} // TODO ottimizza perche qua tira su un sacco di roba
 		Plan plan = null;
 		PlanInProgress pp = null;
 		for(PlanInProgress p : user.getProgressingPlans()) {
@@ -46,7 +53,14 @@ public class StepController {
 	 * @return
 	 */
 	public boolean getNextActiveStep(String userID, String planID, int planWeek) {
-		User user = userDao.getUser(userID, 4);
+		User user;
+		try {
+			user = userDao.getUser(userID, 4);
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot retrieve the user");
+			e.printStackTrace();
+			return false;
+		}
 		Plan plan = null;
 		PlanInProgress pp = null;
 		for(PlanInProgress p : user.getProgressingPlans()) {
@@ -56,6 +70,12 @@ public class StepController {
 			}
 		}
 		StepInProgress step = pp.getActiveStep();
-		return userDao.completeStep(user, step, pp, plan);
+		try {
+			return userDao.completeStep(user, step, pp, plan);
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot complete the steps");
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

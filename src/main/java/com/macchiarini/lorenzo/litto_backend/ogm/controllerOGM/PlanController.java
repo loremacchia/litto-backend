@@ -24,7 +24,14 @@ public class PlanController {
 	 * @return
 	 */
 	public PlanDto getPlan(String ID) {
-		Plan plan =	planDao.getPlanOverview(ID);
+		Plan plan;
+		try {
+			plan = planDao.getPlanOverview(ID);
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot retrieve the plan");
+			e.printStackTrace();
+			return null;
+		}
 		if (plan != null) { // TODO vedere se piano valido
 			return planMapper.toPlanDto(plan);
 		}
@@ -44,7 +51,13 @@ public class PlanController {
 				m.generateId();
 			}
 		}
-		planDao.createPlan(plan);
+		try {
+			planDao.createPlan(plan);
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot create the plan");
+			e.printStackTrace();
+			return null;
+		}
 		return plan.getId();
 	}
 }

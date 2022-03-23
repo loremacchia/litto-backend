@@ -61,22 +61,22 @@ public class UserController {
 	 * @return
 	 */
 	public TokenIDDto createUser(UserInitDto userInitDto) {
-		if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
-			User user = userMapper.toUser(userInitDto);
-			user.generateId();
-			String token;
-			try {
-				token = createToken(user.getEmail(), user.getId());
-			} catch (JWTCreationException e) {
-				System.err.println("ERROR: JWT creation");
-				e.printStackTrace();
-				return null;
-			} catch (Exception e) {
-				System.err.println("ERROR: cannot assign token to user");
-				e.printStackTrace();
-				return null;
+		try {
+			if (userDao.searchUserbyEmail(userInitDto.getEmail()).size() == 0) {
+				User user = userMapper.toUser(userInitDto);
+				user.generateId();
+				userDao.saveUserPreview(user);
+				String token = createToken(user.getEmail(), user.getId());
+				return userMapper.toTokenID(user.getId(),token);
 			}
-			return userMapper.toTokenID(user.getId(),token);
+		} catch (JWTCreationException e) {
+			System.err.println("ERROR: JWT creation");
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot create user");
+			e.printStackTrace();
+			return null;
 		}
 		return null;
 	}
@@ -87,28 +87,49 @@ public class UserController {
 	 * @return
 	 */
 	public boolean completeUser(String ID, UserCompleteDto userCompleteDto) {
-		User user = userDao.getUserOverview(ID); // TODO aggiungere ritorno se non c'è user
-		user.setBio(userCompleteDto.getBio());
-		user.setName(userCompleteDto.getName());
-		user.setSurname(userCompleteDto.getSurname());
-		user.setImageUrl(userCompleteDto.getImageUrl());
-		List<String> correctInterests = new ArrayList<String>(userCompleteDto.getInterests());
-		for(Interest i : user.getInterests()) {
-			if(correctInterests.contains(i.getTopic().getName()))
-				correctInterests.remove(i.getTopic().getName());
-		}
-		List<Topic> topics = topicDao.getTopics(correctInterests); // TODO potrebbe non servire visto che topic ha come chiave il nome
-		List<Interest> interests = new ArrayList<Interest>();
-		for (Topic t : topics) {
-			Interest i = new Interest();
-			i.setTopic(t);
-			i.setLevel(1);
-			i.generateId();
-			interests.add(i);
-		}
-		user.setInterests(interests);
-		userDao.saveUserOverview(user);
-		return true;
+
+			User user;
+			try {
+				user = userDao.getUserOverview(ID);
+			} catch (Exception e1) {
+				System.err.println("ERROR: Cannot retrieve the user");
+				e1.printStackTrace();
+				return false;
+			} 
+			user.setBio(userCompleteDto.getBio());
+			user.setName(userCompleteDto.getName());
+			user.setSurname(userCompleteDto.getSurname());
+			user.setImageUrl(userCompleteDto.getImageUrl());
+			List<String> correctInterests = new ArrayList<String>(userCompleteDto.getInterests());
+			for(Interest i : user.getInterests()) {
+				if(correctInterests.contains(i.getTopic().getName()))
+					correctInterests.remove(i.getTopic().getName());
+			}
+			List<Topic> topics;
+			try {
+				topics = topicDao.getTopics(correctInterests);
+			} catch (Exception e) {
+				System.err.println("ERROR: Cannot retrieve the topics");
+				e.printStackTrace();
+				return false;
+			} // TODO potrebbe non servire visto che topic ha come chiave il nome
+			List<Interest> interests = new ArrayList<Interest>();
+			for (Topic t : topics) {
+				Interest i = new Interest();
+				i.setTopic(t);
+				i.setLevel(1);
+				i.generateId();
+				interests.add(i);
+			}
+			user.setInterests(interests);
+			try {
+				userDao.saveUserOverview(user);
+			} catch (Exception e) {
+				System.err.println("ERROR: Cannot save the user");
+				e.printStackTrace();
+				return false;
+			}
+			return true;
 	}
 
 	/**
@@ -116,7 +137,14 @@ public class UserController {
 	 * @return
 	 */
 	public TokenIDDto loginUser(UserLoginDto userLoginDto) {
-		User user = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		User user;
+		try {
+			user = userDao.loginUser(userLoginDto.getEmail(), userLoginDto.getPassword());
+		} catch (Exception e1) {
+			System.err.println("ERROR: Cannot login the user");
+			e1.printStackTrace();
+			return null;
+		}
 		if(user != null) {
 			String token;
 			try {
@@ -164,8 +192,14 @@ public class UserController {
 	 * @param userID
 	 * @return
 	 */
-	public boolean deleteUser(String userID){
-		userDao.deleteUser(userID);
+	public boolean deleteUser(String userID){ // TODO guarda valori di ritorno
+		try {
+			userDao.deleteUser(userID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot delete user");
+			e.printStackTrace();
+			return true;
+		}
 		return false;
 	}
 	
@@ -174,7 +208,14 @@ public class UserController {
 	 * @return
 	 */
 	public UserDto getUser(String ID) {
-		User user = userDao.getUser(ID, 3);
+		User user;
+		try {
+			user = userDao.getUser(ID, 3);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the user");
+			e.printStackTrace();
+			return null;
+		}
 		UserDto userDto = userMapper.toUserDto(user);
 		return userDto;
 	}
@@ -184,7 +225,14 @@ public class UserController {
 	 * @return
 	 */
 	public List<StepDto> getUserGoals(String ID) {
-		User user = userDao.getUser(ID, 3);
+		User user;
+		try {
+			user = userDao.getUser(ID, 3);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the user");
+			e.printStackTrace();
+			return null;
+		}
 
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for(PlanInProgress p : user.getProgressingPlans()) {
@@ -196,20 +244,31 @@ public class UserController {
 		return activeStepDtos;
 	}
 
-	
 	/**
-	 * TODO qua trovo solamente una lista di piani recommended, non una per ogni token
-	 * TODO testare meglio
 	 * @param ID
 	 * @return
 	 */
 	public List<PlanPreviewDto> getUserRecommendedPlans(String ID) {
-		List<Interest> interests = userDao.getUser(ID, 3).getInterests();
+		List<Interest> interests;
+		try {
+			interests = userDao.getUser(ID, 3).getInterests();
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the user");
+			e.printStackTrace();
+			return null;
+		}
 		List<String> keywords = new ArrayList<String>();
 		for(Interest i : interests) {
 			keywords.add(i.getTopic().getName());
 		}
-		List<Plan> recommendedPlans = searchDao.searchPlanByWords(keywords);
+		List<Plan> recommendedPlans;
+		try {
+			recommendedPlans = searchDao.searchPlanByWords(keywords);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot find the recommended plans");
+			e.printStackTrace();
+			return null;
+		}
 		List<PlanPreviewDto> recommendedPlansDto = new ArrayList<PlanPreviewDto>();
 		for (Plan p : recommendedPlans) {
 			recommendedPlansDto.add(planMapper.toPlanPreviewDto(p));
@@ -221,7 +280,14 @@ public class UserController {
 	 * @return
 	 */
 	public List<Topic> getInterests() {
-		List<Topic> interests = topicDao.getInterests();
+		List<Topic> interests;
+		try {
+			interests = topicDao.getInterests();
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the topics");
+			e.printStackTrace();
+			return null;
+		}
 		return interests;
 	}
 
@@ -233,13 +299,27 @@ public class UserController {
 	 * @return
 	 */
 	public boolean startPlan(String planID, String userID, String dateFrom, String dateTo) {
-		User user = userDao.getUser(userID, 2);
+		User user;
+		try {
+			user = userDao.getUser(userID, 2);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the user");
+			e.printStackTrace();
+			return false;
+		}
 		for(PlanInProgress p : user.getProgressingPlans()) {
 			if(p.getPlan().getId().equals(planID)) 
 				return false;
 		}
 		
-		Plan plan = planDao.getPlanOverview(planID);
+		Plan plan;
+		try {
+			plan = planDao.getPlanOverview(planID);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot retrieve the plan");
+			e.printStackTrace();
+			return false;
+		}
 		if(plan == null) {
 			return false;
 		}
@@ -262,7 +342,13 @@ public class UserController {
 		System.out.println(DateHandler.incrementDate(DateHandler.toDate(dateFrom), counter) + dateTo);
 		planInProgress.setToDoSteps(stepsInProgress);
 		user.addProgressingPlans(planInProgress);
-		userDao.saveUser(user, 4); // TODO penso che vada bene anche 3
+		try {
+			userDao.saveUser(user, 4);
+		} catch (Exception e) {
+			System.err.println("ERROR: cannot save the user");
+			e.printStackTrace();
+			return false;
+		} // TODO penso che vada bene anche 3
 		return true;
 	}
 }

@@ -22,8 +22,16 @@ public class SearchController {
 	 * @return
 	 */
 	public SearchDto search(String word) {
-		List<Plan> plans = searchDao.searchPlanByWords(Arrays.asList(word));
-		List<Topic> tags = searchDao.searchTags(word);
+		List<Plan> plans;
+		List<Topic> tags;
+		try {
+			plans = searchDao.searchPlanByWords(Arrays.asList(word));
+			tags = searchDao.searchTags(word);
+		} catch (Exception e) {
+			System.err.println("ERROR: Cannot search the given word");
+			e.printStackTrace();
+			return null;
+		}
 		System.out.println(word);
 		SearchDto s = new SearchDto();
 		s.setPlans(plans);

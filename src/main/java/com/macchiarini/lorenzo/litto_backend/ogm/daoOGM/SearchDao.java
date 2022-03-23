@@ -23,9 +23,10 @@ public class SearchDao {
 	/**
 	 * Function that, given a word, searches for all the plans related to that word
 	 * @param keywords
+	 * @throws Exception 
 	 * @return
 	 */
-	public List<Plan> searchPlanByWords(List<String> keywords) {
+	public List<Plan> searchPlanByWords(List<String> keywords) throws Exception {
 		Session session = sessionFactory.getSession();
 		Filters f = new Filters();
 		for(String s : keywords) {
@@ -39,9 +40,10 @@ public class SearchDao {
 	/**
 	 * Function that, given a word, searches for all the tags(topics) related to that word
 	 * @param word
+	 * @throws Exception 
 	 * @return
 	 */
-	public List<Topic> searchTags(String word) {
+	public List<Topic> searchTags(String word) throws Exception {
 		Session session = sessionFactory.getSession();
 		return new ArrayList<Topic>(session.loadAll(Topic.class, new Filter("name", ComparisonOperator.CONTAINING, word)));	
 	}

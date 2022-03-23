@@ -20,9 +20,6 @@ public class ServiceResponseFilter implements ContainerResponseFilter {
 			throws IOException {
 		List<String> pathsNoToken = Arrays.asList("gql/user", "gql/user/login", "ogm/user", "ogm/user/login");
 		String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-		System.out.println(requestContext.getUriInfo().getPath());
-		System.out.println(authHeader);
-		System.out.println(requestContext.getMethod());
 		if (responseContext.getEntity() != null) {
 			if (pathsNoToken.contains(requestContext.getUriInfo().getPath())
 					&& requestContext.getMethod().equals("POST")) {

@@ -20,9 +20,10 @@ public class TopicDao {
 
 	/**
 	 * Function to get the first 12 topics
+	 * @throws Exception 
 	 * @return
 	 */
-	public List<Topic> getInterests() {
+	public List<Topic> getInterests() throws Exception {
 		Session session = sessionFactory.getSession();
 		return new ArrayList<Topic>(session.loadAll(Topic.class, new Pagination(0, 12)));
 	}
@@ -30,9 +31,10 @@ public class TopicDao {
 	/**
 	 * Function to get the topic from the strings
 	 * @param topicNames
+	 * @throws Exception 
 	 * @return
 	 */
-	public List<Topic> getTopics(List<String> topicNames) {
+	public List<Topic> getTopics(List<String> topicNames) throws Exception {
 		Session session = sessionFactory.getSession();
 		return new ArrayList<Topic>(session.loadAll(Topic.class, new Filter("name", ComparisonOperator.IN, topicNames)));
 	}

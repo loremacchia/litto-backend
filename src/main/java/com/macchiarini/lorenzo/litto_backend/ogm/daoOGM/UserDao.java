@@ -27,25 +27,28 @@ public class UserDao {
 	 * Function to return the user with a given ID
 	 * @param ID
 	 * @param depth
+	 * @throws Exception 
 	 * @return
 	 */
-	public User getUser(String ID, int depth) {
+	public User getUser(String ID, int depth) throws Exception {
 		return sessionFactory.getSession().load(User.class, ID, depth);
 	}
 	
 	/**
 	 * @param ID
+	 * @throws Exception 
 	 * @return
 	 */
-	public User getUserPreview(String ID) {
+	public User getUserPreview(String ID) throws Exception {
 		return getUser(ID, 0);
 	}
 	
 	/**
 	 * @param ID
 	 * @return
+	 * @throws Exception 
 	 */
-	public User getUserOverview(String ID) {
+	public User getUserOverview(String ID) throws Exception {
 		return getUser(ID, 1);
 	}
 
@@ -54,29 +57,33 @@ public class UserDao {
 	 * It has to search for it in the DB and overwrite its data
 	 * @param user
 	 * @param depth
+	 * @throws Exception 
 	 */
-	public void saveUser(User user, int depth) {
+	public void saveUser(User user, int depth) throws Exception {
 		sessionFactory.getSession().save(user, depth);
 	}
 	
 	/**
 	 * @param user
+	 * @throws Exception 
 	 */
-	public void saveUserPreview(User user) {
+	public void saveUserPreview(User user) throws Exception {
 		saveUser(user, 0);
 	}
 	
 	/**
 	 * @param user
+	 * @throws Exception 
 	 */
-	public void saveUserOverview(User user) {
+	public void saveUserOverview(User user) throws Exception {
 		saveUser(user, 1);
 	}
 	
 	/**
 	 * @param userID
+	 * @throws Exception 
 	 */
-	public void deleteUser(String userID) { // TODO attenzione se c'è gia transaction
+	public void deleteUser(String userID) throws Exception { // TODO attenzione se c'è gia transaction
 		Session session = sessionFactory.getSession();
 		User user = session.load(User.class, userID, 3);
 		Transaction t = session.beginTransaction();
@@ -96,9 +103,10 @@ public class UserDao {
 	/**
 	 * Function to serach if a user has already registered with the given email
 	 * @param email
+	 * @throws Exception 
 	 * @return
 	 */
-	public List<User> searchUserbyEmail(String email) {
+	public List<User> searchUserbyEmail(String email) throws Exception {
 		Session session = sessionFactory.getSession();
 		List<User> users = new ArrayList<User>(session.loadAll(User.class, new Filter("email", ComparisonOperator.EQUALS, email)));
 		return users;
@@ -108,9 +116,10 @@ public class UserDao {
 	 * Function to get the ID of the user by giving the email and password
 	 * @param email
 	 * @param password
+	 * @throws Exception 
 	 * @return
 	 */
-	public User loginUser(String email, String password) {
+	public User loginUser(String email, String password) throws Exception {
 		Session session = sessionFactory.getSession();
 		System.out.println(email + " " + password);
 		Filter f1 = new Filter("email", ComparisonOperator.EQUALS, email);
@@ -128,9 +137,10 @@ public class UserDao {
 	 * @param step
 	 * @param pp
 	 * @param p
+	 * @throws Exception 
 	 * @return
 	 */
-	public boolean completeStep(User user, StepInProgress step, PlanInProgress pp, Plan p) {
+	public boolean completeStep(User user, StepInProgress step, PlanInProgress pp, Plan p) throws Exception {
 		Session session = sessionFactory.getSession();
 		if(step != null) {
 			Transaction t = session.beginTransaction();
