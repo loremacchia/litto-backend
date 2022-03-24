@@ -86,18 +86,20 @@ public class UserDao {
 	public void deleteUser(String userID) throws Exception {
 		Session session = sessionFactory.getSession();
 		User user = session.load(User.class, userID, 3);
-		Transaction t = session.beginTransaction();
-		for(PlanInProgress p : user.getProgressingPlans()) {
-			for(StepInProgress s : p.getToDoSteps()) {
-				session.delete(s);
+		if(user != null) {
+			Transaction t = session.beginTransaction();
+			for(PlanInProgress p : user.getProgressingPlans()) {
+				for(StepInProgress s : p.getToDoSteps()) {
+					session.delete(s);
+				}
+				session.delete(p);
 			}
-			session.delete(p);
+			for(Interest i : user.getInterests()) {
+				session.delete(i);
+			}
+			session.delete(user);
+			t.commit();
 		}
-		for(Interest i : user.getInterests()) {
-			session.delete(i);
-		}
-		session.delete(user);
-		t.commit();
 	}
 	
 	/**
@@ -154,7 +156,7 @@ public class UserDao {
 			}
 			session.save(user);
 			t.commit();
-			return !pp.getToDoSteps().isEmpty();
+			return true;
 		}
 		return false;
 	}

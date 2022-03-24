@@ -69,7 +69,7 @@ public class PlanInProgress extends Entity{
 
 	@Override
 	public String toString() {
-		return "PlanInProgress [endingDate=" + endingDate + ", user=" + user + ", plan=" + plan + ", toDoSteps="
+		return "PlanInProgress [endingDate=" + endingDate + ", plan=" + plan + ", toDoSteps="
 				+ toDoSteps + ", getId()=" + getId() + "]";
 	}
 

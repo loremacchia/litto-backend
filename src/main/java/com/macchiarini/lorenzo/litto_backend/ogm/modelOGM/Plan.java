@@ -82,5 +82,11 @@ public class Plan extends Entity {
 		return "Plan [imageUrl=" + imageUrl + ", title=" + title + ", subtitle=" + subtitle + ", level=" + level
 				+ ", tags=" + tags + ", steps=" + steps + ", duration=" + duration + ", getId()=" + getId() + "]";
 	}
+	
+	
+	public String toString1() {
+		return "Plan [imageUrl=" + imageUrl + ", title=" + title + ", subtitle=" + subtitle + ", level=" + level+
+				"]";
+	}
 
 }

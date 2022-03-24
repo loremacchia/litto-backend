@@ -40,7 +40,7 @@ public class PlanController {
 	 * @param plan
 	 * @return
 	 */
-	public String createPlan(String userId, Plan plan) { 
+	public String createPlan(String userId, Plan plan) {
 		plan.generateId();
 		for(Step s : plan.getSteps()) {
 			s.generateId();
@@ -49,12 +49,13 @@ public class PlanController {
 			}
 		}
 		try {
+			System.out.println("gigi");
 			planDao.createPlan(plan);
 		} catch (Exception e) {
 			System.err.println("ERROR: Cannot create the plan");
 			e.printStackTrace();
 			return null;
 		}
-		return plan.getId();
+		return "\""+plan.getId()+"\"";
 	}
 }

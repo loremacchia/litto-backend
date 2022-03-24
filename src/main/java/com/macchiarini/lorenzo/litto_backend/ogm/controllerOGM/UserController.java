@@ -192,15 +192,15 @@ public class UserController {
 	 * @param userID
 	 * @return
 	 */
-	public boolean deleteUser(String userID){ // TODO guarda valori di ritorno
+	public boolean deleteUser(String userID){
 		try {
 			userDao.deleteUser(userID);
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot delete user");
 			e.printStackTrace();
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	/**
@@ -225,10 +225,12 @@ public class UserController {
 	 * @return
 	 */
 	public List<StepDto> getUserGoals(String ID) {
-		User user;
+		User user = null;
 		try {
 			user = userDao.getUser(ID, 3);
+			System.out.println(user);
 		} catch (Exception e) {
+			System.out.println(user);
 			System.err.println("ERROR: cannot retrieve the user");
 			e.printStackTrace();
 			return null;

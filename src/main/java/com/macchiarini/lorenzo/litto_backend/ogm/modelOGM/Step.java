@@ -53,7 +53,7 @@ public class Step extends Entity {
 
 	@Override
 	public String toString() {
-		return "Step [ id "+ getId()+" title=" + title + ", subtitle=" + subtitle + ", plan=" + plan + ", materials=" + materials
+		return "Step [ id "+ getId()+" title=" + title + ", subtitle=" + subtitle  + ", materials=" + materials
 				+ ", planWeek=" + planWeek + "]";
 	}
 	

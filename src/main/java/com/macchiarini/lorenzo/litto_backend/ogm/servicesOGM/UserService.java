@@ -76,6 +76,7 @@ public class UserService {
 	@Path("/{id}/goals")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUserGoals(@PathParam("id") String ID) {
+		System.out.println("reached");
 		return Response.ok().entity(userController.getUserGoals(ID)).build();
 	}
 
