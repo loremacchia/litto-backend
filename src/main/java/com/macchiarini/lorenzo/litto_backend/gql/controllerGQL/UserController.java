@@ -213,7 +213,8 @@ public class UserController {
 		} catch (Exception e) {
 			System.err.println("ERROR: cannot retrieve the active steps of the user");
 			e.printStackTrace();
-			return null;
+//			return null;
+			return new ArrayList<StepDto>();
 		}
 		List<StepDto> activeStepDtos = new ArrayList<StepDto>();
 		for(StepGqlDto s : stepsDB) {

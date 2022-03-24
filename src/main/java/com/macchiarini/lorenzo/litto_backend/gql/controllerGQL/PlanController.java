@@ -54,7 +54,7 @@ public class PlanController {
 			e.printStackTrace();
 			return null;
 		} 
-		return plan.getId();
+		return "\""+plan.getId()+"\"";
 	}
 
 }

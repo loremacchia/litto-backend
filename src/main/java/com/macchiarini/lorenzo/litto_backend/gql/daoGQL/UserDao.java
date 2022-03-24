@@ -133,7 +133,7 @@ public class UserDao {
 	 */
 	public List<StepGqlDto> getAllActiveSteps(String ID) throws IOException, InterruptedException {
 		String queryBody = "{\"query\":\"query { users(where: {id:\\\"" + ID
-				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title planWeek subtitle } plan { id imageUrl title }}}}}\"}";
+				+ "\\\"}) {  progressingPlans { toDoSteps(options: {limit:1}) { endDate step { title planWeek subtitle } plan { plan { id imageUrl title }}}}}}\"}";
 		return Arrays.asList(gql.customQuery(queryBody, "toDoSteps", StepGqlDto[].class)); 
 	}
 
@@ -158,7 +158,7 @@ public class UserDao {
 		}
 		parsedString.substring(0,parsedString.length()-1);
 		parsedString += "]";
-		return Arrays.asList(gql.query("plans", "tags:{ name_IN: " + parsedString + "}", "id title subtitle duration", PlanPreviewDto[].class));
+		return Arrays.asList(gql.query("plans", "tags:{ name_IN: " + parsedString + "}", "id title imageUrl duration", PlanPreviewDto[].class));
 	}
 
 	/**

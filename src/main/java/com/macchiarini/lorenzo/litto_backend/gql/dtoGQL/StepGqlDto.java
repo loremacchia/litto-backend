@@ -2,15 +2,15 @@ package com.macchiarini.lorenzo.litto_backend.gql.dtoGQL;
 
 import java.io.Serializable;
 
-import com.macchiarini.lorenzo.litto_backend.commondto.PlanPreviewDto;
 import com.macchiarini.lorenzo.litto_backend.commondto.StepPreviewDto;
+import com.macchiarini.lorenzo.litto_backend.gql.modelGQL.PlanInProgress;
 
 public class StepGqlDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String endDate; 
 	private StepPreviewDto step;
-	private PlanPreviewDto plan;
+	private PlanInProgress plan;
 	
 	public String getEndDate() {
 		return endDate;
@@ -24,10 +24,10 @@ public class StepGqlDto implements Serializable {
 	public void setStep(StepPreviewDto step) {
 		this.step = step;
 	}
-	public PlanPreviewDto getPlan() {
+	public PlanInProgress getPlan() {
 		return plan;
 	}
-	public void setPlan(PlanPreviewDto plan) {
+	public void setPlan(PlanInProgress plan) {
 		this.plan = plan;
 	}
 }

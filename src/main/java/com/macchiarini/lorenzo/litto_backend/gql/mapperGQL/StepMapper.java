@@ -15,9 +15,9 @@ public class StepMapper {
 		step.setEndDate(stepDB.getEndDate());
 		step.setTitle(stepDB.getStep().getTitle());
 		step.setSubtitle(stepDB.getStep().getSubtitle());
-		step.setPlanName(stepDB.getPlan().getTitle());
-		step.setPlanId(stepDB.getPlan().getId());
-		step.setImageUrl(stepDB.getPlan().getImageUrl());
+		step.setPlanName(stepDB.getPlan().getPlan().getTitle());
+		step.setPlanId(stepDB.getPlan().getPlan().getId());
+		step.setImageUrl(stepDB.getPlan().getPlan().getImageUrl());
 		step.setPlanWeek(stepDB.getStep().getPlanWeek());
 		return step;
 	}
